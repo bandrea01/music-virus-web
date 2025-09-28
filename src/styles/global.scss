@@ -1,0 +1,122 @@
+@use './variables' as *;
+
+/* Fix autofill Chrome/Safari */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+  -webkit-text-fill-color: var(--text) !important;
+  transition: background-color 9999s ease-out 0s !important;
+  caret-color: var(--text) !important;
+}
+
+
+/* ===== Base / Reset leggero ===== */
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  color: var(--text);
+  background: var(--bg-900);
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+}
+
+/* ===== Utilities globali ===== */
+.container {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 $space-4;
+}
+
+.grid-1 { display: grid; grid-template-columns: 1fr; gap: $space-8; }
+@media (min-width: 768px) {
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: $space-8; }
+}
+
+/* ===== Components globali riusabili ===== */
+.card {
+  position: relative;
+  cursor: pointer;
+  transform: translateZ(0);
+  @include transition-card;
+
+  &:hover { transform: scale(1.05); }
+  &:focus-visible { @include focus-ring(); }
+
+  &__inner { @include card-base; position: relative; z-index: 1; }
+  &__header { display: flex; align-items: center; justify-content: space-between; margin-bottom: $space-5; }
+  &__title-wrap { display: flex; align-items: center; gap: $space-3; }
+  &__title { margin: 0; font-size: 1.5rem; font-weight: 800; color: #fff; }
+
+  &__emoji { text-align: center; margin-bottom: $space-4; }
+  &__emoji-inner { font-size: 3.25rem; transition: transform $trs; }
+  &:hover &__emoji-inner { transform: scale(1.1); }
+
+  /* placeholder per glow pseudo-element */
+  &::before { display: block; }
+}
+
+.badge {
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  border: 1px solid var(--border);
+  background: rgba(51, 65, 85, 0.5);
+  &--fan    { color: $emerald-500; }
+  &--artist { color: $orange-500; }
+  &--venue  { color: $blue-500; }
+}
+
+.btn        { @include btn-ghost; }
+.btn--ghost { @include btn-ghost; }
+.btn--primary { @include btn-primary; }
+
+/* Benefits list */
+.benefits {
+  list-style: none; padding: 0; margin: $space-4 0 $space-6; display: grid; gap: $space-2;
+
+  &__item {
+    display: flex; align-items: center; gap: 0.6rem;
+    color: var(--text-dim);
+    transform: translateX(0);
+    transition: transform $trs;
+
+    .card:hover & { transform: translateX(4px); }
+  }
+
+  &__dot { width: 8px; height: 8px; border-radius: 999px; flex-shrink: 0; background: #64748b; }
+  &__text { font-size: 0.95rem; }
+}
+
+/* Headers generici */
+.section-header {
+  text-align: center; margin-bottom: $space-12;
+
+  &__brand {
+    display: flex; align-items: center; justify-content: center;
+    gap: $space-3; margin-bottom: $space-5;
+  }
+
+  &__logo {
+    width: 48px; height: 48px; border-radius: $radius-md; display: grid; place-items: center;
+    background: $grad-brand; box-shadow: 0 10px 25px $shadow-purple-soft;
+    span { color: #fff; font-size: 1.25rem; line-height: 1; }
+  }
+
+  &__title {
+    font-size: 2.25rem; font-weight: 800; letter-spacing: 0.2px;
+    background: linear-gradient(90deg, #ffffff, #d1d5db);
+    -webkit-background-clip: text; background-clip: text; color: transparent; margin: 0;
+  }
+
+  &__subtitle { font-size: 1.25rem; color: var(--text-dim); margin: 0 0 $space-3; }
+  &__description { color: var(--text-muted); max-width: 60rem; margin: 0 auto; }
+}

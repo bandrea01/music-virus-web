@@ -1,0 +1,94 @@
+@use '../../styles/variables' as *;
+@use '../../styles/global';
+
+/* Wrapper desktop-only centrato */
+.auth {
+  height: 100vh;
+  display: grid;
+  place-items: center;
+  background:
+          radial-gradient(1200px 600px at 20% 0%, rgba(147, 51, 234, 0.15), transparent 60%),
+          linear-gradient(135deg, $color-bg-900, #5b21b6, $color-bg-900);
+}
+
+.auth__container {
+  width: 480px;   /* fisso desktop */
+  max-width: 480px;
+}
+
+/* Card stile coerente con PreRegisterPage */
+.auth-card {
+  background: transparent;
+  box-shadow: none;
+  border-radius: $radius-lg;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  .auth-card__inner {
+    @include card-base;
+    padding: $space-12 !important;
+    border-radius: 0 !important;
+  }
+}
+
+/* Form spacing */
+.auth-form {
+  display: grid;
+  gap: $space-8;
+  margin-bottom: $space-4;
+
+  /* TextField dark style to match panel */
+  .MuiTextField-root {
+    .MuiInputLabel-root {
+      color: var(--text-dim);
+    }
+
+    .MuiOutlinedInput-root {
+      background: rgba(51, 65, 85, 0.35);
+      border-radius: $radius-md;
+
+      fieldset { border-color: var(--border); }
+      &:hover fieldset { border-color: var(--border-2); }
+      &.Mui-focused fieldset { border-color: $purple-500; }
+
+      input {
+        color: var(--text);
+      }
+    }
+
+    .MuiFormHelperText-root {
+      margin-left: 0;
+    }
+  }
+}
+
+/* Button primario coerente (riusa mixin globale) */
+.btn.btn--primary.MuiButton-root {
+  @include btn-primary;
+  color: #fff !important; /* sovrascrivi tipografia MUI */
+  margin-top: $space-2;
+}
+
+/* Messaggio */
+.auth-message {
+  background: rgba(51, 65, 85, 0.35);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+/* Helper/Link in basso */
+.auth-helper {
+  color: var(--text-muted);
+  margin-top: $space-4;
+  text-align: center;
+}
+
+.auth-link {
+  color: #c084fc;
+  text-decoration: none;
+  margin-left: 0.25rem;
+  transition: color $trs-fast;
+  &:hover { color: #d8b4fe; }
+}

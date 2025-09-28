@@ -1,0 +1,300 @@
+@use '../../styles/variables' as *;
+@use '../../styles/global';
+
+/* Background e layout pagina */
+.pre-register {
+  height: 100vh; /* viewport pieno */
+  display: grid; /* centro in un colpo */
+  place-items: center; /* centro H+V */
+  padding: 0 !important; /* togli eventuali padding verticali */
+}
+
+.pre-register__container {
+  width: 1120px; /* desktop fisso: niente responsive */
+  max-width: 1120px;
+  justify-content: center;
+  justify-items: center;
+}
+
+/* Header riusa la section-header globale */
+.header {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+/* Grid MUI: manteniamo il gap coerente */
+.cards {
+  margin: 0;
+}
+
+/* Bridge classi MUI ↔ nostre classi */
+.card {
+  position: relative; /* per glow ::before */
+  cursor: pointer;
+  transform: translateZ(0);
+  @include transition-card;
+
+  /* MUI root hooks */
+  &.MuiCard-root {
+    background: transparent; /* lo sfondo vero è nell'inner per avere blur */
+    box-shadow: none;
+    border-radius: $radius-lg;
+  }
+
+  /* Area cliccabile MUI */
+  .card__action.MuiCardActionArea-root {
+    border-radius: $radius-lg;
+    overflow: hidden; /* per glow e hover */
+    display: block;
+  }
+
+  /* Glow (pseudo elemento) */
+  &::before {
+    @include glow-bg($grad-brand);
+    opacity: 0;
+  }
+
+  /* default off; tipo card lo sovrascrive */
+
+  &:hover {
+    transform: scale(1.05);
+    transition: transform 0.5s ease;
+  }
+
+  /* Inner panel (CardContent) */
+  .card__inner.MuiCardContent-root {
+    @include card-base;
+    padding: $space-8 !important;
+    position: relative;
+    z-index: 1;
+  }
+
+  .card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: $space-5;
+  }
+
+  .card__title-wrap {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+  }
+
+  .card__icon {
+    @include icon-box($grad-brand);
+    transition: transform $trs;
+  }
+
+  .card__title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #fff;
+  }
+
+  .card__emoji {
+    text-align: center;
+    margin-bottom: $space-4;
+  }
+
+  .card__emoji-inner {
+    font-size: 3.25rem;
+    transition: transform $trs;
+  }
+
+  &:hover .card__emoji-inner {
+    transform: scale(1.1);
+  }
+
+  /* Chip (badge) */
+  .badge.MuiChip-root {
+    border-color: var(--border);
+    background: rgba(51, 65, 85, 0.5);
+    font-weight: 700;
+    height: 28px;
+
+    .MuiChip-label {
+      padding: 0 $space-3;
+    }
+  }
+
+  /* Button MUI styled via nostre utility */
+  .btn.MuiButton-root {
+    text-transform: none;
+    font-weight: 700;
+    border-radius: $radius-md;
+    padding: 0.85rem 1.25rem;
+  }
+}
+
+/* Benefits list: riuso globale */
+.benefits {
+  @extend .benefits;
+}
+
+/* Badge colori per tipo */
+.badge--fan {
+  color: $emerald-500 !important;
+}
+
+.badge--artist {
+  color: $orange-500 !important;
+}
+
+.badge--venue {
+  color: $blue-500 !important;
+}
+
+/* Modificatori per tipo card: gradienti glow, icone e dots */
+.card--fan {
+  &::before {
+    @include glow-bg($grad-fan);
+    opacity: 0.3;
+  }
+
+  .card__icon {
+    @include icon-box($grad-fan);
+  }
+
+  .benefits__dot {
+    background: $purple-500;
+  }
+}
+
+.card--artist {
+  &::before {
+    @include glow-bg($grad-artist);
+    opacity: 0.3;
+  }
+
+  .card__icon {
+    @include icon-box($grad-artist);
+  }
+
+  .benefits__dot {
+    background: $orange-500;
+  }
+}
+
+.card--venue {
+  &::before {
+    @include glow-bg($grad-venue);
+    opacity: 0.3;
+  }
+
+  .card__icon {
+    @include icon-box($grad-venue);
+  }
+
+  .benefits__dot {
+    background: $blue-500;
+  }
+}
+
+/* Bottom */
+.bottom {
+  margin-top: 24px;
+  text-align: center;
+
+  &__login {
+    color: var(--text-muted);
+    margin: 0 0 $space-4;
+  }
+
+  &__login-link {
+    margin-left: 0.35rem;
+    color: #c084fc;
+    text-decoration: none;
+    transition: color $trs-fast;
+
+    &:hover {
+      color: #d8b4fe;
+    }
+  }
+}
+
+/* ===== MUI Button: disabled styles ===== */
+.MuiButton-root {
+  /* transizioni morbide per stati */
+  transition:
+          filter $trs,
+          transform $trs,
+          background-color $trs,
+          color $trs,
+          border-color $trs,
+          box-shadow $trs;
+
+  /* stato disabled generico */
+  &.Mui-disabled,
+  &:disabled {
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+    box-shadow: none !important;
+    transform: none !important;
+    opacity: .65;                          /* fallback visivo */
+    filter: grayscale(20%) saturate(.6) brightness(.95);
+  }
+
+  /* disinnesca hover/focus quando disabled */
+  &.Mui-disabled:hover,
+  &:disabled:hover,
+  &.Mui-disabled:focus,
+  &:disabled:focus {
+    background-image: none !important;
+    box-shadow: none !important;
+  }
+
+  /* ===== Varianti MUI ===== */
+  &.MuiButton-contained {
+    &.Mui-disabled,
+    &:disabled {
+      color: var(--text-muted) !important;
+      background-color: color-mix(in srgb, var(--bg-900) 80%, #ffffff 20%) !important;
+      border-color: transparent !important;
+    }
+  }
+
+  &.MuiButton-outlined {
+    &.Mui-disabled,
+    &:disabled {
+      color: var(--text-muted) !important;
+      background: transparent !important;
+      border-color: color-mix(in srgb, var(--border) 75%, transparent) !important;
+    }
+  }
+
+  &.MuiButton-text {
+    &.Mui-disabled,
+    &:disabled {
+      color: var(--text-muted) !important;
+      background: transparent !important;
+    }
+  }
+
+  /* ===== Se usi anche le tue utility class sul Button di MUI ===== */
+  &.btn,
+  &.btn--primary,
+  &.btn--ghost {
+    &.Mui-disabled,
+    &:disabled {
+      opacity: .6;
+      filter: saturate(.5) brightness(.95);
+      box-shadow: none !important;
+    }
+  }
+
+  /* (opzionale) look coerente per primary "custom" */
+  &.btn--primary.Mui-disabled,
+  &.btn--primary:disabled {
+    /* se il tuo mixin btn-primary usa gradienti,
+       qui li "spengi" un po' senza cambiare palette */
+    background-image: none !important;
+    background: color-mix(in srgb, var(--bg-900) 70%, #fff 30%) !important;
+    color: var(--text-dim) !important;
+    border-color: transparent !important;
+  }
+}
