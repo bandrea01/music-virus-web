@@ -1,11 +1,11 @@
 import {useMutation, type UseMutationResult} from '@tanstack/react-query';
 import {loginRequest} from '../api/auth';
-import type {JwtSessionDTO, LoginDTO} from '../api/types';
+import type {JwtSessionResponseDTO, LoginDTO} from '../api/types';
 import {useAppDispatch} from '../store/hook';
 import {setSnackbarError, setSnackbarSuccess} from '../store/snackbar/slice';
 import {useNavigate} from "react-router-dom";
 
-export function useLogin(): UseMutationResult<JwtSessionDTO, unknown, LoginDTO, unknown> {
+export function useLogin(): UseMutationResult<JwtSessionResponseDTO, unknown, LoginDTO, unknown> {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 

@@ -1,5 +1,4 @@
 @use './variables' as *;
-
 /* Fix autofill Chrome/Safari */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
@@ -10,113 +9,448 @@ textarea:-webkit-autofill:focus,
 select:-webkit-autofill,
 select:-webkit-autofill:hover,
 select:-webkit-autofill:focus {
+
   -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
   -webkit-text-fill-color: var(--text) !important;
   transition: background-color 9999s ease-out 0s !important;
   caret-color: var(--text) !important;
 }
 
-
 /* ===== Base / Reset leggero ===== */
-* { box-sizing: border-box; }
-html, body, #root { height: 100%; }
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
 body {
+
   margin: 0;
   color: var(--text);
   background: var(--bg-900);
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
 }
 
 /* ===== Utilities globali ===== */
 .container {
+
   width: 100%;
   max-width: 1120px;
   margin: 0 auto;
   padding: 0 $space-4;
 }
 
-.grid-1 { display: grid; grid-template-columns: 1fr; gap: $space-8; }
+.grid-1 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $space-8;
+}
+
 @media (min-width: 768px) {
-  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: $space-8; }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $space-8;
+  }
 }
 
 /* ===== Components globali riusabili ===== */
 .card {
+
   position: relative;
   cursor: pointer;
   transform: translateZ(0);
   @include transition-card;
 
-  &:hover { transform: scale(1.05); }
-  &:focus-visible { @include focus-ring(); }
+  &:hover {
+    transform: scale(1.05);
+  }
 
-  &__inner { @include card-base; position: relative; z-index: 1; }
-  &__header { display: flex; align-items: center; justify-content: space-between; margin-bottom: $space-5; }
-  &__title-wrap { display: flex; align-items: center; gap: $space-3; }
-  &__title { margin: 0; font-size: 1.5rem; font-weight: 800; color: #fff; }
+  &:focus-visible {
+    @include focus-ring();
+  }
 
-  &__emoji { text-align: center; margin-bottom: $space-4; }
-  &__emoji-inner { font-size: 3.25rem; transition: transform $trs; }
-  &:hover &__emoji-inner { transform: scale(1.1); }
+  &__inner {
+    @include card-base;
+    position: relative;
+    z-index: 1;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: $space-5;
+  }
+
+  &__title-wrap {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #fff;
+  }
+
+  &__emoji {
+    text-align: center;
+    margin-bottom: $space-4;
+  }
+
+  &__emoji-inner {
+    font-size: 3.25rem;
+    transition: transform $trs;
+  }
+
+  &:hover &__emoji-inner {
+    transform: scale(1.1);
+  }
 
   /* placeholder per glow pseudo-element */
-  &::before { display: block; }
+  &::before {
+    display: block;
+  }
 }
 
 .badge {
+
   padding: 0.25rem 0.6rem;
   border-radius: 999px;
   font-weight: 700;
   font-size: 0.9rem;
   border: 1px solid var(--border);
   background: rgba(51, 65, 85, 0.5);
-  &--fan    { color: $emerald-500; }
-  &--artist { color: $orange-500; }
-  &--venue  { color: $blue-500; }
+
+  &--fan {
+    color: $emerald-500;
+  }
+
+  &--artist {
+    color: $orange-500;
+  }
+
+  &--venue {
+    color: $blue-500;
+  }
 }
 
-.btn        { @include btn-ghost; }
-.btn--ghost { @include btn-ghost; }
-.btn--primary { @include btn-primary; }
+.btn {
+  @include btn-ghost;
+}
+
+.btn--ghost {
+  @include btn-ghost;
+}
+
+.btn--primary {
+  @include btn-primary;
+}
 
 /* Benefits list */
 .benefits {
-  list-style: none; padding: 0; margin: $space-4 0 $space-6; display: grid; gap: $space-2;
+
+  list-style: none;
+  padding: 0;
+  margin: $space-4 0 $space-6;
+  display: grid;
+  gap: $space-2;
 
   &__item {
-    display: flex; align-items: center; gap: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
     color: var(--text-dim);
     transform: translateX(0);
     transition: transform $trs;
 
-    .card:hover & { transform: translateX(4px); }
+    .card:hover & {
+      transform: translateX(4px);
+    }
   }
 
-  &__dot { width: 8px; height: 8px; border-radius: 999px; flex-shrink: 0; background: #64748b; }
-  &__text { font-size: 0.95rem; }
+  &__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    flex-shrink: 0;
+    background: #64748b;
+  }
+
+  &__text {
+    font-size: 0.95rem;
+  }
 }
 
 /* Headers generici */
 .section-header {
-  text-align: center; margin-bottom: $space-12;
+
+  text-align: center;
+  margin-bottom: $space-12;
 
   &__brand {
-    display: flex; align-items: center; justify-content: center;
-    gap: $space-3; margin-bottom: $space-5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $space-3;
+    margin-bottom: $space-5;
   }
 
   &__logo {
-    width: 48px; height: 48px; border-radius: $radius-md; display: grid; place-items: center;
-    background: $grad-brand; box-shadow: 0 10px 25px $shadow-purple-soft;
-    span { color: #fff; font-size: 1.25rem; line-height: 1; }
+    width: 48px;
+    height: 48px;
+    border-radius: $radius-md;
+    display: grid;
+    place-items: center;
+    background: $grad-brand;
+    box-shadow: 0 10px 25px $shadow-purple-soft;
+
+    span {
+      color: #fff;
+      font-size: 1.25rem;
+      line-height: 1;
+    }
   }
 
   &__title {
-    font-size: 2.25rem; font-weight: 800; letter-spacing: 0.2px;
+    font-size: 2.25rem;
+    font-weight: 800;
+    letter-spacing: 0.2px;
     background: linear-gradient(90deg, #ffffff, #d1d5db);
-    -webkit-background-clip: text; background-clip: text; color: transparent; margin: 0;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin: 0;
   }
 
-  &__subtitle { font-size: 1.25rem; color: var(--text-dim); margin: 0 0 $space-3; }
-  &__description { color: var(--text-muted); max-width: 60rem; margin: 0 auto; }
+  &__subtitle {
+    font-size: 1.25rem;
+    color: var(--text-dim);
+    margin: 0 0 $space-3;
+  }
+
+  &__description {
+    color: var(--text-muted);
+    max-width: 60rem;
+    margin: 0 auto;
+  }
 }
+
+.mv-dialog__backdrop.MuiBackdrop-root {
+  backdrop-filter: blur(100px);
+  background: rgba(2, 6, 23, 0.6); // slate-950 con alpha
+}
+
+.mv-dialog__paper.MuiPaper-root {
+  border-radius: $radius-lg;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  color: var(--text);
+
+  .MuiDialogContent-root {
+    padding: 20px;
+  }
+}
+
+.mv-dialog__header {
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+  padding: $space-4 $space-5;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(124, 58, 237, 0.08), rgba(236, 72, 153, 0.06));
+}
+
+.mv-dialog__logo {
+
+  width: 44px;
+  height: 44px;
+  border-radius: $radius-md;
+  display: grid;
+  place-items: center;
+  background: $grad-brand; // gradiente brand se presente nelle tue variabili
+  box-shadow: 0 10px 25px $shadow-purple-soft; // se definito, altrimenti rimuovi
+  span {
+    color: #fff;
+    font-size: 1.1rem;
+    line-height: 1;
+  }
+}
+
+.mv-dialog__titles {
+
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mv-dialog__title {
+
+  margin: 0;
+  font-weight: 800 !important;
+  font-size: 1.15rem;
+  letter-spacing: 0.2px;
+  background: linear-gradient(90deg, #ffffff, #d1d5db);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.mv-dialog__subtitle {
+
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+}
+
+/* Contenuto: padding comodo, bordo al contenitore mappa gestito già nel componente */
+.mv-dialog__content {
+  padding: $space-12;
+}
+
+/* Footer azioni */
+.mv-dialog__actions {
+
+  padding: $space-3 $space-5 $space-4;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: $space-3;
+
+  /* facoltativo: inverti su mobile */
+  @media (max-width: 480px) {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    .btn {
+      width: 100%;
+    }
+  }
+}
+
+.MuiPaper-root,
+.MuiCard-root {
+
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border-radius: 15px !important;
+}
+
+.auth-header {
+  position: relative;
+  text-align: center;
+  overflow: hidden;
+  padding-bottom: 190px !important;
+
+  &__bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.7;
+    filter: blur(4px) brightness(0.3);
+    z-index: 0;
+    object-fit: cover;
+    border-radius: 25px;
+  }
+
+  &__content {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+
+/* === Uniforma TextField e Select con tema dark === */
+.MuiFormControl-root,
+.MuiTextField-root {
+  .MuiInputLabel-root {
+    color: var(--text-dim);
+  }
+
+  .MuiOutlinedInput-root {
+    background: rgba(96, 122, 159, 0.18);
+    border-radius: var(--radius-md, 6px);
+
+    fieldset {
+      border-color: var(--border);
+    }
+
+    &:hover fieldset {
+      border-color: var(--border-2);
+    }
+
+    &.Mui-focused fieldset {
+      border-color: #a855f7; /* purple-500 */
+    }
+
+    input,
+    .MuiSelect-select {
+      color: var(--text);
+    }
+  }
+
+  .MuiFormHelperText-root {
+    margin-left: 0;
+  }
+}
+
+.MuiSelect-multiple {
+  .MuiChip-root {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text);
+    font-size: 0.85rem;
+  }
+}
+
+/* === Dropdown Select (Menu tendina) === */
+.MuiMenu-paper,
+.MuiPopover-paper {
+  background: rgba(30, 41, 59, 0.95) !important; /* sfondo scuro */
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md, 6px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  color: #fff !important; /* testo bianco per default */
+}
+
+/* Ogni elemento della lista (MenuItem) */
+.MuiMenuItem-root {
+  font-size: 0.95rem;
+  color: #fff !important; /* forza il testo bianco */
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.08); /* highlight tenue */
+  }
+
+  &.Mui-selected {
+    background-color: rgba(147, 51, 234, 0.25); /* purple-600 con alpha */
+    color: #fff !important;
+  }
+}
+
+.MuiSelect-select {
+  color: #fff !important;
+}
+
+.MuiInputLabel-root {
+  color: var(--text-dim) !important;
+
+  &.Mui-focused {
+    color: #c084fc !important;
+  }
+}
+
+/* Icona della Select (freccia) */
+.MuiSelect-icon {
+  color: #fff !important;
+}
+
+
+

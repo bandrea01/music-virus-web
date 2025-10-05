@@ -18,7 +18,12 @@ export default function PreRegisterPage() {
                 {/* Header */}
                 <Box className="header">
                     <Box component="img" src="/complete_logo.png"
-                         style={{height: 150, width: "auto", objectFit: "contain"}}
+                         style={{
+                             height: 70,
+                             width: "auto",
+                             objectFit: "contain",
+                             marginBottom: 50
+                    }}
                     />
                     <Typography className="section-header__description">
                         Unisciti alla nostra community e inizia il tuo viaggio musicale.

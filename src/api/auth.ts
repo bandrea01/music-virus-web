@@ -1,7 +1,8 @@
 import api from "./axios.ts";
-import type {JwtSessionDTO, LoginDTO} from "./types.ts";
+import type {JwtSessionResponseDTO, LoginDTO} from "./types.ts";
+import {RoutesEnum} from "./routesEnum.ts";
 
-export async function loginRequest(payload: LoginDTO): Promise<JwtSessionDTO> {
-    const { data } = await api.post<JwtSessionDTO>('/api/auth/login', payload);
+export async function loginRequest(payload: LoginDTO): Promise<JwtSessionResponseDTO> {
+    const { data } = await api.post<JwtSessionResponseDTO>(RoutesEnum.AUTH, payload);
     return data;
 }

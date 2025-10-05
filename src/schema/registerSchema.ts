@@ -2,19 +2,18 @@ import {z} from 'zod';
 
 export type UserType = 'fan' | 'artist' | 'venue';
 
-export const defaultRegisterFormValues = {
+export const initialValuesRegisterSchema = {
     name: '',
     surname: '',
     email: '',
     password: '',
     confirmPassword: '',
-    genres: [],
-    socials: '',
+    artistGenres: [],
+    artistSocials: [],
     venueName: '',
-    address: '',
+    venueAddress: null,
 }
 
-/** Oggetto base senza refine */
 const
     baseObject = z.object({
         email: z.string().email('Inserisci una email valida'),
@@ -23,22 +22,23 @@ const
     });
 
 const artistExtraSchema = z.object({
-    preferredGenres: z.string().min(2, 'Inserisci uno stage name'),
-    socialMedias: z.string().min(2, 'Inserisci almeno un link ai tuoi social'),
+    artistGenres: z.string().min(2, 'Inserisci almeno due generi musicali'),
+    socialMedias: z.string().min(1, 'Inserisci almeno un link ai tuoi social'),
 });
 const venueExtraSchema = z.object({
-    venueName: z.string().min(2, 'Inserisci nome venue'),
-    location: z.string().min(2, 'Inserisci una location'),
+    venueName: z.string().min(2, 'Inserisci il nome della tua location'),
+    venueAddress: z.object({
+        lat: z.number().min(-90, 'Latitudine non valida').max(90, 'Latitudine non valida'),
+        lng: z.number().min(-180, 'Longitudine non valida').max(180, 'Longitudine non valida')
+    })
 });
 
-/** Post-refine */
 const withPasswordMatch = <T extends z.ZodTypeAny>(schema: T) =>
     schema.refine(
         (data: any) => data.password === data.confirmPassword,
         {message: 'Le password non coincidono', path: ['confirmPassword']}
     );
 
-/** 4) Schema per tipo: (baseObject MERGE extra) poi REFINE */
 export const registerSchemaByType: Record<UserType, z.ZodTypeAny> = {
     fan: withPasswordMatch(baseObject),
     artist: withPasswordMatch(baseObject.merge(artistExtraSchema)),

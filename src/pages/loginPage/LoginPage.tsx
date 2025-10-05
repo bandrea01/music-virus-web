@@ -4,7 +4,7 @@ import {Box, Button, Card, CardContent, Container, TextField, Typography,} from 
 import '../../styles/global.scss';
 import './LoginPage.scss';
 import {useLogin} from '../../hooks/useLogin';
-import {type loginFormValues, loginSchema} from "../../schema/authSchema.ts";
+import {initalValuesloginSchema, type LoginFormValues, loginSchema} from "../../schema/authSchema.ts";
 
 export default function LoginPage() {
 
@@ -14,15 +14,15 @@ export default function LoginPage() {
         handleSubmit,
         formState: { errors },
         watch
-    } = useForm<loginFormValues>({
+    } = useForm<LoginFormValues>({
         resolver: zodResolver(loginSchema),
         mode: 'onTouched',
-        defaultValues: { email: '', password: '' },
+        defaultValues: initalValuesloginSchema,
     });
 
     //Login handler
     const {mutate: login, isPending} = useLogin();
-    const handleLoginSubmit: SubmitHandler<loginFormValues> = (values) => {
+    const handleLoginSubmit: SubmitHandler<LoginFormValues> = (values) => {
         login(values);
     }
 
@@ -38,7 +38,12 @@ export default function LoginPage() {
                         <Box
                             component="img"
                             src="/complete_logo.png"
-                            sx={{height: 110, width: 'auto', objectFit: 'contain'}}
+                            sx={{
+                                height: 50,
+                                width: 'auto',
+                                objectFit: 'contain',
+                                marginBottom: 5,
+                            }}
                         />
                         {/* Form */}
                         <Box
@@ -46,6 +51,7 @@ export default function LoginPage() {
                             noValidate
                             onSubmit={handleSubmit(handleLoginSubmit)}
                             className="auth-form"
+                            sx={{gap:2}}
                         >
                             <TextField
                                 label="Email"

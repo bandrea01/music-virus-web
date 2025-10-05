@@ -7,6 +7,7 @@ import './styles/global.scss';
 import {UIWrapper} from "./components/UIWrapper.tsx";
 import {store} from "./store/store.ts";
 import {Provider} from "react-redux";
+import 'leaflet/dist/leaflet.css';
 
 const qc = new QueryClient();
 

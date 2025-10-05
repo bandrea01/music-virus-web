@@ -1,36 +1,35 @@
 @use '../../styles/variables' as *;
 @use '../../styles/global';
-
 /* Background e layout pagina */
 .pre-register {
+
   height: 100vh; /* viewport pieno */
   display: grid; /* centro in un colpo */
   place-items: center; /* centro H+V */
   padding: 0 !important; /* togli eventuali padding verticali */
 }
-
 .pre-register__container {
+
   width: 1120px; /* desktop fisso: niente responsive */
   max-width: 1120px;
   justify-content: center;
   justify-items: center;
 }
-
 /* Header riusa la section-header globale */
 .header {
+
   margin-bottom: 20px;
   display: flex;
   justify-content: center;
   flex-direction: column;
 }
-
 /* Grid MUI: manteniamo il gap coerente */
 .cards {
+
   margin: 0;
 }
-
-/* Bridge classi MUI ↔ nostre classi */
 .card {
+
   position: relative; /* per glow ::before */
   cursor: pointer;
   transform: translateZ(0);
@@ -38,19 +37,16 @@
 
   /* MUI root hooks */
   &.MuiCard-root {
-    background: transparent; /* lo sfondo vero è nell'inner per avere blur */
+    background: transparent;
     box-shadow: none;
     border-radius: $radius-lg;
   }
 
-  /* Area cliccabile MUI */
   .card__action.MuiCardActionArea-root {
-    border-radius: $radius-lg;
     overflow: hidden; /* per glow e hover */
     display: block;
   }
 
-  /* Glow (pseudo elemento) */
   &::before {
     @include glow-bg($grad-brand);
     opacity: 0;
@@ -79,8 +75,6 @@
   }
 
   .card__title-wrap {
-    display: flex;
-    align-items: center;
     gap: $space-3;
   }
 
@@ -103,7 +97,6 @@
 
   .card__emoji-inner {
     font-size: 3.25rem;
-    transition: transform $trs;
   }
 
   &:hover .card__emoji-inner {
@@ -125,32 +118,31 @@
   /* Button MUI styled via nostre utility */
   .btn.MuiButton-root {
     text-transform: none;
-    font-weight: 700;
     border-radius: $radius-md;
     padding: 0.85rem 1.25rem;
   }
 }
-
 /* Benefits list: riuso globale */
 .benefits {
+
   @extend .benefits;
 }
-
 /* Badge colori per tipo */
 .badge--fan {
+
   color: $emerald-500 !important;
 }
-
 .badge--artist {
+
   color: $orange-500 !important;
 }
-
 .badge--venue {
+
   color: $blue-500 !important;
 }
-
 /* Modificatori per tipo card: gradienti glow, icone e dots */
 .card--fan {
+
   &::before {
     @include glow-bg($grad-fan);
     opacity: 0.3;
@@ -164,8 +156,8 @@
     background: $purple-500;
   }
 }
-
 .card--artist {
+
   &::before {
     @include glow-bg($grad-artist);
     opacity: 0.3;
@@ -179,8 +171,8 @@
     background: $orange-500;
   }
 }
-
 .card--venue {
+
   &::before {
     @include glow-bg($grad-venue);
     opacity: 0.3;
@@ -194,9 +186,9 @@
     background: $blue-500;
   }
 }
-
 /* Bottom */
 .bottom {
+
   margin-top: 24px;
   text-align: center;
 
@@ -216,9 +208,9 @@
     }
   }
 }
-
 /* ===== MUI Button: disabled styles ===== */
 .MuiButton-root {
+
   /* transizioni morbide per stati */
   transition:
           filter $trs,
@@ -245,7 +237,6 @@
   &.Mui-disabled:focus,
   &:disabled:focus {
     background-image: none !important;
-    box-shadow: none !important;
   }
 
   /* ===== Varianti MUI ===== */
@@ -261,7 +252,6 @@
   &.MuiButton-outlined {
     &.Mui-disabled,
     &:disabled {
-      color: var(--text-muted) !important;
       background: transparent !important;
       border-color: color-mix(in srgb, var(--border) 75%, transparent) !important;
     }
@@ -270,8 +260,6 @@
   &.MuiButton-text {
     &.Mui-disabled,
     &:disabled {
-      color: var(--text-muted) !important;
-      background: transparent !important;
     }
   }
 
@@ -283,7 +271,6 @@
     &:disabled {
       opacity: .6;
       filter: saturate(.5) brightness(.95);
-      box-shadow: none !important;
     }
   }
 
@@ -292,9 +279,7 @@
   &.btn--primary:disabled {
     /* se il tuo mixin btn-primary usa gradienti,
        qui li "spengi" un po' senza cambiare palette */
-    background-image: none !important;
     background: color-mix(in srgb, var(--bg-900) 70%, #fff 30%) !important;
     color: var(--text-dim) !important;
-    border-color: transparent !important;
   }
 }
