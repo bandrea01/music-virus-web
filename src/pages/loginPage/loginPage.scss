@@ -2,19 +2,18 @@
 @use '../../styles/global';
 /* Wrapper desktop-only centrato */
 .auth {
-
-  height: 100vh;
+  min-height: 100dvh;
   display: grid;
   place-items: center;
-  background:
-          radial-gradient(1200px 600px at 20% 0%, rgba(147, 51, 234, 0.15), transparent 60%),
-          linear-gradient(135deg, $color-bg-900, #5b21b6, $color-bg-900);
+  background: radial-gradient(1200px 600px at 20% 0%, rgba(147, 51, 234, 0.15), transparent 60%),
+  linear-gradient(135deg, $color-bg-900, #5b21b6, $color-bg-900);
 }
-.auth__container {
 
+.auth__container {
   width: 480px;
   max-width: 480px;
 }
+
 .auth-card {
   background: transparent;
   box-shadow: none;
@@ -46,9 +45,17 @@
       background: rgba(96, 122, 159, 0.18);
       border-radius: $radius-md;
 
-      fieldset { border-color: var(--border); }
-      &:hover fieldset { border-color: var(--border-2); }
-      &.Mui-focused fieldset { border-color: $purple-500; }
+      fieldset {
+        border-color: var(--border);
+      }
+
+      &:hover fieldset {
+        border-color: var(--border-2);
+      }
+
+      &.Mui-focused fieldset {
+        border-color: $purple-500;
+      }
 
       input {
         color: var(--text);
@@ -76,6 +83,7 @@
   color: #fff !important; /* sovrascrivi tipografia MUI */
   margin-top: $space-2;
 }
+
 /* Messaggio */
 .auth-message {
 
@@ -83,6 +91,7 @@
   border: 1px solid var(--border);
   color: var(--text);
 }
+
 /* Helper/Link in basso */
 .auth-helper {
 
@@ -90,11 +99,15 @@
   margin-top: $space-4;
   text-align: center;
 }
+
 .auth-link {
 
   color: #c084fc;
   text-decoration: none;
   margin-left: 0.25rem;
   transition: color $trs-fast;
-  &:hover { color: #d8b4fe; }
+
+  &:hover {
+    color: #d8b4fe;
+  }
 }

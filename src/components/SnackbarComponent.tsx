@@ -20,13 +20,14 @@ export const SnackbarComponent: React.FC<INotifyProps> = ({
                                                      duration,
                                                  }: INotifyProps) => {
     if (!type || !message) return null;
+    console.info("type: ", type, " message: ", message);
     return (
         <Snackbar
             onClose={onClose}
             open={open}
             message={message}
             autoHideDuration={duration || 3000}
-            sx={{zIndex: 10000}}
+            sx={{zIndex: 100000}}
             anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
         >
             <Alert

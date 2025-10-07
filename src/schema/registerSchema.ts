@@ -1,51 +1,92 @@
 import {z} from 'zod';
 
-export type UserType = 'fan' | 'artist' | 'venue';
+export const userTypeEnum = z.enum(["fan", "artist", "venue"]);
+export type UserType = z.infer<typeof userTypeEnum>
 
-export const initialValuesRegisterSchema = {
-    name: '',
-    surname: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    artistGenres: [],
-    artistSocials: [],
-    venueName: '',
-    venueAddress: null,
-}
-
-const
-    baseObject = z.object({
-        email: z.string().email('Inserisci una email valida'),
-        password: z.string().min(8, 'Minimo 8 caratteri'),
-        confirmPassword: z.string().min(8, 'Minimo 8 caratteri'),
-    });
-
-const artistExtraSchema = z.object({
-    artistGenres: z.string().min(2, 'Inserisci almeno due generi musicali'),
-    socialMedias: z.string().min(1, 'Inserisci almeno un link ai tuoi social'),
-});
-const venueExtraSchema = z.object({
-    venueName: z.string().min(2, 'Inserisci il nome della tua location'),
-    venueAddress: z.object({
-        lat: z.number().min(-90, 'Latitudine non valida').max(90, 'Latitudine non valida'),
-        lng: z.number().min(-180, 'Longitudine non valida').max(180, 'Longitudine non valida')
-    })
-});
-
-const withPasswordMatch = <T extends z.ZodTypeAny>(schema: T) =>
-    schema.refine(
-        (data: any) => data.password === data.confirmPassword,
-        {message: 'Le password non coincidono', path: ['confirmPassword']}
-    );
-
-export const registerSchemaByType: Record<UserType, z.ZodTypeAny> = {
-    fan: withPasswordMatch(baseObject),
-    artist: withPasswordMatch(baseObject.merge(artistExtraSchema)),
-    venue: withPasswordMatch(baseObject.merge(venueExtraSchema)),
+export const initialValuesByType: {
+    fan: FanValues;
+    artist: ArtistValues;
+    venue: VenueValues;
+} = {
+    fan: {
+        userType: "fan",
+        name: "",
+        surname: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+    },
+    artist: {
+        userType: "artist",
+        name: "",
+        surname: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        artistGenres: [],
+        artistSocial: "",
+    },
+    venue: {
+        userType: "venue",
+        name: "",
+        surname: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        venueName: "",
+        venueAddress: null,
+    },
 };
 
-export type FanFormValues = z.infer<typeof registerSchemaByType.fan>;
-export type ArtistFormValues = z.infer<typeof registerSchemaByType.artist>;
-export type VenueFormValues = z.infer<typeof registerSchemaByType.venue>;
-export type RegisterFormValues = z.infer<typeof registerSchemaByType[UserType]>;
+const baseCommonSchema = z.object({
+    userType: userTypeEnum,
+    name: z.string().min(1, "Inserisci il nome"),
+    surname: z.string().min(1, "Inserisci il cognome"),
+    email: z.string().email("Inserisci una email valida"),
+    password: z.string().min(8, "Minimo 8 caratteri"),
+    confirmPassword: z.string().min(8, "Minimo 8 caratteri"),
+});
+
+const fanSchema = baseCommonSchema.extend({
+    userType: z.literal("fan"),
+});
+
+const artistSchema = baseCommonSchema.extend({
+    userType: z.literal("artist"),
+    artistGenres: z.array(z.string()).min(2, "Inserisci almeno due generi musicali"),
+    artistSocial: z.string().min(1, "Inserisci un social"),
+});
+
+const venueSchema = baseCommonSchema.extend({
+    userType: z.literal("venue"),
+    venueName: z.string().min(2, "Inserisci il nome della tua location"),
+    venueAddress: z
+        .object({
+            lat: z.number().min(-90, "Latitudine non valida").max(90, "Latitudine non valida"),
+            lng: z.number().min(-180, "Longitudine non valida").max(180, "Longitudine non valida"),
+        })
+        .nullable(),
+});
+
+const userRegisterSchema = z
+    .discriminatedUnion("userType", [fanSchema, artistSchema, venueSchema])
+    .superRefine((data, ctx) => {
+        if (data.password !== data.confirmPassword) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ["confirmPassword"],
+                message: "Le password non coincidono",
+            });
+        }
+    });
+
+export function getUserRegisterSchema() {
+    return userRegisterSchema
+}
+
+export type FanValues = z.infer<typeof fanSchema>;
+export type ArtistValues = z.infer<typeof artistSchema>;
+export type VenueValues = z.infer<typeof venueSchema>;
+
+export type UserRegisterRequest = z.infer<ReturnType<typeof getUserRegisterSchema>>;
+export type UserRegisterFormValues = z.infer<typeof userRegisterSchema>;

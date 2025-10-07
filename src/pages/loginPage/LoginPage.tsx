@@ -81,7 +81,7 @@ export default function LoginPage() {
                             </Button>
                         </Box>
 
-                        <Typography className="auth-helper">
+                        <Typography className="auth-helper" sx={{marginTop: '25px'}}>
                             Non hai un account?{' '}
                             <Box component="a" href="/pre-register" className="auth-link">
                                 Registrati

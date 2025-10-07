@@ -1,4 +1,3 @@
-
 //Common
 import type {LatLng} from "leaflet";
 
@@ -27,7 +26,7 @@ export type RegisterBaseDTO = {
 
 export interface ArtistRegisterDTO extends RegisterBaseDTO {
     artistGenres: string[];
-    artistSocials: string[];
+    artistSocial: string;
 }
 
 export interface VenueRegisterDTO extends RegisterBaseDTO {

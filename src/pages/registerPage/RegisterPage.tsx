@@ -1,30 +1,16 @@
 import {useMemo} from 'react';
 import {Link as RouterLink, Navigate, useParams} from 'react-router-dom';
-import {
-    type Control,
-    type FieldErrors,
-    FormProvider,
-    type SubmitHandler,
-    useForm,
-    type UseFormSetValue,
-    type UseFormWatch,
-} from 'react-hook-form';
-import {zodResolver} from '@hookform/resolvers/zod';
+import {FormProvider,} from 'react-hook-form';
 import {Box, Button, Card, CardContent, Container, Grid, Link, Stack, TextField, Typography,} from '@mui/material';
-
-import '../../styles/global.scss';
-import '../loginPage/LoginPage.scss';
-
-import {
-    initialValuesRegisterSchema,
-    type RegisterFormValues,
-    registerSchemaByType,
-    type UserType,
-} from '../../schema/registerSchema';
+import {initialValuesByType, type UserRegisterFormValues, type UserType} from '../../schema/registerSchema';
 import {useDispatch} from 'react-redux';
 import {setSnackbarError} from '../../store/snackbar/slice';
 import {ArtistSection} from './ArtistSection.tsx';
 import {VenueSection} from './VenueSection.tsx';
+import {useUserRegisterUser} from "../../hooks/useUserRegisterUser.ts";
+import {useUserRegisterForm} from "../../hooks/useRegisterForm.ts";
+import '../../styles/global.scss';
+import '../loginPage/LoginPage.scss';
 
 const isUserType = (v: unknown): v is UserType =>
     v === 'fan' || v === 'artist' || v === 'venue';
@@ -46,48 +32,75 @@ const subtitleByType: Record<UserType, string> = {
     venue: 'Gestisci eventi e trova artisti emergenti.',
 };
 
-export type FieldsProps = {
-    register: ReturnType<typeof useForm<RegisterFormValues>>['register'];
-    errors: FieldErrors<RegisterFormValues>;
-    control: Control<RegisterFormValues>;
-    setValue: UseFormSetValue<RegisterFormValues>;
-    watch: UseFormWatch<RegisterFormValues>;
-};
-
 export default function RegisterPage() {
-    const dispatch = useDispatch();
-    const params = useParams<{ type?: string }>();
-    const typeParam = params.type;
 
+    // Check on user type
+    const params = useParams<{ type?: string }>();
+    const dispatch = useDispatch();
+    const typeParam = params.type;
     if (!isUserType(typeParam)) {
         dispatch(setSnackbarError('Errore caricamento pagina di registrazione'));
-        return <Navigate to="/pre-register" replace />;
+        return <Navigate to="/pre-register" replace/>;
     }
     const userType: UserType = typeParam;
+    const registerMutation = useUserRegisterUser(userType);
 
-    const schema = useMemo(() => registerSchemaByType[userType], [userType]);
+    //Form
+    const initialValues = useMemo(
+        () => {
+            return initialValuesByType[userType];
+        },
+        [userType]
+    );
 
-    const methods = useForm<RegisterFormValues>({
-        resolver: zodResolver(schema),
-        mode: 'onTouched',
-        defaultValues: initialValuesRegisterSchema,
-    });
-
+    const { form } = useUserRegisterForm({initialValues});
     const {
         register,
         handleSubmit,
-        formState: { errors, isValid },
-        control,
-        setValue,
-        watch,
-    } = methods;
+        formState: {errors, isValid}
+    } = form;
 
-    const isRegisterButtonEnabled = isValid;
+    console.log(form.getValues());
 
-    const handleRegisterSubmit: SubmitHandler<RegisterFormValues> = async () => {
-        // TODO: registerRequest({ type: userType, ...values })
+    const handleRegisterSubmit = async (values: UserRegisterFormValues) => {
+        switch (values.userType) {
+            case "fan": {
+                const payload = {
+                    name: values.name,
+                    surname: values.surname,
+                    email: values.email,
+                    password: values.password,
+                };
+                await registerMutation.mutateAsync(payload);
+                break;
+            }
+            case "artist": {
+                const payload = {
+                    name: values.name,
+                    surname: values.surname,
+                    email: values.email,
+                    password: values.password,
+                    artistGenres: values.artistGenres ?? [],
+                    artistSocial: values.artistSocial,
+                };
+                await registerMutation.mutateAsync(payload as any);
+                break;
+            }
+
+            case 'venue': {
+                const payload = {
+                    name: values.name,
+                    surname: values.surname,
+                    email: values.email,
+                    password: values.password,
+                    venueName: values.venueName,
+                    address: values.venueAddress ?? null,
+                };
+                await registerMutation.mutateAsync(payload as any);
+                break;
+            }
+        }
     };
-
     const renderSectionByType = () => {
         switch (userType) {
             case 'fan':
@@ -95,16 +108,16 @@ export default function RegisterPage() {
             case 'artist':
                 return <ArtistSection/>;
             case 'venue':
-                return <VenueSection />;
+                return <VenueSection/>;
         }
     };
 
     return (
-        <Box className="auth" sx={{ height: '100vh', display: 'grid', placeItems: 'center', p: 2 }}>
+        <Box className="auth" sx={{display: 'grid', placeItems: 'center', p: 2}}>
             <Container className="auth__container" disableGutters>
-                <Card className="auth-card" sx={{ maxWidth: 1100, mx: 'auto' }}>
+                <Card className="auth-card" sx={{maxWidth: 1100, mx: 'auto'}}>
                     <CardContent className="auth-card__inner">
-                        <FormProvider {...methods}>
+                        <FormProvider key={userType} {...form}>
                             <Grid container spacing={8} alignItems="center">
                                 <Grid
                                     item
@@ -174,9 +187,9 @@ export default function RegisterPage() {
                                         noValidate
                                         onSubmit={handleSubmit(handleRegisterSubmit)}
                                         className="auth-form"
-                                        sx={{ width: '160%', maxWidth: 'none' }}
+                                        sx={{width: '160%', maxWidth: 'none'}}
                                     >
-                                        <Stack spacing={2} sx={{ width: '100%' }}>
+                                        <Stack spacing={2} sx={{width: '100%'}}>
                                             <TextField
                                                 label="Nome"
                                                 fullWidth
@@ -231,13 +244,13 @@ export default function RegisterPage() {
 
                                             {renderSectionByType()}
 
-                                            <Box sx={{ display: 'flex', justifyContent: 'flex-end', pt: 1 }}>
+                                            <Box sx={{display: 'flex', justifyContent: 'flex-end', pt: 1}}>
                                                 <Button
                                                     type="submit"
                                                     variant="contained"
                                                     className="btn btn--primary"
-                                                    sx={{ color: '#fff' }}
-                                                    disabled={!isRegisterButtonEnabled}
+                                                    sx={{color: '#fff'}}
+                                                    disabled={!isValid}
                                                 >
                                                     Crea account
                                                 </Button>

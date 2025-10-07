@@ -1,9 +1,6 @@
 import React from "react";
-import {
-    Box, Chip, FormControl, FormHelperText, InputLabel, MenuItem, OutlinedInput, Select, TextField
-} from "@mui/material";
-import { Controller, useFormContext } from "react-hook-form";
-import type { RegisterFormValues } from "../../schema/registerSchema";
+import {Box, Chip, FormControl, InputLabel, MenuItem, OutlinedInput, Select, TextField,} from "@mui/material";
+import {Controller, useFormContext} from "react-hook-form";
 
 const GENRES = [
     "Pop","Rock","Indie","Hip-Hop","Trap","R&B","Soul","Jazz",
@@ -12,20 +9,26 @@ const GENRES = [
     "Cantautorato","Classica","Colonne Sonore","World",
 ];
 
+type ArtistFormValues = {
+    artistGenres: string[];
+    artistSocial: string;
+};
+
 export const ArtistSection: React.FC = () => {
-    const { control, register, formState: { errors } } = useFormContext<RegisterFormValues>();
+    const { control, register, formState: { errors } } = useFormContext<ArtistFormValues>();
+
+    const hasGenresError = Boolean((errors as any)?.artistGenres);
 
     return (
         <>
-            <FormControl fullWidth size="small" margin="dense" error={!!errors.genres}>
-                <InputLabel id="genres-label">Generi musicali</InputLabel>
+            <FormControl fullWidth size="small" margin="dense" error={hasGenresError}>
+                <InputLabel id="artist-genres-label">Generi musicali</InputLabel>
 
                 <Controller
-                    name="genres"
+                    name={"artistGenres" as const}
                     control={control}
                     render={({ field }) => (
                         <Select
-                            labelId="genres-label"
                             multiple
                             value={field.value ?? []}
                             onChange={(e) => field.onChange(e.target.value as string[])}
@@ -45,21 +48,18 @@ export const ArtistSection: React.FC = () => {
                         </Select>
                     )}
                 />
-
-                {!!errors.genres && (
-                    <FormHelperText>{errors.genres?.message as string}</FormHelperText>
-                )}
+                <TextField
+                    label="Social media"
+                    fullWidth
+                    size="small"
+                    margin="dense"
+                    {...register("artistSocial")}
+                    error={!!errors?.artistSocial}
+                    helperText={(errors?.artistSocial?.message) || ""}
+                />
             </FormControl>
 
-            <TextField
-                label="Social media"
-                fullWidth
-                size="small"
-                margin="dense"
-                {...register("socials")}
-                error={!!errors.socials}
-                helperText={errors.socials?.message as string}
-            />
+
         </>
     );
 };

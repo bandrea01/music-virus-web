@@ -452,5 +452,8 @@ body {
   color: #fff !important;
 }
 
-
+.MuiAlert-filledSuccess { background-color: #2e7d32 !important; color: #fff !important; }
+.MuiAlert-filledError   { background-color: #d32f2f !important; color: #fff !important; }
+.MuiAlert-filledWarning { background-color: #ed6c02 !important; color: #fff !important; }
+.MuiAlert-filledInfo    { background-color: #0288d1 !important; color: #fff !important; }
 

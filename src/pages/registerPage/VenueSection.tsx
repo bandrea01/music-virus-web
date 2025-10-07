@@ -1,17 +1,17 @@
-import React, { useMemo, useState } from "react";
-import type { LatLngLiteral } from "leaflet";
-import { TextField } from "@mui/material";
-import { Controller, useFormContext } from "react-hook-form";
-import { MapDialog } from "./MapDialog";
+import React, {useMemo, useState} from "react";
+import type {LatLngLiteral} from "leaflet";
+import {TextField} from "@mui/material";
+import {Controller, useFormContext} from "react-hook-form";
+import {MapDialog} from "./MapDialog";
 
-type FormValues = {
+type VenueFormValues = {
     venueName: string;
     venueAddress: LatLngLiteral | null;
 };
 
 export const VenueSection: React.FC = () => {
     const [open, setOpen] = useState(false);
-    const { control, formState: { errors }, watch } = useFormContext<FormValues>();
+    const { control, formState: { errors }, watch } = useFormContext<VenueFormValues>();
 
     const currentVenueAddress = watch("venueAddress");
 

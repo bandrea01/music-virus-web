@@ -1,8 +1,8 @@
-import React, { useMemo, useState } from 'react';
-import L, { type LatLngLiteral } from 'leaflet';
-import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from 'react-leaflet';
-import { Box, Button } from '@mui/material';
-import markerUrl from '../../public/marker.png?url';
+import React, {useMemo, useState} from 'react';
+import L, {type LatLngLiteral} from 'leaflet';
+import {MapContainer, Marker, Popup, TileLayer, useMapEvents} from 'react-leaflet';
+import {Box, Button} from '@mui/material';
+import markerUrl from '/marker.png?url';
 import shadowUrl from 'leaflet/dist/images/marker-shadow.png?url';
 
 type MapPickerProps = {
@@ -78,7 +78,7 @@ export const MapPicker: React.FC<MapPickerProps> = ({
     return (
         <Box sx={{ width: '100%' }}>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
-                <Button clasName='btn btn--ghost' onClick={handleUseMyLocation}>
+                <Button className='btn btn--ghost' onClick={handleUseMyLocation}>
                     Usa la mia posizione
                 </Button>
             </Box>

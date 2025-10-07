@@ -3,7 +3,7 @@
 /* Background e layout pagina */
 .pre-register {
 
-  height: 100vh; /* viewport pieno */
+  height: 100% !important;
   display: grid; /* centro in un colpo */
   place-items: center; /* centro H+V */
   padding: 0 !important; /* togli eventuali padding verticali */
