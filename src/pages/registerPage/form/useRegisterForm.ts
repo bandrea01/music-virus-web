@@ -3,7 +3,7 @@ import {
     initialValuesByType,
     type UserRegisterFormValues,
     type UserRegisterRequest,
-} from "../schema/registerSchema.ts";
+} from "./registerSchema.ts";
 import {useForm, type UseFormReturn} from "react-hook-form";
 import {useEffect} from "react";
 import {zodResolver} from "@hookform/resolvers/zod";

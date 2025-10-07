@@ -1,12 +1,12 @@
-import api from './axios';
+import api from '../../../axios/axios.ts';
 import type {
     ArtistRegisterDTO,
     RegisterBaseDTO as FanRegisterDTO,
     RegisterDTORequestByType,
     UserTypeId,
     VenueRegisterDTO,
-} from './types';
-import {RoutesEnum} from './routesEnum';
+} from '../../../axios/types.ts';
+import {RoutesEnum} from '../../../axios/routesEnum.ts';
 
 const registerPathByType: Record<UserTypeId, string> = {
     fan: RoutesEnum.FAN_REGISTER,

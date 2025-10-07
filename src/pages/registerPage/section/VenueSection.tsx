@@ -2,7 +2,7 @@ import React, {useMemo, useState} from "react";
 import type {LatLngLiteral} from "leaflet";
 import {TextField} from "@mui/material";
 import {Controller, useFormContext} from "react-hook-form";
-import {MapDialog} from "./MapDialog";
+import {MapDialog} from "./MapDialog.tsx";
 
 type VenueFormValues = {
     venueName: string;

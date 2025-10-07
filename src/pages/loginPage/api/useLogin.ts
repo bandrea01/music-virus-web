@@ -1,10 +1,10 @@
 import {useMutation, type UseMutationResult} from '@tanstack/react-query';
-import {loginRequest} from '../api/auth';
-import type {JwtSessionResponseDTO, LoginDTO} from '../api/types';
-import {useAppDispatch} from '../store/hook';
-import {setSnackbarError, setSnackbarSuccess} from '../store/snackbar/slice';
+import {loginRequest} from './auth.ts';
+import type {JwtSessionResponseDTO, LoginDTO} from '../../../axios/types.ts';
+import {useAppDispatch} from '../../../store/hook.ts';
+import {setSnackbarError, setSnackbarSuccess} from '../../../store/snackbar/slice.ts';
 import {useNavigate} from "react-router-dom";
-import {getAxiosErrorMessage} from "../api/axios.ts";
+import {getAxiosErrorMessage} from "../../../axios/axios.ts";
 import type {AxiosError} from "axios";
 
 export function useLogin(): UseMutationResult<JwtSessionResponseDTO, unknown, LoginDTO, unknown> {

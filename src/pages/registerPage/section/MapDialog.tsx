@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Box, Button, Dialog, DialogActions, DialogContent, TextField, Typography} from "@mui/material";
 import {useFormContext} from "react-hook-form";
 import type {LatLngLiteral} from "leaflet";
-import {MapPicker} from "../../components/MapPicker";
+import {MapPicker} from "../../../components/MapPicker.tsx";
 
 type FormValues = {
     venueName: string;

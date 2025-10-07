@@ -2,13 +2,13 @@ import {useMemo} from 'react';
 import {Link as RouterLink, Navigate, useParams} from 'react-router-dom';
 import {FormProvider,} from 'react-hook-form';
 import {Box, Button, Card, CardContent, Container, Grid, Link, Stack, TextField, Typography,} from '@mui/material';
-import {initialValuesByType, type UserRegisterFormValues, type UserType} from '../../schema/registerSchema';
+import {initialValuesByType, type UserRegisterFormValues, type UserType} from './form/registerSchema.ts';
 import {useDispatch} from 'react-redux';
 import {setSnackbarError} from '../../store/snackbar/slice';
-import {ArtistSection} from './ArtistSection.tsx';
-import {VenueSection} from './VenueSection.tsx';
-import {useUserRegisterUser} from "../../hooks/useUserRegisterUser.ts";
-import {useUserRegisterForm} from "../../hooks/useRegisterForm.ts";
+import {ArtistSection} from './section/ArtistSection.tsx';
+import {VenueSection} from './section/VenueSection.tsx';
+import {useUserRegisterUser} from "./api/useUserRegisterUser.ts";
+import {useUserRegisterForm} from "./form/useRegisterForm.ts";
 import '../../styles/global.scss';
 import '../loginPage/LoginPage.scss';
 

@@ -3,8 +3,8 @@ import {zodResolver} from '@hookform/resolvers/zod';
 import {Box, Button, Card, CardContent, Container, TextField, Typography,} from '@mui/material';
 import '../../styles/global.scss';
 import './LoginPage.scss';
-import {useLogin} from '../../hooks/useLogin';
-import {initalValuesloginSchema, type LoginFormValues, loginSchema} from "../../schema/authSchema.ts";
+import {useLogin} from './api/useLogin.ts';
+import {initalValuesloginSchema, type LoginFormValues, loginSchema} from "./form/authSchema.ts";
 
 export default function LoginPage() {
 

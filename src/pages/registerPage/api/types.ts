@@ -3,18 +3,6 @@ import type {LatLng} from "leaflet";
 
 export type UserTypeId = "fan" | "artist" | "venue";
 
-//Login
-
-export type JwtSessionResponseDTO = {
-    userId: string;
-    jwt: string;
-};
-
-export type LoginDTO = {
-    email: string;
-    password: string;
-};
-
 
 //Register
 export type RegisterBaseDTO = {
