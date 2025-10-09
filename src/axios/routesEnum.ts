@@ -3,4 +3,5 @@ export const RoutesEnum = {
     FAN_REGISTER: '/register/fan',
     ARTIST_REGISTER: '/register/artist',
     VENUE_REGISTER: '/register/venue',
+    PROFILE: '/users/profile',
 }

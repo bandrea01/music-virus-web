@@ -5,8 +5,14 @@ const api = axios.create({
     timeout: 10000,
 });
 
+const TOKEN_KEY = 'jwt';
+
+export const getToken = () => localStorage.getItem(TOKEN_KEY);
+export const setToken = (t: string) => localStorage.setItem(TOKEN_KEY, t);
+export const clearToken = () => localStorage.removeItem(TOKEN_KEY);
+
 api.interceptors.request.use((config) => {
-    const token = localStorage.getItem('jwt');
+    const token = getToken()
     if (token) {
         config.headers = config.headers ?? {};
         config.headers.Authorization = `Bearer ${token}`;
