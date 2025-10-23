@@ -1,23 +1,32 @@
 import {type SubmitHandler, useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
-import {Box, Button, Card, CardContent, Container, TextField, Typography,} from '@mui/material';
+import {Box, Button, Card, CardContent, Container, Typography,} from '@mui/material';
 import '../../styles/global.scss';
 import './LoginPage.scss';
 import {useLogin} from './api/useLogin.ts';
-import {initalValuesloginSchema, type LoginFormValues, loginSchema} from "./form/authSchema.ts";
+import {initialValuesloginSchema, type LoginFormValues, loginSchema} from "./form/authSchema.ts";
+import {TextFormField, useAuth} from "@/components";
+import {useNavigate} from "react-router-dom";
+import {useEffect} from "react";
 
 export default function LoginPage() {
+    const {logout} = useAuth();
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        logout();
+        navigate('/login', { replace: true });
+    }, []);
 
     //Form
     const {
-        register,
         handleSubmit,
-        formState: { errors },
-        watch
+        watch,
+        control
     } = useForm<LoginFormValues>({
         resolver: zodResolver(loginSchema),
-        mode: 'onTouched',
-        defaultValues: initalValuesloginSchema,
+        mode: 'onChange',
+        defaultValues: initialValuesloginSchema,
     });
 
     //Login handler
@@ -53,23 +62,21 @@ export default function LoginPage() {
                             className="auth-form"
                             sx={{gap:2}}
                         >
-                            <TextField
+                            <TextFormField
+                                control={control}
+                                name="email"
                                 label="Email"
                                 type="email"
-                                placeholder="tua@email.it"
+                                placeholder="tua@gmail.com"
                                 fullWidth
-                                error={!!errors.email}
-                                helperText={errors.email?.message}
-                                {...register('email')}
                             />
-                            <TextField
+                            <TextFormField
+                                control={control}
+                                name="password"
                                 label="Password"
                                 type="password"
                                 placeholder="••••••••"
                                 fullWidth
-                                error={!!errors.password}
-                                helperText={errors.password?.message}
-                                {...register('password')}
                             />
                             <Button
                                 type="submit"

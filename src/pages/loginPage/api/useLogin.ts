@@ -1,12 +1,12 @@
 import {useMutation, type UseMutationResult, useQueryClient} from '@tanstack/react-query';
 import {loginRequest} from './auth.ts';
 import type {JwtSessionResponseDTO, LoginDTO} from './types.ts';
-import {useAppDispatch} from '../../../store/hook.ts';
-import {setSnackbarError, setSnackbarSuccess} from '../../../store/snackbar/slice.ts';
+import {useAppDispatch} from '@store/hook.ts';
+import {setSnackbarError, setSnackbarSuccess} from '@store/snackbar/slice.ts';
 import {useNavigate} from "react-router-dom";
-import {getAxiosErrorMessage, setToken} from "../../../axios/axios.ts";
+import {getAxiosErrorMessage} from "@/apiService/axios.ts";
 import type {AxiosError} from "axios";
-import {type AuthRole, type IUserProfile, useAuth} from "../../../components/AuthContext.tsx";
+import {type AuthRole, type IUserProfile, useAuth} from "@/components";
 import {profileRequest} from "../../homePage/api/profile.ts";
 import type {ProfileResponseDTO} from "../../homePage/api/types.ts";
 
@@ -24,7 +24,6 @@ export function useLogin(): UseMutationResult<JwtSessionResponseDTO, unknown, Lo
         retry: 0,
         onSuccess: async (data) => {
             dispatch(setSnackbarSuccess('Login effettuato'));
-            setToken(data.jwt);
             //Update context
             setAuthUser({
                 userId: data.userId,

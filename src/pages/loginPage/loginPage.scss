@@ -38,7 +38,7 @@
   /* TextField dark style to match panel */
   .MuiTextField-root {
     .MuiInputLabel-root {
-      color: var(--text-dim);
+      color: var(--text-dim) !important;
     }
 
     .MuiOutlinedInput-root {

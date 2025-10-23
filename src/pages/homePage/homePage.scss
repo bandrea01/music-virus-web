@@ -21,7 +21,7 @@
   grid-area: header;
   position: sticky;
   top: 0;
-  z-index: 20;
+  z-index: 1000;
 
   height: 64px;
   display: flex;
@@ -29,7 +29,7 @@
   justify-content: space-between;
   padding-inline: var(--space-4, 16px);
 
-  background: var(--color-bg-700);
+  background: rgba(18, 35, 66, 1);
   border-bottom: 1px solid var(--border);
 }
 
@@ -48,13 +48,7 @@
 .home__header-right {
   display: flex;
   align-items: center;
-  gap: 8px;
-
-  img {
-    height: 28px;
-    display: block;
-    object-fit: contain;
-  }
+  flex-direction: row;
 }
 
 .home__role {
@@ -65,16 +59,15 @@
 .home__sidebar {
   grid-area: sidebar;
 
-  width: 300px; /* coerente con grid-template-columns */
+  width: 300px;
   background: var(--color-bg-800);
   border-right: 1px solid var(--border);
   color: var(--text-light);
-
+  box-shadow: var(--shadow-md, 0 8px 24px rgba(0,0,0,.4));
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 
-  /* padding dei due blocchi interni (menu + CTA) */
   & > .MuiBox-root {
     padding: var(--space-4, 16px);
   }
@@ -91,8 +84,6 @@
     border-radius: 8px;
     transition: background-color .2s ease, color .2s ease;
     color: var(--text-light);
-
-    &:hover { background: var(--color-bg-600); }
 
     &.Mui-selected {
       background: var(--color-bg-600);
@@ -175,10 +166,9 @@
 .home__main-content {
   display: grid;
   gap: var(--space-3, 12px);
+  padding: 20px;
 }
 
-/* ---------- RESPONSIVE ---------- */
-/* Mobile vero: sidebar overlay */
 @media (max-width: 768px) {
   .home {
     grid-template-columns: 1fr;
@@ -190,7 +180,7 @@
   }
 
   .home__sidebar {
-    position: fixed;
+    position: sticky;
     top: 64px;
     left: 0;
     height: calc(100vh - 64px);
@@ -208,7 +198,6 @@
   }
 }
 
-/* Larghezze intermedie (DevTools aperti): sidebar un po' più stretta */
 @media (min-width: 769px) and (max-width: 1180px) {
   .home {
     grid-template-columns: 260px minmax(0, 1fr);

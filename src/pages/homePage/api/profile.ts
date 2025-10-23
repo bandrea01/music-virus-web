@@ -1,9 +1,30 @@
-import api from "../../../axios/axios.ts";
-import {RoutesEnum} from "../../../axios/routesEnum.ts";
-import type {ProfileResponseDTO} from "./types.ts";
+import api from "../../../apiService/axios.ts";
+import {RoutesEnum} from "@/apiService/routesEnum.ts";
+import type {ProfileResponseDTO, UpdateProfileDTO} from "./types.ts";
+import type {ProfileEditFormValues} from "../form/profileEditSchema.ts";
 
 export async function profileRequest(): Promise<ProfileResponseDTO> {
     const { data } = await api.get(RoutesEnum.PROFILE);
-
     return data;
+}
+
+export async function updateProfileRequest(profile: UpdateProfileDTO) {
+    const { data } = await api.patch(RoutesEnum.PROFILE, profile);
+    return data;
+}
+
+
+//Mapping
+export function mapProfileEditFormValuesToDTO(values: ProfileEditFormValues): UpdateProfileDTO {
+return {
+    name: values.name,
+    surname: values.surname,
+    email: values.email || undefined,
+    oldPassword: values.oldPassword || undefined,
+    newPassword: values.newPassword || undefined,
+    artistGenres: values.artistGenres?.length ? values.artistGenres : undefined,
+    artistSocial: values.artistSocial || undefined,
+    venueName: values.venueName || undefined,
+    venueAddress: values.venueAddress || undefined,
+}
 }

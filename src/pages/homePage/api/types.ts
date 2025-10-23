@@ -12,3 +12,17 @@ export type ProfileResponseDTO = {
         lng: number;
     };
 };
+
+export type UpdateProfileDTO = {
+    name?: string;
+    surname?: string;
+    email?: string;
+    newPassword?: string;
+    artistGenres?: string[];
+    artistSocial?: string;
+    venueName?: string;
+    venueAddress?: {
+        lat: number;
+        lng: number;
+    };
+}

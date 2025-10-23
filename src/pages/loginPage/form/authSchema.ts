@@ -1,6 +1,6 @@
 import {z} from "zod";
 
-export const initalValuesloginSchema = {
+export const initialValuesloginSchema = {
     email: '',
     password: '',
 };

@@ -21,10 +21,12 @@ export function useUserRegisterForm({
                                         initialValues
                                     }: UseUserRegisterFormProps): UseUserRegisterFormReturn {
     const schema = getUserRegisterSchema();
-    const form = useForm <UserRegisterRequest> ({
-        defaultValues: initialValues,
-        resolver: zodResolver(schema)
-    });
+    const form =
+        useForm<UserRegisterRequest>({
+            defaultValues: initialValues,
+            resolver: zodResolver(schema),
+            mode: 'onChange',
+        });
 
     useEffect(() => {
         const subscription = form.watch((_values, info) => {

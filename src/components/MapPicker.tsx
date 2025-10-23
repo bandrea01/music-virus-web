@@ -11,12 +11,13 @@ type MapPickerProps = {
     height?: number | string;
     defaultCenter?: LatLngLiteral;
     zoom?: number;
+    viewOnly?: boolean;
 };
 
-function ClickHandler({ onPick }: { onPick: (p: LatLngLiteral) => void }) {
+function ClickHandler({onPick}: { onPick: (p: LatLngLiteral) => void }) {
     useMapEvents({
         click(e) {
-            onPick({ lat: e.latlng.lat, lng: e.latlng.lng });
+            onPick({lat: e.latlng.lat, lng: e.latlng.lng});
         },
     });
     return null;
@@ -24,7 +25,7 @@ function ClickHandler({ onPick }: { onPick: (p: LatLngLiteral) => void }) {
 
 const defaultSettings = {
     height: 320,
-    center: { lat: 40.3539, lng: 18.17542 } as LatLngLiteral,
+    center: {lat: 40.3539, lng: 18.17542} as LatLngLiteral,
     zoom: 13,
 };
 
@@ -34,6 +35,7 @@ export const MapPicker: React.FC<MapPickerProps> = ({
                                                         height = defaultSettings.height,
                                                         defaultCenter = defaultSettings.center,
                                                         zoom = defaultSettings.zoom,
+                                                        viewOnly = false,
                                                     }) => {
     const [currentPosition, setCurrentPosition] =
         useState<LatLngLiteral | null>(value ?? defaultCenter);
@@ -70,18 +72,21 @@ export const MapPicker: React.FC<MapPickerProps> = ({
                 };
                 handlePick(position);
             },
-            () => {},
-            { enableHighAccuracy: true, timeout: 8000 }
+            () => {
+            },
+            {enableHighAccuracy: true, timeout: 8000}
         );
     };
 
     return (
-        <Box sx={{ width: '100%' }}>
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
-                <Button className='btn btn--ghost' onClick={handleUseMyLocation}>
-                    Usa la mia posizione
-                </Button>
-            </Box>
+        <Box sx={{width: '100%'}}>
+            {!viewOnly && (
+                <Box sx={{display: 'flex', justifyContent: 'flex-end', mb: 1}}>
+                    <Button className='btn btn--ghost' onClick={handleUseMyLocation}>
+                        Usa la mia posizione
+                    </Button>
+                </Box>
+            )}
 
             <Box
                 sx={{
@@ -95,7 +100,7 @@ export const MapPicker: React.FC<MapPickerProps> = ({
                 <MapContainer
                     center={[center.lat, center.lng]}
                     zoom={zoom}
-                    style={{ width: '100%', height: '100%' }}
+                    style={{width: '100%', height: '100%'}}
                     scrollWheelZoom
                 >
                     <TileLayer
@@ -103,23 +108,16 @@ export const MapPicker: React.FC<MapPickerProps> = ({
                         attribution="&copy; OpenStreetMap contributors"
                     />
 
-                    <ClickHandler onPick={handlePick} />
+                    <ClickHandler onPick={handlePick}/>
 
                     {currentPosition && (
                         <Marker
                             position={[currentPosition.lat, currentPosition.lng]}
                             icon={myMarkerIcon}
-                            draggable
-                            eventHandlers={{
-                                dragend: (e) => {
-                                    const m = e.target as L.Marker;
-                                    const { lat, lng } = m.getLatLng();
-                                    handlePick({ lat, lng });
-                                },
-                            }}
+                            draggable={!viewOnly}
                         >
                             <Popup>
-                                {currentPosition.lat.toFixed(5)}, {currentPosition.lng.toFixed(5)}
+                                {currentPosition?.lat?.toFixed(5)}, {currentPosition?.lng?.toFixed(5)}
                             </Popup>
                         </Marker>
                     )}

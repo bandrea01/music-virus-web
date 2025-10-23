@@ -6,6 +6,15 @@
   ],
   "include": ["src"],
   "compilerOptions": {
-    "types": ["vite/client"]
+    "baseUrl": ".",
+    "types": ["vite/client"],
+    "paths": {
+      "@/*": ["src/*"],
+      "@components/*": ["./src/components/*"],
+      "@apiService/*": ["./src/apiService/*"],
+      "@pages/*": ["./src/pages/*"],
+      "@store/*": ["./src/store/*"],
+      "@styles/*": ["./src/styles/*"]
+    }
   }
 }

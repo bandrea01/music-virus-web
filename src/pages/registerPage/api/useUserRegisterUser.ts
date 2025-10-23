@@ -1,11 +1,11 @@
 import {useMutation} from '@tanstack/react-query';
-import {useAppDispatch} from '../../../store/hook.ts';
-import {setSnackbarError, setSnackbarSuccess} from '../../../store/snackbar/slice.ts';
+import {useAppDispatch} from '@store/hook.ts';
+import {setSnackbarError, setSnackbarSuccess} from '@store/snackbar/slice.ts';
 import {useNavigate} from 'react-router-dom';
-import type {UserTypeId} from '../../index.ts';
+import type {UserTypeId} from '@/pages';
 import {registerRequest} from './register.ts';
 import type {AxiosError} from "axios";
-import {getAxiosErrorMessage} from "../../../axios/axios.ts";
+import {getAxiosErrorMessage} from "@/apiService/axios.ts";
 
 export function useUserRegisterUser(userType: UserTypeId) {
     const dispatch = useAppDispatch();

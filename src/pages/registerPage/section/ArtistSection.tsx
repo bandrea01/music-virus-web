@@ -1,12 +1,14 @@
 import React from "react";
-import {Box, Chip, FormControl, InputLabel, MenuItem, OutlinedInput, Select, TextField,} from "@mui/material";
-import {Controller, useFormContext} from "react-hook-form";
+import {Box, Chip,} from "@mui/material";
+import {useFormContext} from "react-hook-form";
+import {getSelectOptions, SelectFormField} from "../../../components/SelectFormField.tsx";
+import {TextFormField} from "../../../components/TextFormField.tsx";
 
-const GENRES = [
-    "Pop","Rock","Indie","Hip-Hop","Trap","R&B","Soul","Jazz",
-    "Blues","Funk","Disco","House","Techno","EDM","Dubstep",
-    "Drum & Bass","Reggae","Ska","Punk","Metal","Folk",
-    "Cantautorato","Classica","Colonne Sonore","World",
+export const genres = [
+    "Pop", "Rock", "Indie", "Hip-Hop", "Trap", "R&B", "Soul", "Jazz",
+    "Blues", "Funk", "Disco", "House", "Techno", "EDM", "Dubstep",
+    "Drum & Bass", "Reggae", "Ska", "Punk", "Metal", "Folk",
+    "Cantautorato", "Classica", "Colonne Sonore", "World",
 ];
 
 type ArtistFormValues = {
@@ -15,51 +17,46 @@ type ArtistFormValues = {
 };
 
 export const ArtistSection: React.FC = () => {
-    const { control, register, formState: { errors } } = useFormContext<ArtistFormValues>();
-
-    const hasGenresError = Boolean((errors as any)?.artistGenres);
+    const {control, getValues, setValue} = useFormContext<ArtistFormValues>();
+    const genresOptions = getSelectOptions(genres);
 
     return (
         <>
-            <FormControl fullWidth size="small" margin="dense" error={hasGenresError}>
-                <InputLabel id="artist-genres-label">Generi musicali</InputLabel>
-
-                <Controller
-                    name={"artistGenres" as const}
-                    control={control}
-                    render={({ field }) => (
-                        <Select
-                            multiple
-                            value={field.value ?? []}
-                            onChange={(e) => field.onChange(e.target.value as string[])}
-                            input={<OutlinedInput label="Generi musicali" />}
-                            renderValue={(selected) => (
-                                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                                    {(selected as string[]).map((value) => (
-                                        <Chip key={value} label={value} size="small" />
-                                    ))}
-                                </Box>
-                            )}
-                            MenuProps={{ PaperProps: { style: { maxHeight: 320 } } }}
-                        >
-                            {GENRES.map((g) => (
-                                <MenuItem key={g} value={g}>{g}</MenuItem>
+            <SelectFormField
+                control={control}
+                name="artistGenres"
+                label="I tuoi generi musicali"
+                menuItems={genresOptions}
+                renderValue={(selected) => {
+                    const arr = Array.isArray(selected) ? selected : [];
+                    if (arr.length === 0) return <em>Seleziona generi…</em>;
+                    return (
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, maxWidth: '200px' }}>
+                            {arr.map((v) => (
+                                <Chip
+                                    key={v}
+                                    label={v}
+                                    size="small"
+                                    onMouseDown={(e) => e.stopPropagation()}
+                                    onDelete={() => {
+                                        const current = getValues('artistGenres') ?? [];
+                                        const next = Array.isArray(current) ? current.filter(x => x !== v) : [];
+                                        setValue('artistGenres', next, { shouldValidate: true, shouldDirty: true });
+                                    }}
+                                />
                             ))}
-                        </Select>
-                    )}
-                />
-                <TextField
-                    label="Social media"
-                    fullWidth
-                    size="small"
-                    margin="dense"
-                    {...register("artistSocial")}
-                    error={!!errors?.artistSocial}
-                    helperText={(errors?.artistSocial?.message) || ""}
-                />
-            </FormControl>
-
-
+                        </Box>
+                    );
+                }}
+                multiple
+            />
+            <TextFormField
+                control={control}
+                name="artistSocial"
+                label="Social media"
+                fullWidth
+            />
         </>
+
     );
 };

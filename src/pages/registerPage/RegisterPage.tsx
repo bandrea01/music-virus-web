@@ -1,7 +1,7 @@
 import {useMemo} from 'react';
 import {Link as RouterLink, Navigate, useParams} from 'react-router-dom';
 import {FormProvider,} from 'react-hook-form';
-import {Box, Button, Card, CardContent, Container, Grid, Link, Stack, TextField, Typography,} from '@mui/material';
+import {Box, Button, Card, CardContent, Container, Grid, Link, Stack, Typography,} from '@mui/material';
 import {initialValuesByType, type UserRegisterFormValues, type UserType} from './form/registerSchema.ts';
 import {useDispatch} from 'react-redux';
 import {setSnackbarError} from '../../store/snackbar/slice';
@@ -11,6 +11,7 @@ import {useUserRegisterUser} from "./api/useUserRegisterUser.ts";
 import {useUserRegisterForm} from "./form/useRegisterForm.ts";
 import '../../styles/global.scss';
 import '../loginPage/LoginPage.scss';
+import {TextFormField} from "../../components";
 
 const isUserType = (v: unknown): v is UserType =>
     v === 'fan' || v === 'artist' || v === 'venue';
@@ -53,14 +54,11 @@ export default function RegisterPage() {
         [userType]
     );
 
-    const { form } = useUserRegisterForm({initialValues});
+    const {form} = useUserRegisterForm({initialValues});
     const {
-        register,
         handleSubmit,
-        formState: {errors, isValid}
+        control
     } = form;
-
-    console.log(form.getValues());
 
     const handleRegisterSubmit = async (values: UserRegisterFormValues) => {
         switch (values.userType) {
@@ -190,56 +188,41 @@ export default function RegisterPage() {
                                         sx={{width: '160%', maxWidth: 'none'}}
                                     >
                                         <Stack spacing={2} sx={{width: '100%'}}>
-                                            <TextField
+                                            <TextFormField
+                                                control={control}
+                                                name="name"
                                                 label="Nome"
                                                 fullWidth
-                                                size="small"
-                                                margin="dense"
-                                                {...register('name')}
-                                                error={!!errors.name}
-                                                helperText={errors.name?.message as string}
                                             />
-                                            <TextField
+                                            <TextFormField
+                                                control={control}
+                                                name="surname"
                                                 label="Cognome"
                                                 fullWidth
-                                                size="small"
-                                                margin="dense"
-                                                {...register('surname')}
-                                                error={!!errors.surname}
-                                                helperText={errors.surname?.message as string}
                                             />
-                                            <TextField
+                                            <TextFormField
+                                                control={control}
+                                                name="email"
                                                 label="Email"
                                                 type="email"
                                                 autoComplete="email"
                                                 fullWidth
-                                                size="small"
-                                                margin="dense"
-                                                {...register('email')}
-                                                error={!!errors.email}
-                                                helperText={errors.email?.message as string}
                                             />
-                                            <TextField
+                                            <TextFormField
+                                                control={control}
+                                                name="password"
                                                 label="Password"
                                                 type="password"
                                                 autoComplete="new-password"
                                                 fullWidth
-                                                size="small"
-                                                margin="dense"
-                                                {...register('password')}
-                                                error={!!errors.password}
-                                                helperText={errors.password?.message as string}
                                             />
-                                            <TextField
+                                            <TextFormField
+                                                control={control}
+                                                name="confirmPassword"
                                                 label="Conferma Password"
                                                 type="password"
                                                 autoComplete="new-password"
                                                 fullWidth
-                                                size="small"
-                                                margin="dense"
-                                                {...register('confirmPassword')}
-                                                error={!!errors.confirmPassword}
-                                                helperText={errors.confirmPassword?.message as string}
                                             />
 
                                             {renderSectionByType()}
@@ -250,7 +233,7 @@ export default function RegisterPage() {
                                                     variant="contained"
                                                     className="btn btn--primary"
                                                     sx={{color: '#fff'}}
-                                                    disabled={!isValid}
+                                                    disabled={!form.formState.isValid}
                                                 >
                                                     Crea account
                                                 </Button>
