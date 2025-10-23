@@ -4,6 +4,7 @@ import PreRegisterPage from "./pages/preRegisterPage/PreRegisterPage.tsx";
 import HomePage from "./pages/homePage/HomePage.tsx";
 import RegisterPage from "./pages/registerPage/RegisterPage.tsx";
 import PersonalProfilePanel from "./pages/homePage/panel/PersonalProfilePanel.tsx";
+import ErrorPage from "@pages/ErrorPage.tsx";
 
 export default function App() {
     return (
@@ -19,7 +20,7 @@ export default function App() {
                 </Route>
 
                 <Route path="/homepage" element={<Navigate to="/" replace/>} />
-                <Route path="*" element={<Navigate to="/login" replace/>}/>
+                <Route path="*" element={<ErrorPage/>}/>
             </Routes>
         </BrowserRouter>
     );
