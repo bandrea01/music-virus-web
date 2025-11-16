@@ -4,6 +4,6 @@ export * from "./DialogComponent.tsx";
 export * from "./MapPicker.tsx";
 export * from "./SnackbarComponent.tsx";
 export * from "./TopbarComponent.tsx";
-export * from "./AuthContext.tsx";
-export * from "./UIWrapper.tsx";
 export * from "./SelectFormField.tsx";
+export * from "./UserCardComponent.tsx";
+export * from "./context";

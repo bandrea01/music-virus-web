@@ -1,39 +1,23 @@
-import type {ComponentType} from "react";
 import type {SvgIconComponent} from "@mui/icons-material";
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
-import AdminArtistPanel from "./panel/admin/AdminArtistPanel.tsx";
-import AdminGeneralPanel from "./panel/admin/AdminGeneralPanel.tsx";
+import HeadsetIcon from '@mui/icons-material/Headset';
+import PeopleIcon from '@mui/icons-material/People';
 
 export interface Tab {
     key: string;
     label: string;
-    panel: ComponentType;
     icon?: SvgIconComponent;
 }
 
 export const tabs: Tab[] = [
-    // ADMIN
-    { key: 'general', label: 'Dashboard', icon: RecordVoiceOverIcon, panel: AdminGeneralPanel },
-    { key: 'artist',  label: 'Artisti',   icon: RecordVoiceOverIcon, panel: AdminArtistPanel },
+    { key: 'general', label: 'Dashboard', icon: RecordVoiceOverIcon},
+    { key: 'admin-artist-management',  label: 'Gestione artisti', icon: HeadsetIcon},
+    { key: 'admin-fan-management',  label: 'Gestione Fans', icon: PeopleIcon},
 
-    // {id: 'dashboard', label: 'Dashboard', panel: 'DashboardPanel'},
-    // {id: 'campaigns', label: 'Le Mie Campagne', panel: 'EventsPanel'},
-    // {id: 'feedback', label: 'Feedback', panel: 'FeedbackPanel'},
-    // {id: 'profile', label: 'Profilo', panel: 'ProfilePanel'},
-
-    // {id: 'dashboard', label: 'Dashboard', panel: 'DashboardPanel'},
-    // {id: 'campaigns', label: 'Le Mie Campagne', panel: 'EventsPanel'},
-    // {id: 'feedback', label: 'Feedback', panel: 'FeedbackPanel'},
-    // {id: 'profile', label: 'Profilo', panel: 'ProfilePanel'},
-
-    // {id: 'dashboard', label: 'Dashboard', panel: 'DashboardPanel'},
-    // {id: 'campaigns', label: 'Le Mie Campagne', panel: 'EventsPanel'},
-    // {id: 'feedback', label: 'Feedback', panel: 'FeedbackPanel'},
-    // {id: 'profile', label: 'Profilo', panel: 'ProfilePanel'},
 ]
 
 const ALLOWED_BY_ROLE: Record<Exclude<string, undefined>, Tab['key'][]> = {
-    ADMIN: ['general', 'artist'],
+    ADMIN: ['admin-artist-management', 'admin-fan-management'],
     ARTIST: ['general'],
     VENUE: ['general'],
     FAN: ['general'],

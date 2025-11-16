@@ -3,11 +3,11 @@ import ReactDOM from 'react-dom/client';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import App from './App';
 import './styles/global.scss';
-import {UIWrapper} from "./components/UIWrapper.tsx";
+import {UIWrapper} from "@components/context/UIWrapper.tsx";
 import {store} from "./store/store.ts";
 import {Provider} from "react-redux";
 import 'leaflet/dist/leaflet.css';
-import {AuthProvider} from "./components/AuthContext.tsx";
+import {AuthProvider} from "@components/context/AuthContext.tsx";
 
 const qc = new QueryClient();
 

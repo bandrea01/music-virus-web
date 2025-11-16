@@ -1,7 +1,7 @@
 import {Box, IconButton, Typography} from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import {type IUserProfile, useAuth} from "./AuthContext.tsx";
+import {type IUserProfile, useAuth} from "./context/AuthContext.tsx";
 import {useNavigate} from "react-router-dom";
 
 type TopbarComponentProps = {
@@ -18,7 +18,7 @@ const TopbarComponent = (
     return (
         <Box className="home__header">
             <Box className="home__header-left">
-                <img src="/complete_logo.png" alt="Music Virus"/>
+                <img src="/complete_logo.png" alt="Music Virus" draggable={false}/>
             </Box>
             <Box className="home__header-right" gap={2}>
                 <Box display="flex" alignItems="center">

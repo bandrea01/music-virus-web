@@ -6,7 +6,7 @@ import React, {
     useReducer,
     type ReactNode,
 } from 'react';
-import api, { getToken, setToken as persistToken } from '../apiService/axios';
+import api, { getToken, setToken as persistToken } from '@apiService/axios.ts';
 
 export const AuthRole = {
     ROLE_ADMIN: 'ROLE_ADMIN',
@@ -60,7 +60,6 @@ function saveProfileUser(profile: IUserProfile | null) {
     else localStorage.removeItem(LS_KEYS.PROFILE_USER);
 }
 
-/** ─────────── Stato & Reducer ─────────── */
 type State = {
     authUser: IAuthUser | null;
     profileUser: IUserProfile | null;
@@ -93,19 +92,14 @@ function reducer(state: State, action: Action): State {
     }
 }
 
-/** ─────────── Context API ─────────── */
 interface AuthContextType {
     authUser: IAuthUser | null;
     profileUser: IUserProfile | null;
     loading: boolean;
     isAuthenticated: boolean;
-    /** Imposta auth + token + persist */
     setAuthUser: (user: IAuthUser | null) => void;
-    /** Imposta profilo + persist */
     setProfileUser: (profile: IUserProfile | null) => void;
-    /** Imposta entrambi (utile dopo login) */
     login: (user: IAuthUser, profile?: IUserProfile | null) => void;
-    /** Logout completo */
     logout: () => void;
 }
 

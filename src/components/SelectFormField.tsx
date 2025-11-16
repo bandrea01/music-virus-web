@@ -97,6 +97,7 @@ function SelectFormFieldRender<T extends FieldValues>({
             error={!!error}
             helperText={!disabled ? error?.message : ''}
             value={normalizedValue as any ?? ''}
+            // @ts-ignore
             onChange={handleChange}
             onBlur={onBlur}
             SelectProps={{

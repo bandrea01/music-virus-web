@@ -1,2 +1,2 @@
-export * from "./HomePage";
-export * from "./getPanelFromRole.ts";
+export * from "./MainPage.tsx";
+export * from "./tabsHelper.ts";

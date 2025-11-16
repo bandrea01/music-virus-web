@@ -26,3 +26,30 @@ export type UpdateProfileDTO = {
         lng: number;
     };
 }
+
+export type ArtistProfileDTO = {
+    userId: string;
+    name: string;
+    surname: string;
+    email: string;
+    artistGenres: string[];
+    artistSocial: string;
+    enabled: boolean;
+    approved: boolean;
+}
+
+export type UserProfileDTO = {
+    userId: string;
+    name: string;
+    surname: string;
+    email: string;
+    enabled: boolean;
+}
+
+export type ArtistListResponseDTO = {
+    artists: ArtistProfileDTO[];
+}
+
+export type UserListResponseDTO = {
+    fans: UserProfileDTO[];
+}
