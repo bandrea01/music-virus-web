@@ -38,7 +38,20 @@ export type ArtistProfileDTO = {
     approved: boolean;
 }
 
-export type UserProfileDTO = {
+export type VenueProfileDTO = {
+    userId: string;
+    name: string;
+    surname: string;
+    email: string;
+    enabled: boolean;
+    venueName: string;
+    venueAddress: {
+        latitude: number;
+        longitude: number;
+    };
+}
+
+export type FanProfileDTO = {
     userId: string;
     name: string;
     surname: string;
@@ -50,6 +63,10 @@ export type ArtistListResponseDTO = {
     artists: ArtistProfileDTO[];
 }
 
-export type UserListResponseDTO = {
-    fans: UserProfileDTO[];
+export type FanListResponseDTO = {
+    fans: FanProfileDTO[];
+}
+
+export type VenueListResponseDTO = {
+    venues: VenueProfileDTO[];
 }

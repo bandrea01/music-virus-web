@@ -34,6 +34,7 @@ const UserCardComponent = ({
             sx={{
                 bgcolor: `${backgroundCardColor} !important`,
                 borderColor: `${borderCardColor} !important`,
+                borderWidth: "3px !important",
                 padding: "20px",
                 borderRadius: "15px",
                 opacity: "100%",
@@ -49,11 +50,20 @@ const UserCardComponent = ({
                             {avatarText}
                         </Avatar>
                     </Box>
-                    <Box display="flex" alignItems="start" gap={1}>
-                        <Box display="flex" flexDirection="column">
-                            <Typography fontSize="20px" color="white" fontWeight="bold">
-                                {primaryContent}
-                            </Typography>
+                    <Box display="flex" alignItems="start" width="100%" gap={1}>
+                        <Box display="flex" flexDirection="column" alignItems="center">
+                            <Box display="flex" justifyContent="space-between" gap={2} width="450px">
+                                <Typography fontSize="20px" color="white" fontWeight="bold">
+                                    {primaryContent}
+                                </Typography>
+                                {flagsContent &&
+                                    <Box display="flex" alignItems="right" gap={1} mt={0.5}>
+                                        {flagsContent.map((flag, idx) => (
+                                            <React.Fragment key={idx}>{flag}</React.Fragment>
+                                        ))}
+                                    </Box>
+                                }
+                            </Box>
                             <Typography fontSize="12px" color="#fff">
                                 {secondaryContent}
                             </Typography>
@@ -61,13 +71,6 @@ const UserCardComponent = ({
                                 {otherContent}
                             </Box>
                         </Box>
-                        {flagsContent &&
-                            <Box display="flex" alignItems="center" gap={0.5} mt={0.5}>
-                                {flagsContent.map((flag, idx) => (
-                                    <React.Fragment key={idx}>{flag}</React.Fragment>
-                                ))}
-                            </Box>
-                        }
                     </Box>
                 </Box>
                 {actions &&
@@ -79,6 +82,7 @@ const UserCardComponent = ({
                                         key={idx}
                                         variant="contained"
                                         sx={{
+                                            minWidth: "160px",
                                             backgroundColor: "#4A16E686",
                                             '&:hover': {scale: 1.05, backgroundColor: "#5E0DD8A5"}
                                         }}

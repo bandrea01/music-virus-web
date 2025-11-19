@@ -4,15 +4,15 @@ import {useAppDispatch} from '@store/hook.ts';
 import {setSnackbarError} from '@store/snackbar/slice.ts';
 import {getAxiosErrorMessage} from "@apiService/axios.ts";
 import type {AxiosError} from "axios";
-import {getUsersList} from "@pages/homePage/api/profile.ts";
-import type {FanListResponseDTO} from "@pages/homePage/api/types.ts";
+import type {VenueListResponseDTO} from "@pages/homePage/api/types.ts";
+import {getVenuesList} from "@pages/homePage/api/profile.ts";
 
-export function useGetUsers() {
+export function useGetVenues() {
     const dispatch = useAppDispatch();
 
-    const query = useQuery<FanListResponseDTO, AxiosError>({
-        queryKey: ['users'],
-        queryFn: getUsersList,
+    const query = useQuery<VenueListResponseDTO, AxiosError>({
+        queryKey: ['venues'],
+        queryFn: getVenuesList,
         retry: 0,
     });
 

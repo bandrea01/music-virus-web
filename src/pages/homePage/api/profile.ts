@@ -20,7 +20,11 @@ export async function getArtistList() {
 
 export async function getUsersList() {
     const {data} = await api.get(RoutesEnum.FAN_LIST);
-    console.log(data);
+    return data;
+}
+
+export async function getVenuesList() {
+    const {data} = await api.get(RoutesEnum.VENUE_LIST);
     return data;
 }
 

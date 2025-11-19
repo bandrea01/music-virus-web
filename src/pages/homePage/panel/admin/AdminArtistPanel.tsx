@@ -7,10 +7,11 @@ import {approveArtist, banUser, unapproveArtist, unbanUser} from "@pages/homePag
 import {useAppDispatch} from "@store/hook.ts";
 import {setSnackbarSuccess} from "@store/snackbar/slice.ts";
 import UserCardComponent from "@components/UserCardComponent.tsx";
+import {sortArtists} from "@/utils";
 
 const getCardColors = (approved: boolean, enabled: boolean) => {
     const backgroundColor = enabled ? '#132543' : '#242835';
-    const borderColor = approved ? '' : 'rgba(191,157,60,0.4)';
+    const borderColor = (approved || !enabled) ? '' : 'rgba(191,157,60,0.67)';
     const avatarColor = enabled ? '#274b7a' : '#202133';
     return {backgroundColor, borderColor, avatarColor};
 }
@@ -49,7 +50,8 @@ const AdminArtistPanel = () => {
     const {openPopup, closePopup} = usePopup();
     const dispatch = useAppDispatch();
 
-    const artists = data?.artists || [];
+    const datas = data?.artists || [];
+    const artists = sortArtists(datas);
 
     const handleRefetchLogic = () => {
         refetch().then(() => {});

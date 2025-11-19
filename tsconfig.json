@@ -1,20 +1,43 @@
 {
   "files": [],
   "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.node.json"
+    }
   ],
-  "include": ["src"],
+  "include": [
+    "src"
+  ],
   "compilerOptions": {
     "baseUrl": ".",
-    "types": ["vite/client"],
+    "types": [
+      "vite/client"
+    ],
     "paths": {
-      "@/*": ["src/*"],
-      "@components/*": ["./src/components/*"],
-      "@apiService/*": ["./src/apiService/*"],
-      "@pages/*": ["./src/pages/*"],
-      "@store/*": ["./src/store/*"],
-      "@styles/*": ["./src/styles/*"]
+      "@/*": [
+        "src/*"
+      ],
+      "@components/*": [
+        "./src/components/*"
+      ],
+      "@apiService/*": [
+        "./src/apiService/*"
+      ],
+      "@pages/*": [
+        "./src/pages/*"
+      ],
+      "@store/*": [
+        "./src/store/*"
+      ],
+      "@styles/*": [
+        "./src/styles/*"
+      ],
+      "@utils/*": [
+        "./src/utils/*"
+      ]
     }
   }
 }

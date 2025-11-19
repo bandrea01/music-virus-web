@@ -31,7 +31,7 @@ const SidebarComponent: React.FC<SidebarComponentProps> = ({
                             selected={active === tab.key}
                             onClick={() => {
                                 setActive(tab.key);
-                                navigate(`/${tab.key}`);
+                                navigate(`/music-virus/${tab.key}`);
                             }}
                             sx={{
                                 gap: 1,

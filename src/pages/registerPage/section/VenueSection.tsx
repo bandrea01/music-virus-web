@@ -2,7 +2,7 @@ import React, {useMemo, useState} from "react";
 import type {LatLngLiteral} from "leaflet";
 import {useFormContext} from "react-hook-form";
 import {MapDialog} from "./MapDialog.tsx";
-import {TextFormField} from "../../../components/TextFormField.tsx";
+import {TextFormField} from "@/components";
 
 type VenueFormValues = {
     venueName: string;
@@ -27,6 +27,8 @@ export const VenueSection: React.FC = () => {
                 control={control}
                 name="venueName"
                 label="Indirizzo"
+                onClick={() => setOpen(true)}
+                sx={{cursor: "pointer"}}
             />
             <span>{coordsDisplay}</span>
             <MapDialog control={control} open={open} onClose={() => setOpen(false)}/>

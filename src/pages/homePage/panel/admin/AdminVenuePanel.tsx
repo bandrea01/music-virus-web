@@ -1,12 +1,13 @@
 import PanelPaperComponent from "@components/PanelPaperComponent.tsx";
-import {Box, Typography} from "@mui/material";
+import {Box, Button, Typography} from "@mui/material";
 import {useEffect} from "react";
 import {usePopup} from "@components/context/PopupContextProvider.tsx";
 import {banUser, unbanUser} from "@pages/homePage/api/admin.ts";
 import {useAppDispatch} from "@store/hook.ts";
 import {setSnackbarSuccess} from "@store/snackbar/slice.ts";
 import UserCardComponent from "@components/UserCardComponent.tsx";
-import {useGetUsers} from "@pages/homePage/hooks/useGetUsers.ts";
+import PinDropOutlinedIcon from "@mui/icons-material/PinDropOutlined";
+import {useGetVenues} from "@pages/homePage/hooks/useGetVenues.ts";
 
 const getCardColors = (enabled: boolean) => {
     const backgroundColor = enabled ? '#132543' : '#242835';
@@ -29,15 +30,36 @@ const bannedComponent = (banned: boolean) => {
     );
 }
 
-const AdminFansPanel = () => {
-    const {data, refetch} = useGetUsers();
+const addressComponent = (venueAddress: { latitude: number, longitude: number }) => {
+    return (
+        <Button style={{border: "2px", borderColor: "white"}}>
+            <PinDropOutlinedIcon sx={{height: "20px", color: "#fafafa"}}/>
+            <Typography
+                color="#fafafa"
+                fontSize="12px"
+                sx={{cursor: 'pointer', flexWrap: 'nowrap'}}
+                onClick={() => {
+                    const url = `https://www.google.com/maps/search/?api=1&query=${venueAddress.latitude},${venueAddress.longitude}`;
+                    window.open(url, '_blank');
+                }}
+            >
+                Indirizzo
+            </Typography>
+        </Button>
+    );
+}
+
+const AdminVenuePanel = () => {
+    const {data, refetch} = useGetVenues();
     const {openPopup, closePopup} = usePopup();
     const dispatch = useAppDispatch();
 
-    const fans = data?.fans || [];
+    const venues = data?.venues || [];
+    console.log("venues", venues);
 
     const handleRefetchLogic = () => {
-        refetch().then(() => {});
+        refetch().then(() => {
+        });
         closePopup();
         dispatch(setSnackbarSuccess("Azione eseguita correttamente!"))
     }
@@ -67,21 +89,26 @@ const AdminFansPanel = () => {
             title="Gestione Esercenti"
         >
             <Box display="grid" gap={2} p={2} sx={{flex: 1, overflowY: 'auto'}}>
-                {fans.map((fan) => {
-                    const {backgroundColor, avatarColor} = getCardColors(fan.enabled);
+                {venues.map((venue) => {
+                    const {backgroundColor, avatarColor} = getCardColors(venue.enabled);
                     return (
                         <UserCardComponent
                             backgroundCardColor={backgroundColor}
                             avatarColor={avatarColor}
-                            avatarText={`${fan.name[0]}${fan.surname[0]}`}
-                            primaryContent={`${fan.name} ${fan.surname}`}
-                            secondaryContent={fan.email}
-                            flagsContent={[bannedComponent(fan.enabled)]}
+                            avatarText={`${venue.name[0]}${venue.surname[0]}`}
+                            primaryContent={`${venue.name} ${venue.surname} - ${venue.venueName}`}
+                            secondaryContent={venue.email}
+                            flagsContent={
+                                [
+                                    addressComponent(venue.venueAddress),
+                                    bannedComponent(venue.enabled),
+                                ]
+                            }
                             actions={
                                 [
                                     {
-                                        text: fan.enabled ? "Banna" : "Abilita",
-                                        onConfirm: () => handleEnableUser(fan.enabled, fan.userId)
+                                        text: venue.enabled ? "Banna" : "Abilita",
+                                        onConfirm: () => handleEnableUser(venue.enabled, venue.userId)
                                     }
                                 ]
                             }
@@ -93,4 +120,4 @@ const AdminFansPanel = () => {
     );
 }
 
-export default AdminFansPanel;
+export default AdminVenuePanel;

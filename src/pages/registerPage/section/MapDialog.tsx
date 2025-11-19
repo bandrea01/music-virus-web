@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Box} from "@mui/material";
 import {useFormContext} from "react-hook-form";
 import type {LatLngLiteral} from "leaflet";
-import {MapPicker, TextFormField} from "../../../components";
+import {MapPicker, TextFormField} from "@/components";
 import DialogComponent from "@components/DialogComponent.tsx";
 
 type FormValues = {
@@ -22,7 +22,9 @@ export const MapDialog: React.FC<MapDialogProps> = ({open, onClose, control}) =>
     const [tempVenueName, setTempVenueName] = useState<string>("");
     const [tempVenueAddress, setTempVenueAddress] = useState<LatLngLiteral | null>(null);
 
-    // inizializza i buffer quando si apre la modale
+    console.log("Temp Venue Address:", tempVenueAddress);
+    console.log("Temp Venue Name:", tempVenueName);;
+
     useEffect(() => {
         if (open) {
             setTempVenueName(getValues("venueName") ?? "");

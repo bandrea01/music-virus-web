@@ -6,6 +6,7 @@ export const RoutesEnum = {
     PROFILE: '/users/profile',
     ARTIST_LIST: '/users/artists',
     FAN_LIST: '/users/fans',
+    VENUE_LIST: '/users/venues',
 
     //ADMIN
     APPROVE_ARTIST: '/admin/artist/approve',
