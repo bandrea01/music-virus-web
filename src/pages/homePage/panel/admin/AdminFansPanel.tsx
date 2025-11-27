@@ -66,7 +66,7 @@ const AdminFansPanel = () => {
 
     return (
         <PanelPaperComponent
-            title="Gestione Esercenti"
+            title="Gestione Fans"
         >
             <Box display="grid" gap={2} p={2} sx={{flex: 1, overflowY: 'auto'}}>
                 {fans.map((fan) => {
