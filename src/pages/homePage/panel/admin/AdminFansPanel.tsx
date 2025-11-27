@@ -7,6 +7,8 @@ import {useAppDispatch} from "@store/hook.ts";
 import {setSnackbarSuccess} from "@store/snackbar/slice.ts";
 import UserCardComponent from "@components/UserCardComponent.tsx";
 import {useGetUsers} from "@pages/homePage/hooks/useGetUsers.ts";
+import NotInterestedIcon from "@mui/icons-material/NotInterested";
+import HowToRegOutlinedIcon from "@mui/icons-material/HowToRegOutlined";
 
 const getCardColors = (enabled: boolean) => {
     const backgroundColor = enabled ? '#132543' : '#242835';
@@ -81,7 +83,8 @@ const AdminFansPanel = () => {
                                 [
                                     {
                                         text: fan.enabled ? "Banna" : "Abilita",
-                                        onConfirm: () => handleEnableUser(fan.enabled, fan.userId)
+                                        onConfirm: () => handleEnableUser(fan.enabled, fan.userId),
+                                        startIcon: fan.enabled ? <NotInterestedIcon/> : <HowToRegOutlinedIcon/>
                                     }
                                 ]
                             }

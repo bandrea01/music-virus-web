@@ -28,6 +28,10 @@ export async function getVenuesList() {
     return data;
 }
 
+export async function getAdminStatistics() {
+    const {data} = await api.get(RoutesEnum.ADMIN_STATS);
+    return data;
+}
 
 //Mapping
 export function mapProfileEditFormValuesToDTO(values: ProfileEditFormValues): UpdateProfileDTO {

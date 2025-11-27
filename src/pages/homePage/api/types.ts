@@ -59,6 +59,15 @@ export type FanProfileDTO = {
     enabled: boolean;
 }
 
+export type ProfileCounterDTO = {
+    type: string;
+    count: number;
+}
+
+export type StatisticDTO = {
+    counters: ProfileCounterDTO[];
+}
+
 export type ArtistListResponseDTO = {
     artists: ArtistProfileDTO[];
 }

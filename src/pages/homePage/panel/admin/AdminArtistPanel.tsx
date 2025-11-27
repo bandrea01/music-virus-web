@@ -8,6 +8,10 @@ import {useAppDispatch} from "@store/hook.ts";
 import {setSnackbarSuccess} from "@store/snackbar/slice.ts";
 import UserCardComponent from "@components/UserCardComponent.tsx";
 import {sortArtists} from "@/utils";
+import NotInterestedIcon from "@mui/icons-material/NotInterested";
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import HowToRegOutlinedIcon from '@mui/icons-material/HowToRegOutlined';
 
 const getCardColors = (approved: boolean, enabled: boolean) => {
     const backgroundColor = enabled ? '#132543' : '#242835';
@@ -127,11 +131,13 @@ const AdminArtistPanel = () => {
                                 [
                                     {
                                         text: artist.enabled ? "Banna" : "Abilita",
-                                        onConfirm: () => handleEnableArtist(artist.enabled, artist.userId)
+                                        onConfirm: () => handleEnableArtist(artist.enabled, artist.userId),
+                                        startIcon: artist.enabled? <NotInterestedIcon/> : <HowToRegOutlinedIcon/>
                                     },
                                     {
                                         text: artist.approved ? "Non approvare" : "Approva",
-                                        onConfirm: () => handleApproveArtist(artist.approved, artist.userId)
+                                        onConfirm: () => handleApproveArtist(artist.approved, artist.userId),
+                                        startIcon: artist.approved? <RemoveCircleOutlineIcon/> : <CheckCircleOutlineIcon/>
                                     }
                                 ]
                             }

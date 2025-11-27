@@ -5,8 +5,8 @@ import {useNavigate} from "react-router-dom";
 import {getAxiosErrorMessage} from "@apiService/axios.ts";
 import type {AxiosError} from "axios";
 import {useAuth} from "@/components";
-import {updateProfileRequest} from "./profile.ts";
-import type {UpdateProfileDTO} from "./types.ts";
+import {updateProfileRequest} from "../api/profile.ts";
+import type {UpdateProfileDTO} from "../api/types.ts";
 
 export function useProfileEdit(): UseMutationResult<unknown, unknown, UpdateProfileDTO, unknown> {
     const dispatch = useAppDispatch();

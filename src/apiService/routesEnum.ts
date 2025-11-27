@@ -13,4 +13,5 @@ export const RoutesEnum = {
     UNAPPROVE_ARTIST: '/admin/artist/unapprove',
     BAN_USER: '/admin/disable',
     UNBAN_USER: '/admin/enable',
+    ADMIN_STATS: '/admin/stats',
 }

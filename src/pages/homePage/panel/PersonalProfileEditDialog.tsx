@@ -1,11 +1,11 @@
 import React, {useEffect, useMemo, useRef} from "react";
 import {Box, Chip} from "@mui/material";
-import {getSelectOptions, type IUserProfile, SelectFormField, TextFormField, useAuth} from "../../../components";
+import {getSelectOptions, type IUserProfile, SelectFormField, TextFormField, useAuth} from "@/components";
 import DialogComponent from "../../../components/DialogComponent.tsx";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {getProfileEditSchemaAndDefaults} from "../form/profileEditSchema.ts";
-import {useProfileEdit} from "../api/useProfileEdit.ts";
+import {useProfileEdit} from "../hooks/useProfileEdit.ts";
 import {MapDialog} from "../../registerPage/section/MapDialog.tsx";
 import {mapProfileEditFormValuesToDTO} from "../api/profile.ts";
 import {z} from "zod";

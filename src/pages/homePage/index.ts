@@ -1,2 +1,2 @@
 export * from "./MainPage.tsx";
-export * from "./tabsHelper.ts";
+export * from "./helpers/tabsHelper.ts";

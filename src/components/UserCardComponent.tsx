@@ -13,6 +13,7 @@ type UserCardComponentProps = {
     actions: {
         text: string;
         onConfirm: () => void;
+        startIcon?: React.ReactNode;
     }[];
 }
 
@@ -51,13 +52,13 @@ const UserCardComponent = ({
                         </Avatar>
                     </Box>
                     <Box display="flex" alignItems="start" width="100%" gap={1}>
-                        <Box display="flex" flexDirection="column" alignItems="center">
-                            <Box display="flex" justifyContent="space-between" gap={2} width="450px">
+                        <Box display="flex" flexDirection="column">
+                            <Box display="flex" justifyContent="space-between" gap={0.5} width="400px">
                                 <Typography fontSize="20px" color="white" fontWeight="bold">
                                     {primaryContent}
                                 </Typography>
                                 {flagsContent &&
-                                    <Box display="flex" alignItems="right" gap={1} mt={0.5}>
+                                    <Box display="flex" alignItems="center" gap={1} mt={0.5}>
                                         {flagsContent.map((flag, idx) => (
                                             <React.Fragment key={idx}>{flag}</React.Fragment>
                                         ))}
@@ -80,12 +81,15 @@ const UserCardComponent = ({
                                 {actions.map((action, idx) => (
                                     <Button
                                         key={idx}
-                                        variant="contained"
+                                        variant="text"
                                         sx={{
+                                            color: '#fafafa',
+                                            borderColor: '#fafafa',
                                             minWidth: "160px",
-                                            backgroundColor: "#4A16E686",
+                                            justifyContent: "flex-start",
                                             '&:hover': {scale: 1.05, backgroundColor: "#5E0DD8A5"}
                                         }}
+                                        startIcon={action.startIcon}
                                         onClick={action.onConfirm}
                                     >
                                         {action.text}

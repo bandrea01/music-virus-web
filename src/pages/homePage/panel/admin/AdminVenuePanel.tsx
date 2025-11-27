@@ -8,6 +8,8 @@ import {setSnackbarSuccess} from "@store/snackbar/slice.ts";
 import UserCardComponent from "@components/UserCardComponent.tsx";
 import PinDropOutlinedIcon from "@mui/icons-material/PinDropOutlined";
 import {useGetVenues} from "@pages/homePage/hooks/useGetVenues.ts";
+import NotInterestedIcon from "@mui/icons-material/NotInterested";
+import HowToRegOutlinedIcon from "@mui/icons-material/HowToRegOutlined";
 
 const getCardColors = (enabled: boolean) => {
     const backgroundColor = enabled ? '#132543' : '#242835';
@@ -33,9 +35,9 @@ const bannedComponent = (banned: boolean) => {
 const addressComponent = (venueAddress: { latitude: number, longitude: number }) => {
     return (
         <Button style={{border: "2px", borderColor: "white"}}>
-            <PinDropOutlinedIcon sx={{height: "20px", color: "#fafafa"}}/>
+            <PinDropOutlinedIcon sx={{height: "20px", color: "#dd84ff"}}/>
             <Typography
-                color="#fafafa"
+                color={"#dd84ff"}
                 fontSize="12px"
                 sx={{cursor: 'pointer', flexWrap: 'nowrap'}}
                 onClick={() => {
@@ -108,7 +110,8 @@ const AdminVenuePanel = () => {
                                 [
                                     {
                                         text: venue.enabled ? "Banna" : "Abilita",
-                                        onConfirm: () => handleEnableUser(venue.enabled, venue.userId)
+                                        onConfirm: () => handleEnableUser(venue.enabled, venue.userId),
+                                        startIcon: venue.enabled ? <NotInterestedIcon/> : <HowToRegOutlinedIcon/>
                                     }
                                 ]
                             }

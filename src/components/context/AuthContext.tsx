@@ -55,7 +55,6 @@ function saveAuthUser(user: IAuthUser | null) {
     else localStorage.removeItem(LS_KEYS.AUTH_USER);
 }
 function saveProfileUser(profile: IUserProfile | null) {
-    console.log('Salvo profilo utente:', profile)
     if (profile) localStorage.setItem(LS_KEYS.PROFILE_USER, JSON.stringify(profile));
     else localStorage.removeItem(LS_KEYS.PROFILE_USER);
 }
@@ -63,7 +62,7 @@ function saveProfileUser(profile: IUserProfile | null) {
 type State = {
     authUser: IAuthUser | null;
     profileUser: IUserProfile | null;
-    loading: boolean; // bootstrap in corso
+    loading: boolean;
 };
 
 type Action =
@@ -143,7 +142,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                     persistToken(nextToken);
                 } else {
                     delete api.defaults.headers.common['Authorization'];
-                    persistToken(''); // o rimuovi nel tuo servizio
+                    persistToken('');
                 }
 
                 dispatch({ type: 'HYDRATE', authUser: nextAuth, profileUser: nextProfile });
@@ -198,7 +197,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-/** Hook */
 export const useAuth = () => {
     const ctx = useContext(AuthContext);
     if (!ctx) throw new Error('useAuth must be used within AuthProvider');

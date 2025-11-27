@@ -1,24 +1,30 @@
 import React from "react";
 import {Box, Divider, List, ListItemButton, ListItemIcon, ListItemText, Typography} from "@mui/material";
-import type {Tab} from "@pages/homePage/tabsHelper.ts";
+import type {Tab} from "@/utils/tabsHelper.ts";
 import {useNavigate} from "react-router-dom";
+import {selectActiveTab, setActiveTab} from "@store/sidebar/slice.ts";
+import {useDispatch, useSelector} from "react-redux";
 
 interface SidebarComponentProps {
     menu: Tab[];
-    active: string;
-    setActive: (key: string) => void;
     sx?: object;
 }
 
 const SidebarComponent: React.FC<SidebarComponentProps> = ({
                                                                menu,
-                                                               active,
-                                                               setActive,
                                                                sx
                                                            }) => {
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const activeTab = useSelector(selectActiveTab);
+
     console.log(menu);
+
+    const handleClick = (key: string) => {
+        dispatch(setActiveTab(key));
+        navigate(`/music-virus/${key}`);
+    };
 
     return (
         <Box className="home__sidebar" sx={{...sx}}>
@@ -28,11 +34,8 @@ const SidebarComponent: React.FC<SidebarComponentProps> = ({
                     {menu.map((tab) => (
                         <ListItemButton
                             key={tab.key}
-                            selected={active === tab.key}
-                            onClick={() => {
-                                setActive(tab.key);
-                                navigate(`/music-virus/${tab.key}`);
-                            }}
+                            selected={activeTab === tab.key}
+                            onClick={() => handleClick(tab.key)}
                             sx={{
                                 gap: 1,
                                 '&:hover': {bgcolor: '#6b21a8'},
