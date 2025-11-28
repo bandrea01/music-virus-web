@@ -7,6 +7,7 @@ import type {AxiosError} from "axios";
 import {useAuth} from "@/components";
 import {updateProfileRequest} from "../api/profile.ts";
 import type {UpdateProfileDTO} from "../api/types.ts";
+import {MusicVirusRoutesEnum} from "@/utils";
 
 export function useProfileEdit(): UseMutationResult<unknown, unknown, UpdateProfileDTO, unknown> {
     const dispatch = useAppDispatch();
@@ -22,7 +23,7 @@ export function useProfileEdit(): UseMutationResult<unknown, unknown, UpdateProf
         onSuccess: async () => {
             dispatch(setSnackbarSuccess('Profilo modificato con successo! Effettua nuovamente il login'));
             logout();
-            navigate('/login', {replace: true});
+            navigate(MusicVirusRoutesEnum.LOGIN, {replace: true});
         },
         onError: (err: AxiosError) => {
             dispatch(setSnackbarError(getAxiosErrorMessage(err, "Errore durante la modifica del profilo!")));

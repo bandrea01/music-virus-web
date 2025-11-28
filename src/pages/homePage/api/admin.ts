@@ -20,3 +20,4 @@ export async function unbanUser(userId: string) {
     const {data} = await api.patch(`${RoutesEnum.UNBAN_USER}/${userId}`);
     return data;
 }
+

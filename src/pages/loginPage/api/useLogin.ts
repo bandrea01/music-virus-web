@@ -9,6 +9,7 @@ import type {AxiosError} from "axios";
 import {type AuthRole, type IUserProfile, useAuth} from "@/components";
 import {profileRequest} from "../../homePage/api/profile.ts";
 import type {ProfileResponseDTO} from "../../homePage/api/types.ts";
+import {MusicVirusRoutesEnum} from "@/utils";
 
 export function useLogin(): UseMutationResult<JwtSessionResponseDTO, unknown, LoginDTO, unknown> {
     const dispatch = useAppDispatch();
@@ -39,7 +40,7 @@ export function useLogin(): UseMutationResult<JwtSessionResponseDTO, unknown, Lo
                 setProfileUser(profile as IUserProfile);
             } else {
                 dispatch(setSnackbarError("Errore nel caricamento del profilo!"));
-                navigate("/login");
+                navigate(MusicVirusRoutesEnum.LOGIN);
             }
             navigate('/homepage', {replace: true});
         },

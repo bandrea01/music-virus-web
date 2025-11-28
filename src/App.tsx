@@ -9,7 +9,7 @@ import ErrorPage from "@pages/ErrorPage.tsx";
 import AdminArtistPanel from "@pages/homePage/panel/admin/AdminArtistPanel.tsx";
 import AdminFansPanel from "@pages/homePage/panel/admin/AdminFansPanel.tsx";
 import AdminVenuePanel from "@pages/homePage/panel/admin/AdminVenuePanel.tsx";
-import AdminGeneralPanel from "@pages/homePage/panel/admin/AdminGeneralPanel.tsx";
+import AdminGeneralPanel from "@pages/homePage/panel/admin/adminGeneralPanel/AdminGeneralPanel.tsx";
 import {MusicVirusRoutesEnum} from "@/utils";
 import ProtectedRoute from "@components/context/ProtectedRoute.tsx";
 

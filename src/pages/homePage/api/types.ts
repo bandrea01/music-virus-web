@@ -66,6 +66,7 @@ export type ProfileCounterDTO = {
 
 export type StatisticDTO = {
     counters: ProfileCounterDTO[];
+    artistApprovingRequestsCounter: number;
 }
 
 export type ArtistListResponseDTO = {

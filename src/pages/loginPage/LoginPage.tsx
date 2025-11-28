@@ -8,6 +8,7 @@ import {initialValuesloginSchema, type LoginFormValues, loginSchema} from "./for
 import {TextFormField, useAuth} from "@/components";
 import {useNavigate} from "react-router-dom";
 import {useEffect} from "react";
+import {MusicVirusRoutesEnum} from "@/utils";
 
 export default function LoginPage() {
     const {logout} = useAuth();
@@ -15,7 +16,7 @@ export default function LoginPage() {
 
     useEffect(() => {
         logout();
-        navigate('/login', { replace: true });
+        navigate(MusicVirusRoutesEnum.LOGIN, { replace: true });
     }, []);
 
     //Form

@@ -6,6 +6,7 @@ import type {UserTypeId} from '@/pages';
 import {registerRequest} from './register.ts';
 import type {AxiosError} from "axios";
 import {getAxiosErrorMessage} from "@/apiService/axios.ts";
+import {MusicVirusRoutesEnum} from "@/utils";
 
 export function useUserRegisterUser(userType: UserTypeId) {
     const dispatch = useAppDispatch();
@@ -19,7 +20,7 @@ export function useUserRegisterUser(userType: UserTypeId) {
         retry: 0,
         onSuccess: () => {
             dispatch(setSnackbarSuccess('Registrazione effettuata!\n Effettua il login'));
-            navigate('/login');
+            navigate(MusicVirusRoutesEnum.LOGIN);
         },
         onError: (err: AxiosError) => {
             dispatch(setSnackbarError(getAxiosErrorMessage(err, "Errore durante la registrazione!")));

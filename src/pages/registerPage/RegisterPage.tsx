@@ -12,6 +12,7 @@ import {useUserRegisterForm} from "./form/useRegisterForm.ts";
 import '../../styles/global.scss';
 import '../loginPage/LoginPage.scss';
 import {TextFormField} from "../../components";
+import {MusicVirusRoutesEnum} from "@/utils";
 
 const isUserType = (v: unknown): v is UserType =>
     v === 'fan' || v === 'artist' || v === 'venue';
@@ -241,7 +242,7 @@ export default function RegisterPage() {
 
                                             <Typography variant="body2" color="white">
                                                 Hai già un account?{' '}
-                                                <Link component={RouterLink} to="/login">
+                                                <Link component={RouterLink} to={MusicVirusRoutesEnum.LOGIN}>
                                                     Accedi
                                                 </Link>
                                             </Typography>

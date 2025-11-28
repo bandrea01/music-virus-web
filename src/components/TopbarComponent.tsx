@@ -3,6 +3,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import {type IUserProfile, useAuth} from "./context/AuthContext.tsx";
 import {useNavigate} from "react-router-dom";
+import {MusicVirusRoutesEnum} from "@/utils";
 
 type TopbarComponentProps = {
     profileUser: IUserProfile | null;
@@ -41,7 +42,7 @@ const TopbarComponent = (
                         sx={{cursor: 'pointer', marginTop: '3px'}}
                         onClick={() => {
                             logout();
-                            navigate('/login')
+                            navigate(MusicVirusRoutesEnum.LOGIN)
                         }}
                     />
                 </Box>

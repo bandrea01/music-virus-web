@@ -4,6 +4,7 @@ import Grid from '@mui/material/Grid';
 import '../../styles/global.scss';
 import './preRegisterPage.scss';
 import {useUserType} from "./useUserType.ts";
+import {MusicVirusRoutesEnum} from "@/utils";
 
 export default function PreRegisterPage() {
     const navigate = useNavigate();
@@ -91,7 +92,7 @@ export default function PreRegisterPage() {
                 <Box className="bottom">
                     <Typography className="bottom__login">
                         Hai già un account?
-                        <Box component="a" href="/login" className="bottom__login-link">Accedi qui</Box>
+                        <Box component="a" href={MusicVirusRoutesEnum.LOGIN} className="bottom__login-link">Accedi qui</Box>
                     </Typography>
                 </Box>
             </Container>
