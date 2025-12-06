@@ -2,7 +2,7 @@ name: Build & Deploy frontend (Oracle VM)
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
     paths:
       - 'frontend/**'
       - 'docker-compose.yml'
