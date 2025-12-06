@@ -1,0 +1,88 @@
+name: Build & Deploy frontend (Oracle VM)
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'frontend/**'
+      - 'docker-compose.yml'
+      - '.github/workflows/deploy-frontend.yml'
+
+concurrency:
+  group: deploy-frontend-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build_test_sync_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      #BUILD
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: |
+          npm ci
+
+      - name: Build frontend (Vite)
+        working-directory: ./frontend
+        run: |
+          npm run build
+          ls -la dist
+
+      - name: Start ssh-agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.ORACLE_SSH_KEY }}
+
+      - name: Add host to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H "${{ secrets.ORACLE_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Ensure remote frontend dirs
+        run: |
+          ssh ${{ secrets.ORACLE_USER }}@${{ secrets.ORACLE_HOST }} "\
+            mkdir -p /home/${{ secrets.ORACLE_USER }}/app/frontend && \
+            mkdir -p /home/${{ secrets.ORACLE_USER }}/app/frontend/dist \
+          "
+
+      - name: Upload frontend artifacts (dist, Dockerfile, nginx.conf)
+        run: |
+          # dist
+          scp -r frontend/dist \
+            ${{ secrets.ORACLE_USER }}@${{ secrets.ORACLE_HOST }}:/home/${{ secrets.ORACLE_USER }}/app/frontend/
+
+          # Dockerfile e nginx.conf del frontend
+          scp frontend/Dockerfile \
+              ${{ secrets.ORACLE_USER }}@${{ secrets.ORACLE_HOST }}:/home/${{ secrets.ORACLE_USER }}/app/frontend/Dockerfile
+
+          scp frontend/nginx.conf \
+              ${{ secrets.ORACLE_USER }}@${{ secrets.ORACLE_HOST }}:/home/${{ secrets.ORACLE_USER }}/app/frontend/nginx.conf
+
+      - name: Deploy frontend service with Docker Compose
+        run: |
+          ssh ${{ secrets.ORACLE_USER }}@${{ secrets.ORACLE_HOST }} "\
+            cd /home/${{ secrets.ORACLE_USER }}/app && \
+            docker compose up -d --build frontend && \
+            docker compose ps \
+          "
+
+      - name: Optional HTTP healthcheck
+        if: ${{ success() && vars.FRONTEND_HEALTHCHECK_URL != '' }}
+        run: |
+          for i in {1..12}; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" "${{ vars.FRONTEND_HEALTHCHECK_URL }}") || true
+            if [ "$code" = "200" ]; then exit 0; fi
+            sleep 5
+          done
+          exit 1
