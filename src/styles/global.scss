@@ -309,7 +309,7 @@ body {
 }
 
 .mv-dialog__content {
-  padding: $space-12;
+  padding: $space-14;
 }
 
 /* Footer azioni */
@@ -334,6 +334,32 @@ body {
   background-color: transparent !important;
   box-shadow: none !important;
   border-radius: 15px !important;
+
+  /* Chrome, Edge, Safari */
+  &::-webkit-scrollbar {
+    width: 6px;
+
+    &:hover {
+    }
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 999px;
+
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.35);
+  }
+
+  /* Firefox */
+  scrollbar-width: thin; // sottile
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 }
 
 
@@ -371,45 +397,40 @@ body {
   }
 }
 
-/* Base comune (OutlinedInput è usato sia da TextField che da Select) */
 .MuiInputBase-root {
-  color: var(--text);
+  color: #fafafa !important;
   background: rgba(96, 122, 159, 0.18);
   border-radius: var(--radius-xl);
-  min-height: 40px; /* altezza target coerente */
+  min-height: 40px;
   overflow: visible;
 
-  /* testuali (input) */
   .MuiInputBase-input {
-    padding: 10px 14px;         /* padding coerente */
+    padding: 10px 14px;
     line-height: 1.2;
+
     &::placeholder {
       color: var(--text-dim);
       opacity: 1;
     }
   }
 
-  /* area “button” del Select */
   .MuiSelect-select {
-    padding: 10px 14px;         /* uguale ai text input */
+    padding: 10px 14px;
     display: flex;
     align-items: center;
   }
 
-  /* icone (freccia select, adornment) */
   .MuiSelect-icon,
   .MuiInputAdornment-root {
     color: var(--text-dim);
   }
 
-  /* stato disabilitato */
   &.Mui-disabled {
     opacity: 0.6;
     cursor: not-allowed;
   }
 }
 
-/* Bordi/focus/hover/errore (Outlined) */
 .MuiOutlinedInput-root {
   border-radius: var(--radius-xl);
 
@@ -417,22 +438,23 @@ body {
     border-radius: inherit;
     border-color: var(--border);
   }
+
   &:hover .MuiOutlinedInput-notchedOutline {
     border-color: var(--border-2);
   }
+
   &.Mui-focused .MuiOutlinedInput-notchedOutline {
     border-color: #a855f7;
     border-width: 2px;
   }
 }
 
-/* Label (vale per TextField e per Select con InputLabel) */
 .MuiInputLabel-root {
   color: var(--text-dim);
 
   &.MuiInputLabel-outlined:not(.MuiInputlLabel-shrink) {
     top: 50% !important;
-    transform: translate(14px, -50%) scale(1) !important; /* 14px = padding X dell'input */
+    transform: translate(14px, -50%) scale(1) !important;
     transform-origin: left top;
   }
 
@@ -455,9 +477,29 @@ body {
   }
 }
 
+//Button
+.MuiButton-root {
+  color: white !important;
+  text-transform: capitalize !important;
+  font-size: 15px !important;
+  font-weight: bold !important;
+  border: 2px solid var(--border) !important;
+  background-color: #2a4370 !important;
+  border-radius: 17px !important;
+  padding: 6px 14px !important;
+
+  &:hover {
+    background-color: #4461a6 !important;
+    border-color: var(--border-2) !important;
+    transform: scale(1.03) !important;
+    transition: ease-in-out 0.2s !important;
+  }
+}
+
 /* Helper text */
 .MuiFormHelperText-root {
   color: var(--text-dim);
+
   .MuiFormControl-root.Mui-error & {
     color: #ef4444;
   }
@@ -480,8 +522,11 @@ body {
 /* Size small: allinea densità (se usi size="small") */
 .MuiInputBase-sizeSmall {
   min-height: 36px;
+
   .MuiInputBase-input,
-  .MuiSelect-select { padding: 8px 12px; }
+  .MuiSelect-select {
+    padding: 8px 12px;
+  }
 }
 
 /* =========================================
@@ -507,13 +552,36 @@ body {
   color: #fff !important;
   transition: background-color 0.15s ease;
 
-  &:hover { background-color: rgba(255, 255, 255, 0.08); }
-  &.Mui-selected { background-color: rgba(147, 51, 234, 0.25); }
-  &.Mui-selected:hover { background-color: rgba(147, 51, 234, 0.35); }
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+
+  &.Mui-selected {
+    background-color: rgba(147, 51, 234, 0.25);
+  }
+
+  &.Mui-selected:hover {
+    background-color: rgba(147, 51, 234, 0.35);
+  }
 }
 
-.MuiAlert-filledSuccess { background-color: #2e7d32 !important; color: #fff !important; }
-.MuiAlert-filledError   { background-color: #d32f2f !important; color: #fff !important; }
-.MuiAlert-filledWarning { background-color: #ed6c02 !important; color: #fff !important; }
-.MuiAlert-filledInfo    { background-color: #0288d1 !important; color: #fff !important; }
+.MuiAlert-filledSuccess {
+  background-color: #2e7d32 !important;
+  color: #fff !important;
+}
+
+.MuiAlert-filledError {
+  background-color: #d32f2f !important;
+  color: #fff !important;
+}
+
+.MuiAlert-filledWarning {
+  background-color: #ed6c02 !important;
+  color: #fff !important;
+}
+
+.MuiAlert-filledInfo {
+  background-color: #0288d1 !important;
+  color: #fff !important;
+}
 

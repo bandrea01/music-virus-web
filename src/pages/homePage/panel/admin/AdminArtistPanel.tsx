@@ -1,6 +1,6 @@
 import PanelPaperComponent from "@components/PanelPaperComponent.tsx";
 import {Box, Chip, Typography} from "@mui/material";
-import {useGetArtists} from "@pages/homePage/hooks/useGetArtists.tsx";
+import {useGetArtists} from "@pages/homePage/hooks/usersDomain.tsx";
 import {useEffect} from "react";
 import {usePopup} from "@components/context/PopupContextProvider.tsx";
 import {approveArtist, banUser, unapproveArtist, unbanUser} from "@pages/homePage/api/admin.ts";

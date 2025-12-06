@@ -1,7 +1,7 @@
 import React, {type PropsWithChildren} from 'react';
-import {useAppDispatch, useAppSelector} from '@store/hook.ts';
-import {SnackbarComponent} from '../SnackbarComponent.tsx';
-import {resetSnackbar, selectSnackbarIsOpen} from "@store/snackbar/slice.ts";
+import {useAppDispatch} from '@store/hook.ts';
+import {SnackbarComponent} from '@/components';
+import {resetSnackbar, selectSnackbarIsOpen, selectSnackbarMessage, selectSnackbarType} from "@store/snackbar/slice.ts";
 import {useSelector} from "react-redux";
 import {PopupContextProvider} from "@components/context/PopupContextProvider.tsx";
 import {PopupComponent} from "@components/PopupComponent.tsx";
@@ -11,8 +11,8 @@ export const UIWrapper: React.FC<PropsWithChildren> = ({children}) => {
 
     //Singleton
     const open = useSelector(selectSnackbarIsOpen);
-    const message = useAppSelector(state => state.snackbarReducer.message);
-    const type = useAppSelector(state => state.snackbarReducer.type);
+    const message = useSelector(selectSnackbarMessage);
+    const type = useSelector(selectSnackbarType);
 
     return (
         <>
@@ -24,6 +24,7 @@ export const UIWrapper: React.FC<PropsWithChildren> = ({children}) => {
                 open={open}
                 type={type}
                 message={message}
+                duration={5000}
                 onClose={() => dispatch(resetSnackbar())}
             />
         </>

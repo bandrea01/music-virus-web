@@ -4,14 +4,14 @@ import {FormProvider,} from 'react-hook-form';
 import {Box, Button, Card, CardContent, Container, Grid, Link, Stack, Typography,} from '@mui/material';
 import {initialValuesByType, type UserRegisterFormValues, type UserType} from './form/registerSchema.ts';
 import {useDispatch} from 'react-redux';
-import {setSnackbarError} from '../../store/snackbar/slice';
+import {setSnackbarError} from '@store/snackbar/slice.ts';
 import {ArtistSection} from './section/ArtistSection.tsx';
 import {VenueSection} from './section/VenueSection.tsx';
 import {useUserRegisterUser} from "./api/useUserRegisterUser.ts";
 import {useUserRegisterForm} from "./form/useRegisterForm.ts";
 import '../../styles/global.scss';
 import '../loginPage/LoginPage.scss';
-import {TextFormField} from "../../components";
+import {TextFormField} from "@/components";
 import {MusicVirusRoutesEnum} from "@/utils";
 
 const isUserType = (v: unknown): v is UserType =>

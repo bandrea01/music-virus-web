@@ -6,12 +6,20 @@ export const RoutesEnum = {
     PROFILE: '/users/profile',
     ARTIST_LIST: '/users/artists',
     FAN_LIST: '/users/fans',
-    VENUE_LIST: '/users/venues',
+    FUNDRAISING: '/fundraising',
+    EDIT_FUNDRAISING: '/fundraising/$1',
+    DELETE_FUNDRAISING: '/fundraising/cancel/$1',
 
     //ADMIN
+    VENUE_LIST: '/users/venues',
+    ADMIN_VENUES: '/admin/venues',
+    ADMIN_ARTISTS: '/admin/artists',
     APPROVE_ARTIST: '/admin/artist/approve',
     UNAPPROVE_ARTIST: '/admin/artist/unapprove',
     BAN_USER: '/admin/disable',
-    UNBAN_USER: '/admin/enable',
     ADMIN_STATS: '/admin/stats',
+    UNBAN_USER: '/admin/enable',
+
+    //ARTIST
+    ARTIST_FUNDRAISING: '/fundraising?artistId=$1',
 }

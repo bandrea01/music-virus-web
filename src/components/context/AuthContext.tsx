@@ -1,12 +1,5 @@
-import React, {
-    createContext,
-    useContext,
-    useEffect,
-    useMemo,
-    useReducer,
-    type ReactNode,
-} from 'react';
-import api, { getToken, setToken as persistToken } from '@apiService/axios.ts';
+import React, {createContext, type ReactNode, useContext, useEffect, useMemo, useReducer,} from 'react';
+import api, {getToken, setToken as persistToken, userIdentityApi} from '@apiService/axios.ts';
 
 export const AuthRole = {
     ROLE_ADMIN: 'ROLE_ADMIN',
@@ -124,7 +117,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         (async () => {
             if (token && !storedProfile) {
                 try {
-                    const { data } = await api.get<IUserProfile>('/api/users/profile');
+                    const { data } = await userIdentityApi.get<IUserProfile>('/api/users/profile');
                     saveProfileUser(data);
                     dispatch({ type: 'SET_PROFILE', profileUser: data });
                 } catch {}

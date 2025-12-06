@@ -1,9 +1,4 @@
-import axios, {AxiosError} from 'axios';
-
-const api = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL,
-    timeout: 10000,
-});
+import axios, {AxiosError, type AxiosInstance} from 'axios';
 
 const TOKEN_KEY = 'jwt';
 
@@ -11,15 +6,23 @@ export const getToken = () => localStorage.getItem(TOKEN_KEY);
 export const setToken = (t: string) => localStorage.setItem(TOKEN_KEY, t);
 export const clearToken = () => localStorage.removeItem(TOKEN_KEY);
 
-api.interceptors.request.use((config) => {
-    const token = getToken()
-    if (token) {
-        config.headers = config.headers ?? {};
-        config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-});
+export function createApi(baseURL: string): AxiosInstance {
+    const api = axios.create({
+        baseURL,
+        timeout: 10000,
+    });
 
+    api.interceptors.request.use((config) => {
+        const token = getToken();
+        if (token) {
+            config.headers = config.headers ?? {};
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    });
+
+    return api;
+}
 
 export function getAxiosErrorMessage(e: unknown, fallback = 'Errore'): string {
     const err = e as AxiosError<any>;
@@ -27,9 +30,12 @@ export function getAxiosErrorMessage(e: unknown, fallback = 'Errore'): string {
         const data = err.response.data;
         if (typeof data === 'string') return data;
         if (typeof data?.message === 'string') return data.message;
-        if (typeof data?.detail === 'string') return data.detail; // per ProblemDetail
+        if (typeof data?.detail === 'string') return data.detail; // ProblemDetail
     }
     return err?.message || fallback;
 }
 
-export default api;
+export const userIdentityApi = createApi(import.meta.env.VITE_USER_IDENTITY_BASE_URL);
+export const eventFundraisingApi = createApi(import.meta.env.VITE_EVENT_FUNDRAISING_BASE_URL);
+
+export default axios;

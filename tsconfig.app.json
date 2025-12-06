@@ -29,7 +29,7 @@
     "noUncheckedSideEffectImports": true,
     /* alias */
     "paths": {
-      "@/*": [
+      "@*": [
         "./src/*"
       ],
       "@components/*": [

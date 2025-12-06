@@ -77,10 +77,7 @@ const DialogComponent: React.FC<DialogComponentProps> = ({
                 {actions?.map((action) => (
                     <Button
                         onClick={action.onClick}
-                        color={action.color || "primary"}
-                        variant={action.variant || "text"}
                         disabled={action.disabled}
-                        sx={{borderRadius: '12px', ...action.sx}}
                     >
                         {action.label}
                     </Button>

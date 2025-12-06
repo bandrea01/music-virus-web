@@ -30,35 +30,48 @@
   }
 }
 
-
-/* Form spacing */
 .auth-form {
   display: grid;
 
-  /* TextField dark style to match panel */
-  .MuiTextField-root {
+  .MuiTextField-root,
+  .MuiPickersTextField-root {
     .MuiInputLabel-root {
       color: var(--text-dim) !important;
     }
 
-    .MuiOutlinedInput-root {
+    .MuiOutlinedInput-root,
+    .MuiPickersInputBase-root {
       background: rgba(96, 122, 159, 0.18);
       border-radius: $radius-md;
 
-      fieldset {
+      fieldset,
+      .MuiOutlinedInput-notchedOutline,
+      .MuiPickersOutlinedInput-notchedOutline {
         border-color: var(--border);
       }
 
-      &:hover fieldset {
+      &:hover fieldset,
+      &:hover .MuiOutlinedInput-notchedOutline,
+      &:hover .MuiPickersOutlinedInput-notchedOutline {
         border-color: var(--border-2);
       }
 
-      &.Mui-focused fieldset {
+      &.Mui-focused fieldset,
+      &.Mui-focused .MuiOutlinedInput-notchedOutline,
+      &.Mui-focused .MuiPickersOutlinedInput-notchedOutline {
         border-color: $purple-500;
       }
 
-      input {
+      .MuiPickersSectionList-sectionContent,
+      .MuiPickersInputBase-input,
+      .MuiPickersInputBase-sectionSeparator,
+      .MuiPickersInputBase-sectionAfter,
+      .MuiSvgIcon-root {
         color: var(--text);
+      }
+
+      .MuiDateCalendar-root {
+        background: var(--bg-panel);
       }
     }
 
@@ -68,6 +81,55 @@
   }
 }
 
+.MuiPickerPopper-paper {
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  backdrop-filter: blur(6px);
+
+  .MuiPickersCalendarHeader-label {
+    color: #fff;
+  }
+
+  .MuiDayCalendar-weekDayLabel {
+    color: #fff;
+  }
+
+  .MuiPickersDay-root {
+    color: #fff;
+
+    &.Mui-selected {
+      color: #fff;
+    }
+
+    &.Mui-disabled:not(.Mui-selected){
+        color: rgba(255, 255, 255, 0.46);
+    }
+  }
+
+  .MuiSvgIcon-root {
+    color: #fff;
+  }
+
+  .MuiTypography-root {
+    color: #fff;
+  }
+
+  .MuiIconButton-root {
+    color: #fff;
+  }
+}
+
+.MuiBox-root {
+  .MuiSlider-root {
+    height: 30px;
+    .MuiSlider-thumb {
+      opacity: 0;
+    }
+  }
+}
+
+
 .MuiSelect-multiple {
   .MuiChip-root {
     background: rgba(255, 255, 255, 0.08);
@@ -76,7 +138,6 @@
   }
 }
 
-/* Button primario coerente (riusa mixin globale) */
 .btn.btn--primary.MuiButton-root {
 
   @include btn-primary;

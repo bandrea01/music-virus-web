@@ -12,6 +12,10 @@ import AdminVenuePanel from "@pages/homePage/panel/admin/AdminVenuePanel.tsx";
 import AdminGeneralPanel from "@pages/homePage/panel/admin/adminGeneralPanel/AdminGeneralPanel.tsx";
 import {MusicVirusRoutesEnum} from "@/utils";
 import ProtectedRoute from "@components/context/ProtectedRoute.tsx";
+import DefaultRouteManager from "@components/context/DefaultRouteManager.tsx";
+import FundraisingPanel from "@pages/homePage/panel/FundraisingPanel.tsx";
+import EventPanel from "@pages/homePage/panel/EventPanel.tsx";
+import ArtistFundraisingPanel from "@pages/homePage/panel/artist/fundraising/ArtistFundraisingPanel.tsx";
 
 export default function App() {
     return (
@@ -34,16 +38,27 @@ export default function App() {
                         </ProtectedRoute>
                     }
                 >
+                    {/*Default route manager to redirect based on role*/}
                     <Route
                         index
-                        element={
-                            <Navigate
-                                to={MusicVirusRoutesEnum.ADMIN_GENERAL_DASHBOARD}
-                                replace
-                            />
-                        }
+                        element={<DefaultRouteManager />}
                     />
 
+                    {/*common*/}
+                    <Route
+                        path={MusicVirusRoutesEnum.PROFILE}
+                        element={<PersonalProfilePanel/>}
+                    />
+                    <Route
+                        path={MusicVirusRoutesEnum.FUNDRAISING}
+                        element={<FundraisingPanel/>}
+                    />
+                    <Route
+                        path={MusicVirusRoutesEnum.EVENT}
+                        element={<EventPanel/>}
+                    />
+
+                    {/*admin*/}
                     <Route
                         path={MusicVirusRoutesEnum.ADMIN_GENERAL_DASHBOARD}
                         element={<AdminGeneralPanel/>}
@@ -60,16 +75,13 @@ export default function App() {
                         path={MusicVirusRoutesEnum.ADMIN_VENUE_MANAGEMENT}
                         element={<AdminVenuePanel/>}
                     />
+
+                    {/*artist*/}
                     <Route
-                        path={MusicVirusRoutesEnum.PROFILE}
-                        element={<PersonalProfilePanel/>}
+                        path={MusicVirusRoutesEnum.ARTIST_PERSONAL_FUNDRAISING}
+                        element={<ArtistFundraisingPanel/>}
                     />
                 </Route>
-
-                <Route
-                    path={MusicVirusRoutesEnum.HOMEPAGE}
-                    element={<Navigate to={MusicVirusRoutesEnum.MUSIC_VIRUS} replace/>}
-                />
 
                 <Route path="*" element={<ErrorPage/>}/>
             </Routes>

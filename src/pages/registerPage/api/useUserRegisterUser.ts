@@ -19,6 +19,11 @@ export function useUserRegisterUser(userType: UserTypeId) {
         },
         retry: 0,
         onSuccess: () => {
+            if(userType === 'artist') {
+                dispatch(setSnackbarSuccess('Registrazione effettuata!\n Attendi la verifica del tuo account da parte di un amministratore prima di effettuare il login'));
+                navigate(MusicVirusRoutesEnum.LOGIN);
+                return;
+            }
             dispatch(setSnackbarSuccess('Registrazione effettuata!\n Effettua il login'));
             navigate(MusicVirusRoutesEnum.LOGIN);
         },

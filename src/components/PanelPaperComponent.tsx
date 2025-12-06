@@ -1,15 +1,18 @@
 import React from "react";
-import {Box, Card, CardContent, Typography} from "@mui/material";
+import {Box, Button, Card, CardContent, Divider, Typography} from "@mui/material";
 import type {SxProps, Theme} from "@mui/material/styles";
+import type {ActionProps} from "@utils/types/types.ts";
 
 export interface IPanelPaperComponent {
     title: string;
+    actions?: ActionProps[];
     children?: React.ReactNode;
-    sx?: SxProps<Theme>; // stile extra per la Card
+    sx?: SxProps<Theme>;
 }
 
 const PanelPaperComponent: React.FC<IPanelPaperComponent> = ({
                                                                  title,
+                                                                 actions,
                                                                  children,
                                                                  sx,
                                                              }) => {
@@ -51,7 +54,23 @@ const PanelPaperComponent: React.FC<IPanelPaperComponent> = ({
                         overflowY: "auto",
                     }}
                 >
-                    {children}
+                    <Box display="flex" flexDirection="column" gap={2}>
+                        <Box display="flex" justifyContent="end" gap={1}>
+                            {actions?.map((action, index) => (
+                                <Button
+                                    key={index}
+                                    startIcon={action.startIcon}
+                                    onClick={action.onClick}
+                                >
+                                    {action.label}
+                                </Button>
+                            ))}
+                        </Box>
+                        <Divider color={"#25324a"}/>
+                        <Box>
+                            {children}
+                        </Box>
+                    </Box>
                 </CardContent>
             </Card>
         </Box>

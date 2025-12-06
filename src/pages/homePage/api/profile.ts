@@ -1,35 +1,35 @@
-import api from "../../../apiService/axios.ts";
+import {userIdentityApi} from "@apiService/axios.ts";
 import {RoutesEnum} from "@/apiService/routesEnum.ts";
-import type {ProfileResponseDTO, UpdateProfileDTO} from "./types.ts";
-import type {ProfileEditFormValues} from "../form/profileEditSchema.ts";
+import type {ProfileEditFormValues, ProfileResponseDTO, UpdateProfileDTO} from "@pages";
 
 export async function profileRequest(): Promise<ProfileResponseDTO> {
-    const {data} = await api.get(RoutesEnum.PROFILE);
+    const {data} = await userIdentityApi.get(RoutesEnum.PROFILE);
     return data;
 }
 
 export async function updateProfileRequest(profile: UpdateProfileDTO) {
-    const {data} = await api.patch(RoutesEnum.PROFILE, profile);
+    const {data} = await userIdentityApi.patch(RoutesEnum.PROFILE, profile);
     return data;
 }
 
 export async function getArtistList() {
-    const {data} = await api.get(RoutesEnum.ARTIST_LIST);
+    const {data} = await userIdentityApi.get(RoutesEnum.ARTIST_LIST);
     return data;
 }
 
-export async function getUsersList() {
-    const {data} = await api.get(RoutesEnum.FAN_LIST);
+export async function getFansList() {
+    const {data} = await userIdentityApi.get(RoutesEnum.FAN_LIST);
     return data;
 }
 
 export async function getVenuesList() {
-    const {data} = await api.get(RoutesEnum.VENUE_LIST);
+    const {data} = await userIdentityApi.get(RoutesEnum.VENUE_LIST);
+    console.log('venues', data);
     return data;
 }
 
 export async function getAdminStatistics() {
-    const {data} = await api.get(RoutesEnum.ADMIN_STATS);
+    const {data} = await userIdentityApi.get(RoutesEnum.ADMIN_STATS);
     return data;
 }
 

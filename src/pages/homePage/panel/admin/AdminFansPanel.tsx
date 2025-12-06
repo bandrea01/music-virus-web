@@ -6,7 +6,7 @@ import {banUser, unbanUser} from "@pages/homePage/api/admin.ts";
 import {useAppDispatch} from "@store/hook.ts";
 import {setSnackbarSuccess} from "@store/snackbar/slice.ts";
 import UserCardComponent from "@components/UserCardComponent.tsx";
-import {useGetUsers} from "@pages/homePage/hooks/useGetUsers.ts";
+import {useGetFans} from "@pages/homePage/hooks/usersDomain.tsx";
 import NotInterestedIcon from "@mui/icons-material/NotInterested";
 import HowToRegOutlinedIcon from "@mui/icons-material/HowToRegOutlined";
 
@@ -32,7 +32,7 @@ const bannedComponent = (banned: boolean) => {
 }
 
 const AdminFansPanel = () => {
-    const {data, refetch} = useGetUsers();
+    const {data, refetch} = useGetFans();
     const {openPopup, closePopup} = usePopup();
     const dispatch = useAppDispatch();
 

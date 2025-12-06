@@ -46,7 +46,7 @@ const UserCardComponent = ({
                 <Box display="flex" gap={2}>
                     <Box>
                         <Avatar
-                            sx={{bgcolor: avatarColor, width: 56, height: 56}}
+                            sx={{bgcolor: avatarColor, width: 56, height: 56, ":hover": {cursor: "pointer", backgroundColor: '#33619e'}}}
                         >
                             {avatarText}
                         </Avatar>
@@ -87,7 +87,6 @@ const UserCardComponent = ({
                                             borderColor: '#fafafa',
                                             minWidth: "160px",
                                             justifyContent: "flex-start",
-                                            '&:hover': {scale: 1.05, backgroundColor: "#5E0DD8A5"}
                                         }}
                                         startIcon={action.startIcon}
                                         onClick={action.onConfirm}

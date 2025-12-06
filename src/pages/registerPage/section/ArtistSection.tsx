@@ -1,8 +1,8 @@
 import React from "react";
 import {Box, Chip,} from "@mui/material";
 import {useFormContext} from "react-hook-form";
-import {getSelectOptions, SelectFormField} from "../../../components/SelectFormField.tsx";
-import {TextFormField} from "../../../components/TextFormField.tsx";
+import {getSelectOptions, SelectFormField} from "@components/formComponent/SelectFormField.tsx";
+import {TextFormField} from "@components/formComponent/TextFormField.tsx";
 
 export const genres = [
     "Pop", "Rock", "Indie", "Hip-Hop", "Trap", "R&B", "Soul", "Jazz",

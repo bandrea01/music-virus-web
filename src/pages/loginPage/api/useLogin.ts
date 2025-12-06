@@ -7,8 +7,8 @@ import {useNavigate} from "react-router-dom";
 import {getAxiosErrorMessage} from "@/apiService/axios.ts";
 import type {AxiosError} from "axios";
 import {type AuthRole, type IUserProfile, useAuth} from "@/components";
-import {profileRequest} from "../../homePage/api/profile.ts";
-import type {ProfileResponseDTO} from "../../homePage/api/types.ts";
+import {profileRequest} from "@pages";
+import type {ProfileResponseDTO} from "@pages";
 import {MusicVirusRoutesEnum} from "@/utils";
 
 export function useLogin(): UseMutationResult<JwtSessionResponseDTO, unknown, LoginDTO, unknown> {
@@ -42,7 +42,7 @@ export function useLogin(): UseMutationResult<JwtSessionResponseDTO, unknown, Lo
                 dispatch(setSnackbarError("Errore nel caricamento del profilo!"));
                 navigate(MusicVirusRoutesEnum.LOGIN);
             }
-            navigate('/homepage', {replace: true});
+            navigate(MusicVirusRoutesEnum.MUSIC_VIRUS, {replace: true});
         },
         onError: (err: AxiosError) => {
             dispatch(setSnackbarError(getAxiosErrorMessage(err, "Errore durante il login!")));

@@ -1,7 +1,7 @@
 import {Box, IconButton, Typography} from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import {type IUserProfile, useAuth} from "./context/AuthContext.tsx";
+import {type IUserProfile, useAuth} from "@components/context";
 import {useNavigate} from "react-router-dom";
 import {MusicVirusRoutesEnum} from "@/utils";
 
@@ -25,7 +25,7 @@ const TopbarComponent = (
                 <Box display="flex" alignItems="center">
                     <IconButton
                         component="a"
-                        href="/profile"
+                        href={MusicVirusRoutesEnum.PROFILE}
                         sx={{
                             color: "white",
                             '&:hover': {color: '#ac60ff'},

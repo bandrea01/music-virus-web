@@ -1,10 +1,10 @@
-import {Avatar, Box, Card, CardContent, Chip, Link, Typography} from "@mui/material";
-import {AuthRole, useAuth} from "@components";
+import {Avatar, Box, Chip, Link, Typography} from "@mui/material";
 import CreateIcon from '@mui/icons-material/Create';
 import {MapPicker} from "@components/MapPicker";
 import {useState} from "react";
 import PersonalProfileEditDialog from "./PersonalProfileEditDialog.tsx";
 import PanelPaperComponent from "@components/PanelPaperComponent.tsx";
+import {type AuthRole, useAuth} from "@/components";
 
 function renderGenresCards(genres: string[]) {
     return (

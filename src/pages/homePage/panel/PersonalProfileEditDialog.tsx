@@ -4,10 +4,9 @@ import {getSelectOptions, type IUserProfile, SelectFormField, TextFormField, use
 import DialogComponent from "../../../components/DialogComponent.tsx";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {getProfileEditSchemaAndDefaults} from "../form/profileEditSchema.ts";
-import {useProfileEdit} from "../hooks/useProfileEdit.ts";
+import {getProfileEditSchemaAndDefaults, useProfileEdit} from "@pages";
 import {MapDialog} from "../../registerPage/section/MapDialog.tsx";
-import {mapProfileEditFormValuesToDTO} from "../api/profile.ts";
+import {mapProfileEditFormValuesToDTO} from "@pages";
 import {z} from "zod";
 import {genres} from "../../registerPage/section/ArtistSection.tsx";
 
@@ -73,12 +72,7 @@ const PersonalProfileEditDialog: React.FC<PersonalProfileEditDialogProps> = ({
                         reset()
                     },
                     variant: "contained",
-                    disabled: isPending,
-                    sx: {
-                        bgcolor: '#5a2732',
-                        color: '#fff',
-                        '&:hover': {bgcolor: '#591422'},
-                    },
+                    disabled: isPending
                 },
                 {
                     label: "Salva",
@@ -86,7 +80,7 @@ const PersonalProfileEditDialog: React.FC<PersonalProfileEditDialogProps> = ({
                     variant: "contained",
                     disabled: isPending || !formState.isValid || !formState.isDirty,
                     sx: {
-                        bgcolor: '#3868b8',
+                        bgcolor: '#452a7c !important',
                         color: '#fff',
                         '&:hover': {bgcolor: 'rgba(18,35,66,0.9)'},
                     },

@@ -80,3 +80,31 @@ export type FanListResponseDTO = {
 export type VenueListResponseDTO = {
     venues: VenueProfileDTO[];
 }
+
+export type FundraisingRequestDTO = {
+    artistId: string;
+    fundraisingName: string;
+    venueId: string;
+    targetAmount: number;
+    eventDate: string;
+}
+
+export type EnrichFundraising = Fundraising & {
+    artistName: string;
+    venueName: string;
+}
+export type Fundraising = {
+    fundraisingId: string;
+    fundraisingName: string;
+    artistId: string;
+    venueId: string;
+    currentAmount: number;
+    targetAmount: number;
+    status: string;
+    eventDate: string;
+}
+export type FundraisingListResponseDTO = {
+    fundraisings: Fundraising[];
+}
+
+

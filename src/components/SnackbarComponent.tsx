@@ -20,7 +20,6 @@ export const SnackbarComponent: React.FC<INotifyProps> = ({
                                                      duration,
                                                  }: INotifyProps) => {
     if (!type || !message) return null;
-    console.info("type: ", type, " message: ", message);
     return (
         <Snackbar
             onClose={onClose}

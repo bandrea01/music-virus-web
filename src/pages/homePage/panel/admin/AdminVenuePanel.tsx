@@ -7,7 +7,7 @@ import {useAppDispatch} from "@store/hook.ts";
 import {setSnackbarSuccess} from "@store/snackbar/slice.ts";
 import UserCardComponent from "@components/UserCardComponent.tsx";
 import PinDropOutlinedIcon from "@mui/icons-material/PinDropOutlined";
-import {useGetVenues} from "@pages/homePage/hooks/useGetVenues.ts";
+import {useAdminDomain} from "@pages/homePage/hooks/useAdminDomain.ts";
 import NotInterestedIcon from "@mui/icons-material/NotInterested";
 import HowToRegOutlinedIcon from "@mui/icons-material/HowToRegOutlined";
 
@@ -52,7 +52,7 @@ const addressComponent = (venueAddress: { latitude: number, longitude: number })
 }
 
 const AdminVenuePanel = () => {
-    const {data, refetch} = useGetVenues();
+    const {data, refetch} = useAdminDomain();
     const {openPopup, closePopup} = usePopup();
     const dispatch = useAppDispatch();
 
