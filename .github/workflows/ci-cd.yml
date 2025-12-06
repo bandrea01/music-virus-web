@@ -2,11 +2,7 @@ name: Build & Deploy frontend (Oracle VM)
 
 on:
   push:
-    branches: [ main ]
-    paths:
-      - 'frontend/**'
-      - 'docker-compose.yml'
-      - '.github/workflows/deploy-frontend.yml'
+    branches: [ master ]
 
 concurrency:
   group: deploy-frontend-${{ github.ref }}
