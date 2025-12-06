@@ -6,6 +6,18 @@ const r = (p: string) => fileURLToPath(new URL(p, import.meta.url));
 
 export default defineConfig({
     plugins: [react()],
+    server: {
+        proxy: {
+            '/api/user': {
+                target: 'http://localhost:8082',
+                changeOrigin: true,
+            },
+            '/api/event': {
+                target: 'http://localhost:8083',
+                changeOrigin: true,
+            },
+        },
+    },
     resolve: {
         alias: {
             '@': r('./src'),
