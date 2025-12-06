@@ -39,34 +39,27 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.ORACLE_SSH_KEY }}
 
-      - name: Add host to known_hosts
+            - name: Ensure remote frontend dirs
         run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H "${{ secrets.ORACLE_HOST }}" >> ~/.ssh/known_hosts
-
-      - name: Ensure remote frontend dirs
-        run: |
-          ssh ${{ secrets.ORACLE_USER }}@${{ secrets.ORACLE_HOST }} "\
+          ssh -o StrictHostKeyChecking=no ${{ secrets.ORACLE_USER }}@${{ secrets.ORACLE_HOST }} "\
             mkdir -p /home/${{ secrets.ORACLE_USER }}/app/frontend && \
             mkdir -p /home/${{ secrets.ORACLE_USER }}/app/frontend/dist \
           "
 
       - name: Upload frontend artifacts (dist, Dockerfile, nginx.conf)
         run: |
-          # dist (output build Vite)
-          scp -r dist \
+          scp -o StrictHostKeyChecking=no -r dist \
             ${{ secrets.ORACLE_USER }}@${{ secrets.ORACLE_HOST }}:/home/${{ secrets.ORACLE_USER }}/app/frontend/
 
-          # Dockerfile e nginx.conf del frontend (sono nella root del repo)
-          scp Dockerfile \
+          scp -o StrictHostKeyChecking=no Dockerfile \
               ${{ secrets.ORACLE_USER }}@${{ secrets.ORACLE_HOST }}:/home/${{ secrets.ORACLE_USER }}/app/frontend/Dockerfile
 
-          scp nginx.conf \
+          scp -o StrictHostKeyChecking=no nginx.conf \
               ${{ secrets.ORACLE_USER }}@${{ secrets.ORACLE_HOST }}:/home/${{ secrets.ORACLE_USER }}/app/frontend/nginx.conf
 
       - name: Deploy frontend service with Docker Compose
         run: |
-          ssh ${{ secrets.ORACLE_USER }}@${{ secrets.ORACLE_HOST }} "\
+          ssh -o StrictHostKeyChecking=no ${{ secrets.ORACLE_USER }}@${{ secrets.ORACLE_HOST }} "\
             cd /home/${{ secrets.ORACLE_USER }}/app && \
             docker compose up -d --build frontend && \
             docker compose ps \
