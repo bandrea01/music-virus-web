@@ -12,22 +12,22 @@ export async function getAdminVenuesList() {
 }
 
 export async function approveArtist(artistId: string) {
-    const {data} = await userIdentityApi.patch( `${RoutesEnum.APPROVE_ARTIST}/${artistId}`);
+    const {data} = await userIdentityApi.patch( `${RoutesEnum.APPROVE_ARTIST}`.replace('$1', artistId));
     return data;
 }
 
 export async function unapproveArtist(artistId: string) {
-    const {data} = await userIdentityApi.patch(`${RoutesEnum.UNAPPROVE_ARTIST}/${artistId}`);
+    const {data} = await userIdentityApi.patch(`${RoutesEnum.UNAPPROVE_ARTIST}`.replace('$1', artistId));
     return data;
 }
 
 export async function banUser(userId: string) {
-    const {data} = await userIdentityApi.patch(`${RoutesEnum.BAN_USER}/${userId}`);
+    const {data} = await userIdentityApi.patch(`${RoutesEnum.BAN_USER}`.replace('$1', userId));
     return data;
 }
 
 export async function unbanUser(userId: string) {
-    const {data} = await userIdentityApi.patch(`${RoutesEnum.UNBAN_USER}/${userId}`);
+    const {data} = await userIdentityApi.patch(`${RoutesEnum.UNBAN_USER}`.replace('$1', userId));
     return data;
 }
 

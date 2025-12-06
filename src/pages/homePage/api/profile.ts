@@ -3,12 +3,12 @@ import {RoutesEnum} from "@/apiService/routesEnum.ts";
 import type {ProfileEditFormValues, ProfileResponseDTO, UpdateProfileDTO} from "@pages";
 
 export async function profileRequest(): Promise<ProfileResponseDTO> {
-    const {data} = await userIdentityApi.get(RoutesEnum.PROFILE);
+    const {data} = await userIdentityApi.get(RoutesEnum.PERSONAL_PROFILE);
     return data;
 }
 
 export async function updateProfileRequest(profile: UpdateProfileDTO) {
-    const {data} = await userIdentityApi.patch(RoutesEnum.PROFILE, profile);
+    const {data} = await userIdentityApi.patch(RoutesEnum.PERSONAL_PROFILE, profile);
     return data;
 }
 
@@ -24,7 +24,6 @@ export async function getFansList() {
 
 export async function getVenuesList() {
     const {data} = await userIdentityApi.get(RoutesEnum.VENUE_LIST);
-    console.log('venues', data);
     return data;
 }
 

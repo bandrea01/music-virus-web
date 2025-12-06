@@ -1,10 +1,17 @@
-import axios, {AxiosError, type AxiosInstance} from 'axios';
+import axios, { AxiosError, type AxiosInstance } from 'axios';
 
 const TOKEN_KEY = 'jwt';
 
 export const getToken = () => localStorage.getItem(TOKEN_KEY);
 export const setToken = (t: string) => localStorage.setItem(TOKEN_KEY, t);
 export const clearToken = () => localStorage.removeItem(TOKEN_KEY);
+
+const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL ??
+    '/api';
+
+const USER_IDENTITY_BASE_URL = `${API_BASE_URL}/user`;
+const EVENT_FUNDRAISING_BASE_URL = `${API_BASE_URL}/event-fundraising`;
 
 export function createApi(baseURL: string): AxiosInstance {
     const api = axios.create({
@@ -35,7 +42,9 @@ export function getAxiosErrorMessage(e: unknown, fallback = 'Errore'): string {
     return err?.message || fallback;
 }
 
-export const userIdentityApi = createApi(import.meta.env.VITE_USER_IDENTITY_BASE_URL);
-export const eventFundraisingApi = createApi(import.meta.env.VITE_EVENT_FUNDRAISING_BASE_URL);
+export const userIdentityApi = createApi(USER_IDENTITY_BASE_URL);
+export const eventFundraisingApi = createApi(EVENT_FUNDRAISING_BASE_URL);
+
+export const api = createApi(API_BASE_URL);
 
 export default axios;
