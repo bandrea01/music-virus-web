@@ -2,7 +2,7 @@ import {type SubmitHandler, useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {Box, Button, Card, CardContent, Container, Typography,} from '@mui/material';
 import '../../styles/global.scss';
-import './LoginPage.scss';
+import './loginPage.scss';
 import {useLogin} from './api/useLogin.ts';
 import {initialValuesloginSchema, type LoginFormValues, loginSchema} from "./form/authSchema.ts";
 import {TextFormField, useAuth} from "@/components";
