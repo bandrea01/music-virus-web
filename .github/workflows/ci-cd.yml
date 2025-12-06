@@ -38,8 +38,6 @@ jobs:
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.ORACLE_SSH_KEY }}
-
-            - name: Ensure remote frontend dirs
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.ORACLE_USER }}@${{ secrets.ORACLE_HOST }} "\
             mkdir -p /home/${{ secrets.ORACLE_USER }}/app/frontend && \
