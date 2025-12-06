@@ -10,7 +10,7 @@ import {VenueSection} from './section/VenueSection.tsx';
 import {useUserRegisterUser} from "./api/useUserRegisterUser.ts";
 import {useUserRegisterForm} from "./form/useRegisterForm.ts";
 import '../../styles/global.scss';
-import '../loginPage/LoginPage.scss';
+import '../loginPage/loginPage.scss';
 import {TextFormField} from "@/components";
 import {MusicVirusRoutesEnum} from "@/utils";
 
