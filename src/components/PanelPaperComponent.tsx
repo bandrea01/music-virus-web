@@ -6,6 +6,7 @@ import type {ActionProps} from "@utils/types/types.ts";
 export interface IPanelPaperComponent {
     title: string;
     actions?: ActionProps[];
+    filtersContent?: React.ReactNode;
     children?: React.ReactNode;
     sx?: SxProps<Theme>;
 }
@@ -13,6 +14,7 @@ export interface IPanelPaperComponent {
 const PanelPaperComponent: React.FC<IPanelPaperComponent> = ({
                                                                  title,
                                                                  actions,
+                                                                 filtersContent,
                                                                  children,
                                                                  sx,
                                                              }) => {
@@ -66,7 +68,15 @@ const PanelPaperComponent: React.FC<IPanelPaperComponent> = ({
                                 </Button>
                             ))}
                         </Box>
+
+                        {filtersContent && (
+                            <Box>
+                                {filtersContent}
+                            </Box>
+                        )}
+
                         <Divider color={"#25324a"}/>
+
                         <Box>
                             {children}
                         </Box>

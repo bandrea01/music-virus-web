@@ -1,5 +1,4 @@
 @use './variables' as *;
-/* Fix autofill Chrome/Safari */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
@@ -584,4 +583,5 @@ body {
   background-color: #0288d1 !important;
   color: #fff !important;
 }
+
 

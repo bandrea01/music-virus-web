@@ -7,7 +7,6 @@ export async function createFundraising(payload: FundraisingRequestDTO) {
     return data;
 }
 
-
 export async function getFundraisingList() {
     const {data} = await eventFundraisingApi.get(RoutesEnum.ADMIN_VENUES);
     return data;
@@ -29,6 +28,6 @@ export async function editFundraising(fundraisingId: string, payload: Fundraisin
 }
 
 export async function cancelFundraising(fundraisingId: string) {
-    const {data} = await eventFundraisingApi.delete(`${RoutesEnum.DELETE_FUNDRAISING}`.replace('$1', fundraisingId));
+    const {data} = await eventFundraisingApi.patch(`${RoutesEnum.DELETE_FUNDRAISING}`.replace('$1', fundraisingId));
     return data;
 }

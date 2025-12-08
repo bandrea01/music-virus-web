@@ -5,5 +5,6 @@ export * from "./SnackbarComponent.tsx";
 export * from "./TopbarComponent.tsx";
 export * from "./UserCardComponent.tsx";
 export * from './FullScreenSpinner.tsx';
+export * from "./CheckboxFilterBar.tsx";
 export * from "./context";
 export * from "./formComponent";

@@ -1,149 +1,167 @@
-import {useMutation, useQuery} from '@tanstack/react-query';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {useEffect} from 'react';
 import {useAppDispatch} from '@store/hook.ts';
 import {setSnackbarError, setSnackbarSuccess} from '@store/snackbar/slice.ts';
 import {getAxiosErrorMessage} from "@apiService/axios.ts";
 import type {AxiosError} from "axios";
-import type {FundraisingListResponseDTO, FundraisingRequestDTO} from "@pages/homePage/api/types.ts";
+import type {
+    FundraisingListResponseDTO,
+    FundraisingRequestDTO
+} from "@pages/homePage/api/types.ts";
 import {
+    type AddEditFundraisingFormValues,
     cancelFundraising,
     confirmFundraising,
     createFundraising,
     editFundraising,
     getFundraisingList,
     getPersonalFundraisingList
-} from "@pages/homePage/api/fundraising.ts";
-import type {AddEditFundraisingFormValues} from "@pages/homePage/form/addEditFundraisingSchema.ts";
+} from "@pages";
 
-export function mapFundraisingFormValuesToDTO(artistId: string, values: AddEditFundraisingFormValues): FundraisingRequestDTO {
+export function mapFundraisingFormValuesToDTO(
+    artistId: string,
+    values: AddEditFundraisingFormValues
+): FundraisingRequestDTO {
     return {
         artistId: artistId,
         fundraisingName: values.fundraisingName,
         venueId: values.venueId,
         targetAmount: values.targetAmount,
         eventDate: values.eventDate.toISOString()
-    }
+    };
 }
 
-export function useCreateFundraising() {
+export function useFundraisingQuery<T>(options: {
+    queryKey: readonly unknown[] | string;
+    queryFn: () => Promise<T>;
+    errorMessage: string;
+    enabled?: boolean;
+}) {
     const dispatch = useAppDispatch();
 
-    return useMutation({
-        mutationKey: ['fundraising'],
-        mutationFn: async (payload: FundraisingRequestDTO) => {
-            return createFundraising(payload);
-        },
+    const query = useQuery<T, AxiosError>({
+        queryKey: Array.isArray(options.queryKey) ? options.queryKey : [options.queryKey],
+        queryFn: options.queryFn,
+        retry: 0,
+        enabled: options.enabled ?? true,
+    });
+
+    useEffect(() => {
+        if (query.error) {
+            dispatch(
+                setSnackbarError(
+                    getAxiosErrorMessage(query.error, options.errorMessage)
+                )
+            );
+            console.error('Request error:', query.error);
+        }
+    }, [query.error, dispatch, options.errorMessage]);
+
+    return {...query};
+}
+
+export function useFundraisingMutation<TVariables, TData = void>(options: {
+    mutationKey: readonly unknown[] | string;
+    mutationFn: (variables: TVariables) => Promise<TData>;
+    errorMessage: string;
+    successMessage?: string;
+    invalidateQueries?: (readonly unknown[] | string)[];
+}) {
+    const dispatch = useAppDispatch();
+    const queryClient = useQueryClient();
+
+    return useMutation<TData, AxiosError, TVariables>({
+        mutationKey: Array.isArray(options.mutationKey) ? options.mutationKey : [options.mutationKey],
+        mutationFn: options.mutationFn,
         retry: 0,
         onSuccess: () => {
-            dispatch(setSnackbarSuccess('Raccolta fondi creata con successo!'));
+            if (options.successMessage) {
+                dispatch(setSnackbarSuccess(options.successMessage));
+            }
+
+            if (options.invalidateQueries?.length) {
+                options.invalidateQueries.forEach((key) => {
+                    queryClient.invalidateQueries({
+                        queryKey: Array.isArray(key) ? key : [key],
+                    });
+                });
+            }
         },
         onError: (err: AxiosError) => {
-            dispatch(setSnackbarError(getAxiosErrorMessage(err, "Errore durante la creazione della raccolta fondi!")));
-            console.error('Fundraising creation error:', err);
+            dispatch(setSnackbarError(getAxiosErrorMessage(err, options.errorMessage)));
+            console.error('Fundraising mutation error:', err);
         },
     });
 }
 
 export function useGetFundraising() {
-    const dispatch = useAppDispatch();
-
-    const query = useQuery<FundraisingRequestDTO, AxiosError>({
+    return useFundraisingQuery<FundraisingListResponseDTO>({
         queryKey: ['fundraising'],
         queryFn: getFundraisingList,
-        retry: 0,
+        errorMessage: "Errore durante la richiesta della lista delle raccolte fondi!"
     });
-
-    useEffect(() => {
-        if (query.error) {
-            dispatch(
-                setSnackbarError(
-                    getAxiosErrorMessage(query.error, "Errore durante la richiesta della lista di artisti!")
-                )
-            );
-            console.error('Request error:', query.error);
-        }
-        dispatch(setSnackbarSuccess("Raccolta fondi creata con successo!"));
-    }, [query.error, dispatch]);
-
-    return {...query}
 }
 
 export function useGetPersonalFundraisingList(userId: string) {
-    const dispatch = useAppDispatch();
-
-    const query = useQuery<FundraisingListResponseDTO, AxiosError>({
-        queryKey: ['fundraising'],
+    return useFundraisingQuery<FundraisingListResponseDTO>({
+        queryKey: ['personal-fundraising', userId],
         queryFn: () => getPersonalFundraisingList(userId),
-        retry: 0,
+        errorMessage: "Errore durante la richiesta della lista delle tue raccolte fondi!"
     });
+}
 
-    useEffect(() => {
-        if (query.error) {
-            dispatch(
-                setSnackbarError(
-                    getAxiosErrorMessage(query.error, "Errore durante la richiesta della lista di artisti!")
-                )
-            );
-            console.error('Request error:', query.error);
-        }
-    }, [query.error, dispatch]);
-
-    return {...query}
+export function useCreateFundraising() {
+    return useFundraisingMutation<FundraisingRequestDTO>({
+        mutationKey: ['create-fundraising'],
+        mutationFn: (payload) => createFundraising(payload),
+        errorMessage: "Errore durante la creazione della raccolta fondi!",
+        successMessage: "Raccolta fondi creata con successo!",
+        invalidateQueries: [
+            ['fundraising'],
+            ['personal-fundraising'],
+        ],
+    });
 }
 
 export function useCancelFundraising() {
-    const dispatch = useAppDispatch();
-
-    return useMutation({
-        mutationKey: ['cancelFundraising'],
-        mutationFn: async (fundraisingId: string) => {
-            return cancelFundraising(fundraisingId);
-        },
-        retry: 0,
-        onSuccess: () => {
-            dispatch(setSnackbarSuccess('Raccolta fondi annullata con successo!'));
-        },
-        onError: (err: AxiosError) => {
-            dispatch(setSnackbarError(getAxiosErrorMessage(err, "Errore durante l'annullamento della raccolta fondi!")));
-            console.error('Fundraising cancellation error:', err);
-        }
+    return useFundraisingMutation<string>({
+        mutationKey: ['cancel-fundraising'],
+        mutationFn: (fundraisingId) => cancelFundraising(fundraisingId),
+        errorMessage: "Errore durante l'annullamento della raccolta fondi!",
+        successMessage: "Raccolta fondi annullata con successo!",
+        invalidateQueries: [
+            ['fundraising'],
+            ['personal-fundraising'],
+        ],
     });
 }
 
-export function useEditFundraising(payload: any) {
-    const dispatch = useAppDispatch();
-
-    return useMutation({
-        mutationKey: ['editFundraising'],
-        mutationFn: async (fundraisingId: string) => {
-            return editFundraising(fundraisingId, payload);
-        },
-        retry: 0,
-        onSuccess: () => {
-            dispatch(setSnackbarSuccess('Raccolta fondi modificata con successo!'));
-        },
-        onError: (err: AxiosError) => {
-            dispatch(setSnackbarError(getAxiosErrorMessage(err, "Errore durante la modifica della raccolta fondi!")));
-            console.error('Fundraising cancellation error:', err);
-        }
+export function useEditFundraising() {
+    return useFundraisingMutation<{
+        fundraisingId: string;
+        payload: FundraisingRequestDTO;
+    }>({
+        mutationKey: ['edit-fundraising'],
+        mutationFn: ({fundraisingId, payload}) =>
+            editFundraising(fundraisingId, payload),
+        errorMessage: "Errore durante la modifica della raccolta fondi!",
+        successMessage: "Raccolta fondi modificata con successo!",
+        invalidateQueries: [
+            ['fundraising'],
+            ['personal-fundraising'],
+        ],
     });
 }
 
 export function confirmFundraisingAndCreateEvent() {
-    const dispatch = useAppDispatch();
-
-    return useMutation({
-        mutationKey: ['confirmFundraising'],
-        mutationFn: async (fundraisingId: string) => {
-            return confirmFundraising(fundraisingId);
-        },
-        retry: 0,
-        onSuccess: () => {
-            dispatch(setSnackbarSuccess('Raccolta fondi confermata con successo.\nEvento creato!'));
-        },
-        onError: (err: AxiosError) => {
-            dispatch(setSnackbarError(getAxiosErrorMessage(err, "Errore durante la creazione dell'evento!")));
-            console.error('Fundraising cancellation error:', err);
-        }
+    return useFundraisingMutation<string>({
+        mutationKey: ['confirm-fundraising'],
+        mutationFn: (fundraisingId) => confirmFundraising(fundraisingId),
+        errorMessage: "Errore durante la creazione dell'evento!",
+        successMessage: "Raccolta fondi confermata con successo.\nEvento creato!",
+        invalidateQueries: [
+            ['fundraising'],
+            ['personal-fundraising'],
+        ],
     });
 }
