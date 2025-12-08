@@ -6,9 +6,9 @@ import {banUser, unbanUser} from "@pages/homePage/api/admin.ts";
 import {useAppDispatch} from "@store/hook.ts";
 import {setSnackbarSuccess} from "@store/snackbar/slice.ts";
 import UserCardComponent from "@components/UserCardComponent.tsx";
-import {useGetFans} from "@pages/homePage/hooks/usersDomain.tsx";
 import NotInterestedIcon from "@mui/icons-material/NotInterested";
 import HowToRegOutlinedIcon from "@mui/icons-material/HowToRegOutlined";
+import {useAdminFans} from "@pages";
 
 const getCardColors = (enabled: boolean) => {
     const backgroundColor = enabled ? '#132543' : '#242835';
@@ -16,9 +16,9 @@ const getCardColors = (enabled: boolean) => {
     return {backgroundColor, avatarColor};
 }
 
-const bannedComponent = (banned: boolean) => {
-    const color = banned ? "#0dd329" : "#dc5858";
-    const written = banned ? "Abilitato" : "Bannato";
+const bannedComponent = (enabled: boolean) => {
+    const color = enabled ? "#0dd329" : "#dc5858";
+    const written = enabled ? "Abilitato" : "Bannato";
     return (
         <>
             <Typography fontSize="15px" color={color} fontWeight="bold">
@@ -32,14 +32,15 @@ const bannedComponent = (banned: boolean) => {
 }
 
 const AdminFansPanel = () => {
-    const {data, refetch} = useGetFans();
+    const {data, refetch} = useAdminFans();
     const {openPopup, closePopup} = usePopup();
     const dispatch = useAppDispatch();
 
     const fans = data?.fans || [];
 
     const handleRefetchLogic = () => {
-        refetch().then(() => {});
+        refetch().then(() => {
+        });
         closePopup();
         dispatch(setSnackbarSuccess("Azione eseguita correttamente!"))
     }
@@ -70,20 +71,21 @@ const AdminFansPanel = () => {
         >
             <Box display="grid" gap={2} p={2} sx={{flex: 1, overflowY: 'auto'}}>
                 {fans.map((fan) => {
-                    const {backgroundColor, avatarColor} = getCardColors(fan.enabled);
+                    const {backgroundColor, avatarColor} = getCardColors(fan.enabled as boolean);
                     return (
                         <UserCardComponent
+                            key={fan.userId}
                             backgroundCardColor={backgroundColor}
                             avatarColor={avatarColor}
                             avatarText={`${fan.name[0]}${fan.surname[0]}`}
                             primaryContent={`${fan.name} ${fan.surname}`}
                             secondaryContent={fan.email}
-                            flagsContent={[bannedComponent(fan.enabled)]}
+                            flagsContent={[bannedComponent(fan.enabled as boolean)]}
                             actions={
                                 [
                                     {
                                         text: fan.enabled ? "Banna" : "Abilita",
-                                        onConfirm: () => handleEnableUser(fan.enabled, fan.userId),
+                                        onConfirm: () => handleEnableUser(fan.enabled as boolean, fan.userId),
                                         startIcon: fan.enabled ? <NotInterestedIcon/> : <HowToRegOutlinedIcon/>
                                     }
                                 ]

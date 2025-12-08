@@ -6,6 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import React from "react";
 import {FundraisingStatusEnum, type FundraisingStatusKey} from "@utils";
 import {useCancelFundraising} from "@pages/homePage/hooks/useFundraising.ts";
+import {useNavigate} from "react-router-dom";
 
 export const ArtistFundraisingCardActionsEnum = {
     CONFIRM_FUNDRAISING: "CONFIRM_FUNDRAISING",
@@ -15,8 +16,11 @@ export const ArtistFundraisingCardActionsEnum = {
 } as const;
 
 type ArtistFundraisingActionKey = keyof typeof ArtistFundraisingCardActionsEnum;
+type ArtistFundraisingActionProps = {
+    fundraisingId: string;
+};
 
-const ArtistFundraisingConfirmAction: React.FC = (fundraisingId: string) => {
+const ArtistFundraisingConfirmAction: React.FC<ArtistFundraisingActionProps> = ({fundraisingId}) => {
     return (
         <Button
             startIcon={<ConfirmationNumberIcon/>}
@@ -30,7 +34,7 @@ const ArtistFundraisingConfirmAction: React.FC = (fundraisingId: string) => {
     );
 };
 
-const ArtistFundraisingCancelAction: React.FC = (fundraisingId: string) => {
+const ArtistFundraisingCancelAction: React.FC<ArtistFundraisingActionProps> = ({fundraisingId}) => {
     const {mutate: cancelFundraising} = useCancelFundraising();
     return (
         <Button
@@ -46,7 +50,7 @@ const ArtistFundraisingCancelAction: React.FC = (fundraisingId: string) => {
     );
 };
 
-const ArtistFundraisingEditAction: React.FC = (fundraisingId: string) => {
+const ArtistFundraisingEditAction: React.FC<ArtistFundraisingActionProps> = ({fundraisingId}) => {
     return (
         <Button
             onClick={() => {
@@ -61,7 +65,8 @@ const ArtistFundraisingEditAction: React.FC = (fundraisingId: string) => {
     );
 };
 
-const ArtistFundraisingViewDonationsAction: React.FC = (fundraisingId: string) => {
+const ArtistFundraisingViewDonationsAction: React.FC<ArtistFundraisingActionProps> = ({fundraisingId}) => {
+    const navigate = useNavigate();
     return (
         <Button
             onClick={() => {
@@ -75,7 +80,7 @@ const ArtistFundraisingViewDonationsAction: React.FC = (fundraisingId: string) =
     );
 };
 
-const actionComponent: Record<ArtistFundraisingActionKey, React.FC> = {
+const actionComponent: Record<ArtistFundraisingActionKey, React.FC<ArtistFundraisingActionProps>> = {
     CONFIRM_FUNDRAISING: ArtistFundraisingConfirmAction,
     CANCEL_FUNDRAISING: ArtistFundraisingCancelAction,
     EDIT_FUNDRAISING: ArtistFundraisingEditAction,
@@ -101,11 +106,19 @@ const actionsByStatus: Partial<Record<FundraisingStatusKey, ArtistFundraisingAct
     [FundraisingStatusEnum.CANCELLED]: [],
 };
 
-export function getActionsFromStatus(status: FundraisingStatusKey): React.ReactNode[] {
+export function getActionsFromStatus(
+    status: FundraisingStatusKey,
+    fundraisingId: string,
+): React.ReactNode[] {
     const actions = actionsByStatus[status] ?? [];
 
     return actions.map((actionKey) => {
         const ActionComponent = actionComponent[actionKey];
-        return <ActionComponent key={actionKey}/>;
+        return (
+            <ActionComponent
+                key={actionKey}
+                fundraisingId={fundraisingId}
+            />
+        );
     });
 }

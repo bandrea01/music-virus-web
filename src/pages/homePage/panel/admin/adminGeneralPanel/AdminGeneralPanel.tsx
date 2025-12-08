@@ -1,5 +1,4 @@
 import PanelPaperComponent from "@components/PanelPaperComponent.tsx";
-import {useGetAdminStats} from "@pages/homePage/hooks/useGetAdminStats.ts";
 import {Box, Icon, Typography} from "@mui/material";
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import HeadphonesOutlinedIcon from '@mui/icons-material/HeadphonesOutlined';
@@ -10,6 +9,7 @@ import {useNavigate} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {setActiveTab} from "@store/sidebar/slice.ts";
 import './adminGeneralPanel.scss'
+import {useAdminStats} from "@pages";
 
 function getUserCounterIconAndLink(type: string): {
     icon: SvgIconComponent,
@@ -29,7 +29,7 @@ function getUserCounterIconAndLink(type: string): {
 }
 
 const AdminGeneralPanel = () => {
-    const {data} = useGetAdminStats();
+    const {data} = useAdminStats();
 
     const navigate = useNavigate();
     const dispatch = useDispatch();

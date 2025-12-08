@@ -1,1 +1,2 @@
-export * from './profileEditSchema.ts';
+export * from './profileEditForm.ts';
+export * from './fundraisingForm.ts';

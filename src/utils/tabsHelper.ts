@@ -125,5 +125,8 @@ export const getTabsByRole = (role: AuthRole | undefined): Tab[] => {
         ...commonTabKeys,
     ];
 
-    return tabs.filter((t) => allowedKeys.includes(t.key));
+    const uniqueAllowedKeys = Array.from(new Set(allowedKeys));
+    return uniqueAllowedKeys
+        .map((key) => tabs.find((t) => t.key === key))
+        .filter((t): t is Tab => t !== undefined);
 };

@@ -1,11 +1,19 @@
-import {useQuery, type UseQueryResult} from '@tanstack/react-query';
+import {useMutation, type UseMutationResult, useQuery, type UseQueryResult} from '@tanstack/react-query';
 import {useEffect} from 'react';
 import {useAppDispatch} from '@store/hook.ts';
-import {setSnackbarError} from '@store/snackbar/slice.ts';
+import {setSnackbarError, setSnackbarSuccess} from '@store/snackbar/slice.ts';
 import {getAxiosErrorMessage} from "@apiService/axios.ts";
 import type {AxiosError} from "axios";
-import {getArtistList, getFansList, getVenuesList} from "@pages/homePage/api/profile.ts";
-import type {ArtistListResponseDTO, FanListResponseDTO, VenueListResponseDTO} from "@pages/homePage/api/types.ts";
+import {getArtistList, getFansList, getVenuesList, updateProfileRequest} from "@pages/homePage/api/profile.ts";
+import type {
+    ArtistListResponseDTO,
+    FanListResponseDTO,
+    UpdateProfileDTO,
+    VenueListResponseDTO
+} from "@pages/homePage/api/types.ts";
+import {useNavigate} from "react-router-dom";
+import {useAuth} from "@components";
+import {MusicVirusRoutesEnum} from "@utils";
 
 function useUsersByRole<T>(
     key: string,
@@ -55,4 +63,27 @@ export function useGetVenues(): UseQueryResult<VenueListResponseDTO, AxiosError>
         () => getVenuesList(),
         "Errore durante la richiesta della lista dei locali!"
     );
+}
+
+export function useProfileEdit(): UseMutationResult<unknown, unknown, UpdateProfileDTO, unknown> {
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const {logout} = useAuth();
+
+    return useMutation({
+        mutationKey: ['profile-edit'],
+        mutationFn: async (payload) => {
+            return await updateProfileRequest(payload);
+        },
+        retry: 0,
+        onSuccess: async () => {
+            dispatch(setSnackbarSuccess('Profilo modificato con successo! Effettua nuovamente il login'));
+            logout();
+            navigate(MusicVirusRoutesEnum.LOGIN, {replace: true});
+        },
+        onError: (err: AxiosError) => {
+            dispatch(setSnackbarError(getAxiosErrorMessage(err, "Errore durante la modifica del profilo!")));
+            console.error('Login error:', err);
+        },
+    });
 }

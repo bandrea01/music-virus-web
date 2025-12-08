@@ -1,9 +1,6 @@
 import PanelPaperComponent from "@components/PanelPaperComponent.tsx";
 import {Box, Chip, Typography} from "@mui/material";
-import {useGetArtists} from "@pages/homePage/hooks/usersDomain.tsx";
-import {useEffect} from "react";
 import {usePopup} from "@components/context/PopupContextProvider.tsx";
-import {approveArtist, banUser, unapproveArtist, unbanUser} from "@pages/homePage/api/admin.ts";
 import {useAppDispatch} from "@store/hook.ts";
 import {setSnackbarSuccess} from "@store/snackbar/slice.ts";
 import UserCardComponent from "@components/UserCardComponent.tsx";
@@ -12,6 +9,13 @@ import NotInterestedIcon from "@mui/icons-material/NotInterested";
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import HowToRegOutlinedIcon from '@mui/icons-material/HowToRegOutlined';
+import {
+    useAdminArtists,
+    useAdminBanUser,
+    useAdminUnbanUser,
+    useAdminApproveArtist,
+    useAdminUnapproveArtist
+} from "@pages";
 
 const getCardColors = (approved: boolean, enabled: boolean) => {
     const backgroundColor = enabled ? '#132543' : '#242835';
@@ -33,10 +37,11 @@ const approvedComponent = (approved: boolean) => {
             </Typography>
         </>
     );
-}
-const bannedComponent = (banned: boolean) => {
-    const color = banned ? "#0dd329" : "#dc5858";
-    const written = banned ? "Abilitato" : "Bannato";
+};
+
+const enabledStatusComponent = (enabled: boolean) => {
+    const color = enabled ? "#0dd329" : "#dc5858";
+    const written = enabled ? "Abilitato" : "Bannato";
     return (
         <>
             <Typography fontSize="15px" color={color} fontWeight="bold">
@@ -47,106 +52,117 @@ const bannedComponent = (banned: boolean) => {
             </Typography>
         </>
     );
-}
+};
 
 const AdminArtistPanel = () => {
-    const {data, refetch} = useGetArtists();
+    const {data} = useAdminArtists();
     const {openPopup, closePopup} = usePopup();
     const dispatch = useAppDispatch();
+
+    const {mutate: banUser} = useAdminBanUser();
+    const {mutate: unbanUser} = useAdminUnbanUser();
+    const {mutate: approveArtist} = useAdminApproveArtist();
+    const {mutate: unapproveArtist} = useAdminUnapproveArtist();
 
     const datas = data?.artists || [];
     const artists = sortArtists(datas);
 
-    const handleRefetchLogic = () => {
-        refetch().then(() => {});
+    const handleAfterMutation = () => {
         closePopup();
-        dispatch(setSnackbarSuccess("Azione eseguita correttamente!"))
-    }
+        dispatch(setSnackbarSuccess("Azione eseguita correttamente!"));
+    };
 
     const handleEnableArtist = (isEnabled: boolean, userId: string) => {
         openPopup({
             title: isEnabled ? "Banna Utente" : "Abilita Utente",
-            message: isEnabled ? "Sei sicuro di voler bannare questo utente?" : "Sei sicuro di voler abilitare questo utente?",
-            onConfirmFn: async () => {
-                isEnabled ? await banUser(userId) : await unbanUser(userId);
-                handleRefetchLogic();
+            message: isEnabled
+                ? "Sei sicuro di voler bannare questo utente?"
+                : "Sei sicuro di voler abilitare questo utente?",
+            onConfirmFn: () => {
+                if (isEnabled) {
+                    banUser(userId, {onSuccess: handleAfterMutation});
+                } else {
+                    unbanUser(userId, {onSuccess: handleAfterMutation});
+                }
             },
             confirmLabel: "Conferma",
             confirmButtonVariant: "contained",
             cancelLabel: "Annulla",
             cancelButtonVariant: "text",
         });
-    }
+    };
 
     const handleApproveArtist = (isApproved: boolean, userId: string) => {
         openPopup({
             title: isApproved ? "Revoca approvazione" : "Approva artista",
-            message: isApproved ? "Sei sicuro di voler revocare l'approvazione a questo artista?" : "Sei sicuro di voler approvare questo artista?",
-            onConfirmFn: async () => {
-                isApproved ? await unapproveArtist(userId) : await approveArtist(userId);
-                handleRefetchLogic();
+            message: isApproved
+                ? "Sei sicuro di voler revocare l'approvazione a questo artista?"
+                : "Sei sicuro di voler approvare questo artista?",
+            onConfirmFn: () => {
+                if (isApproved) {
+                    unapproveArtist(userId, {onSuccess: handleAfterMutation});
+                } else {
+                    approveArtist(userId, {onSuccess: handleAfterMutation});
+                }
             },
             confirmLabel: "Conferma",
             confirmButtonVariant: "contained",
             cancelLabel: "Annulla",
             cancelButtonVariant: "text",
         });
-    }
-
-    useEffect(() => {
-        refetch().then(() => {
-        });
-    }, []);
+    };
 
     return (
-        <PanelPaperComponent
-            title="Gestione Artisti"
-        >
+        <PanelPaperComponent title="Gestione Artisti">
             <Box className="adminPanel" display="grid" gap={2} p={2} sx={{flex: 1, overflowY: 'auto'}}>
                 {artists.map((artist) => {
-                    const {backgroundColor, borderColor, avatarColor} = getCardColors(artist.approved, artist.enabled);
+                    const {
+                        backgroundColor,
+                        borderColor,
+                        avatarColor
+                    } = getCardColors(artist.approved as boolean, artist.enabled as boolean);
+
                     return (
                         <UserCardComponent
+                            key={artist.userId}
                             backgroundCardColor={backgroundColor}
                             borderCardColor={borderColor}
                             avatarColor={avatarColor}
                             avatarText={`${artist.name[0]}${artist.surname[0]}`}
                             primaryContent={`${artist.name} ${artist.surname}`}
                             secondaryContent={artist.email}
-                            otherContent={
-                                artist.artistGenres?.map((genre: string) => (
-                                    <Chip
-                                        key={genre}
-                                        label={genre}
-                                        size="small"
-                                        sx={{color: "#8e8e8e"}}
-                                    />
-                                ))
-                            }
+                            otherContent={artist.artistGenres?.map((genre: string) => (
+                                <Chip
+                                    key={genre}
+                                    label={genre}
+                                    size="small"
+                                    sx={{color: "#8e8e8e"}}
+                                />
+                            ))}
                             flagsContent={[
-                                approvedComponent(artist.approved),
-                                bannedComponent(artist.enabled),
+                                approvedComponent(artist.approved as boolean),
+                                enabledStatusComponent(artist.enabled as boolean),
                             ]}
-                            actions={
-                                [
-                                    {
-                                        text: artist.enabled ? "Banna" : "Abilita",
-                                        onConfirm: () => handleEnableArtist(artist.enabled, artist.userId),
-                                        startIcon: artist.enabled? <NotInterestedIcon/> : <HowToRegOutlinedIcon/>
-                                    },
-                                    {
-                                        text: artist.approved ? "Non approvare" : "Approva",
-                                        onConfirm: () => handleApproveArtist(artist.approved, artist.userId),
-                                        startIcon: artist.approved? <RemoveCircleOutlineIcon/> : <CheckCircleOutlineIcon/>
-                                    }
-                                ]
-                            }
+                            actions={[
+                                {
+                                    text: artist.enabled ? "Banna" : "Abilita",
+                                    onConfirm: () => handleEnableArtist(artist.enabled as boolean, artist.userId),
+                                    startIcon: artist.enabled ? <NotInterestedIcon/> : <HowToRegOutlinedIcon/>
+                                },
+                                {
+                                    text: artist.approved ? "Non approvare" : "Approva",
+                                    onConfirm: () => handleApproveArtist(artist.approved as boolean, artist.userId),
+                                    startIcon: artist.approved
+                                        ? <RemoveCircleOutlineIcon/>
+                                        : <CheckCircleOutlineIcon/>
+                                }
+                            ]}
                         />
-                    )
+                    );
                 })}
             </Box>
         </PanelPaperComponent>
     );
-}
+};
 
 export default AdminArtistPanel;

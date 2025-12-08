@@ -10,6 +10,10 @@ export async function getAdminVenuesList() {
     const {data} = await userIdentityApi.get(RoutesEnum.ADMIN_VENUES);
     return data;
 }
+export async function getAdminFansList() {
+    const {data} = await userIdentityApi.get(RoutesEnum.ADMIN_FANS);
+    return data;
+}
 
 export async function approveArtist(artistId: string) {
     const {data} = await userIdentityApi.patch( `${RoutesEnum.APPROVE_ARTIST}`.replace('$1', artistId));

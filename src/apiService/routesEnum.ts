@@ -14,6 +14,7 @@ export const RoutesEnum = {
     //ADMIN
     ADMIN_VENUES: '/admin/venues',
     ADMIN_ARTISTS: '/admin/artists',
+    ADMIN_FANS: '/admin/fans',
     APPROVE_ARTIST: '/admin/artist/approve/$1',
     UNAPPROVE_ARTIST: '/admin/artist/unapprove/$1',
     ADMIN_STATS: '/admin/stats',

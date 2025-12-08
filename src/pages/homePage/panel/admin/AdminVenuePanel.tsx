@@ -7,7 +7,7 @@ import {useAppDispatch} from "@store/hook.ts";
 import {setSnackbarSuccess} from "@store/snackbar/slice.ts";
 import UserCardComponent from "@components/UserCardComponent.tsx";
 import PinDropOutlinedIcon from "@mui/icons-material/PinDropOutlined";
-import {useAdminDomain} from "@pages/homePage/hooks/useAdminDomain.ts";
+import {useAdminVenues} from "@pages/homePage/hooks/useAdminDomain.ts";
 import NotInterestedIcon from "@mui/icons-material/NotInterested";
 import HowToRegOutlinedIcon from "@mui/icons-material/HowToRegOutlined";
 
@@ -17,9 +17,9 @@ const getCardColors = (enabled: boolean) => {
     return {backgroundColor, avatarColor};
 }
 
-const bannedComponent = (banned: boolean) => {
-    const color = banned ? "#0dd329" : "#dc5858";
-    const written = banned ? "Abilitato" : "Bannato";
+const bannedComponent = (enabled: boolean) => {
+    const color = enabled ? "#0dd329" : "#dc5858";
+    const written = enabled ? "Abilitato" : "Bannato";
     return (
         <>
             <Typography fontSize="15px" color={color} fontWeight="bold">
@@ -52,7 +52,7 @@ const addressComponent = (venueAddress: { latitude: number, longitude: number })
 }
 
 const AdminVenuePanel = () => {
-    const {data, refetch} = useAdminDomain();
+    const {data, refetch} = useAdminVenues();
     const {openPopup, closePopup} = usePopup();
     const dispatch = useAppDispatch();
 
@@ -92,9 +92,10 @@ const AdminVenuePanel = () => {
         >
             <Box display="grid" gap={2} p={2} sx={{flex: 1, overflowY: 'auto'}}>
                 {venues.map((venue) => {
-                    const {backgroundColor, avatarColor} = getCardColors(venue.enabled);
+                    const {backgroundColor, avatarColor} = getCardColors(venue.enabled as boolean);
                     return (
                         <UserCardComponent
+                            key={venue.userId}
                             backgroundCardColor={backgroundColor}
                             avatarColor={avatarColor}
                             avatarText={`${venue.name[0]}${venue.surname[0]}`}
@@ -103,14 +104,14 @@ const AdminVenuePanel = () => {
                             flagsContent={
                                 [
                                     addressComponent(venue.venueAddress),
-                                    bannedComponent(venue.enabled),
+                                    bannedComponent(venue.enabled as boolean),
                                 ]
                             }
                             actions={
                                 [
                                     {
                                         text: venue.enabled ? "Banna" : "Abilita",
-                                        onConfirm: () => handleEnableUser(venue.enabled, venue.userId),
+                                        onConfirm: () => handleEnableUser(venue.enabled as boolean, venue.userId),
                                         startIcon: venue.enabled ? <NotInterestedIcon/> : <HowToRegOutlinedIcon/>
                                     }
                                 ]

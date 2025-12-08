@@ -34,8 +34,8 @@ export type ArtistProfileDTO = {
     email: string;
     artistGenres: string[];
     artistSocial: string;
-    enabled: boolean;
-    approved: boolean;
+    enabled?: boolean;
+    approved?: boolean;
 }
 
 export type VenueProfileDTO = {
@@ -43,12 +43,12 @@ export type VenueProfileDTO = {
     name: string;
     surname: string;
     email: string;
-    enabled: boolean;
     venueName: string;
     venueAddress: {
         latitude: number;
         longitude: number;
     };
+    enabled?: boolean;
 }
 
 export type FanProfileDTO = {
@@ -56,7 +56,7 @@ export type FanProfileDTO = {
     name: string;
     surname: string;
     email: string;
-    enabled: boolean;
+    enabled?: boolean;
 }
 
 export type ProfileCounterDTO = {

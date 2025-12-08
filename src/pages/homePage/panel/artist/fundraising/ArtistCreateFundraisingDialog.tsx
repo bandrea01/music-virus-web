@@ -1,9 +1,12 @@
 import DialogComponent from "@components/DialogComponent.tsx";
 import React from "react";
 import {SelectFormField, type SelectMenuItem, TextFormField} from "@components";
-import {type Fundraising, type VenueProfileDTO} from "@pages";
-import type {AddEditFundraisingFormValues} from "@pages/homePage/form/addEditFundraisingSchema.ts";
-import {useAddEditFundraisingForm} from "@pages/homePage/hooks/useFundraisingForm.ts";
+import {
+    type AddEditFundraisingFormValues,
+    type Fundraising,
+    type VenueProfileDTO,
+    useAddEditFundraisingForm
+} from "@pages";
 import {Box} from "@mui/material";
 import {DatePickerFormField} from "@components/formComponent/DatePickerFormField.tsx";
 import {SliderFormField} from "@components/formComponent/SliderFormField.tsx";
