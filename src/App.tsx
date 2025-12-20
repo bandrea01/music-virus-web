@@ -1,10 +1,9 @@
-// src/App.tsx
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import LoginPage from "./pages/loginPage/LoginPage.tsx";
 import PreRegisterPage from "./pages/preRegisterPage/PreRegisterPage.tsx";
 import MainPage from "@pages/homePage/MainPage.tsx";
 import RegisterPage from "./pages/registerPage/RegisterPage.tsx";
-import PersonalProfilePanel from "./pages/homePage/panel/PersonalProfilePanel.tsx";
+import PersonalProfilePanel from "@pages/homePage/panel/common/profile/PersonalProfilePanel.tsx";
 import ErrorPage from "@pages/ErrorPage.tsx";
 import AdminArtistPanel from "@pages/homePage/panel/admin/AdminArtistPanel.tsx";
 import AdminFansPanel from "@pages/homePage/panel/admin/AdminFansPanel.tsx";
@@ -13,11 +12,13 @@ import AdminGeneralPanel from "@pages/homePage/panel/admin/adminGeneralPanel/Adm
 import {MusicVirusRoutesEnum} from "@/utils";
 import ProtectedRoute from "@components/context/ProtectedRoute.tsx";
 import DefaultRouteManager from "@components/context/DefaultRouteManager.tsx";
-import FundraisingPanel from "@pages/homePage/panel/FundraisingPanel.tsx";
-import EventPanel from "@pages/homePage/panel/EventPanel.tsx";
+import GeneralFundraisingPanel from "@pages/homePage/panel/common/fundraising/GeneralFundraisingPanel.tsx";
+import EventPanel from "@pages/homePage/panel/common/event/EventPanel.tsx";
 import ArtistFundraisingPanel from "@pages/homePage/panel/artist/fundraising/ArtistFundraisingPanel.tsx";
+import {usePrefetchBaseDomain} from "@main.tsx";
 
 export default function App() {
+    usePrefetchBaseDomain(true);
     return (
         <BrowserRouter>
             <Routes>
@@ -51,7 +52,7 @@ export default function App() {
                     />
                     <Route
                         path={MusicVirusRoutesEnum.FUNDRAISING}
-                        element={<FundraisingPanel/>}
+                        element={<GeneralFundraisingPanel/>}
                     />
                     <Route
                         path={MusicVirusRoutesEnum.EVENT}

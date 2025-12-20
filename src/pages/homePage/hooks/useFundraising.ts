@@ -4,17 +4,13 @@ import {useAppDispatch} from '@store/hook.ts';
 import {setSnackbarError, setSnackbarSuccess} from '@store/snackbar/slice.ts';
 import {getAxiosErrorMessage} from "@apiService/axios.ts";
 import type {AxiosError} from "axios";
-import type {
-    FundraisingListResponseDTO,
-    FundraisingRequestDTO
-} from "@pages/homePage/api/types.ts";
+import type {FundraisingListResponseDTO, FundraisingRequestDTO} from "@pages/homePage/api/types.ts";
 import {
     type AddEditFundraisingFormValues,
     cancelFundraising,
     confirmFundraising,
     createFundraising,
-    editFundraising,
-    getFundraisingList,
+    editFundraising, getOthersFundraisingList,
     getPersonalFundraisingList
 } from "@pages";
 
@@ -97,15 +93,15 @@ export function useFundraisingMutation<TVariables, TData = void>(options: {
 export function useGetFundraising() {
     return useFundraisingQuery<FundraisingListResponseDTO>({
         queryKey: ['fundraising'],
-        queryFn: getFundraisingList,
+        queryFn: () => getOthersFundraisingList(),
         errorMessage: "Errore durante la richiesta della lista delle raccolte fondi!"
     });
 }
 
-export function useGetPersonalFundraisingList(userId: string) {
+export function useGetPersonalFundraisingList() {
     return useFundraisingQuery<FundraisingListResponseDTO>({
-        queryKey: ['personal-fundraising', userId],
-        queryFn: () => getPersonalFundraisingList(userId),
+        queryKey: ['personal-fundraising'],
+        queryFn: () => getPersonalFundraisingList(),
         errorMessage: "Errore durante la richiesta della lista delle tue raccolte fondi!"
     });
 }

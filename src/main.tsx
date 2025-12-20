@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import ReactDOM from 'react-dom/client';
-import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import {QueryClientProvider, useQueryClient} from '@tanstack/react-query';
 import App from './App';
 import './styles/global.scss';
 import {UIWrapper} from "@components/context/UIWrapper.tsx";
@@ -11,8 +11,33 @@ import {AuthProvider} from "@components/context/AuthContext.tsx";
 import {LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 import {it} from "date-fns/locale";
+import {getArtistList, getVenuesList} from "@pages";
+import {DOMAIN_FETCH_QUERY_WAIT_TIME} from "@utils/constant/constants.ts";
 
-const qc = new QueryClient();
+const qc = useQueryClient();
+
+export const domainKeys = {
+    artists: () => ['domain', 'artists'] as const,
+    venues: () => ['domain', 'venues'] as const,
+}
+
+export function usePrefetchBaseDomain(enabled = true) {
+    useEffect(() => {
+        if (!enabled) return;
+
+        qc.prefetchQuery({
+            queryKey: domainKeys.artists(),
+            queryFn: getArtistList,
+            staleTime: DOMAIN_FETCH_QUERY_WAIT_TIME,
+        }).then(() => {});
+
+        qc.prefetchQuery({
+            queryKey: domainKeys.venues(),
+            queryFn: getVenuesList,
+            staleTime: DOMAIN_FETCH_QUERY_WAIT_TIME,
+        }).then(() => {});
+    }, [qc, enabled]);
+}
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>

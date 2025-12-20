@@ -102,9 +102,23 @@ export type Fundraising = {
     targetAmount: number;
     status: string;
     eventDate: string;
+    expirationDate: string;
 }
 export type FundraisingListResponseDTO = {
     fundraisings: Fundraising[];
 }
 
+
+export type Event = {
+    eventId: string;
+    fundraisingId: string;
+    artistId: string;
+    venueId: string;
+    status: string;
+    eventName: string;
+    eventDate: string;
+}
+export type EventListResponseDTO = {
+    events: Event[];
+}
 

@@ -1,14 +1,14 @@
 import React, {useEffect, useMemo, useRef} from "react";
 import {Box, Chip} from "@mui/material";
-import {getSelectOptions, type IUserProfile, SelectFormField, TextFormField, useAuth} from "@/components";
-import DialogComponent from "../../../components/DialogComponent.tsx";
+import {getSelectOptions, type IUserProfile, SelectFormField, TextFormField, useAuth} from "@components";
+import DialogComponent from "@components/DialogComponent.tsx";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {getProfileEditSchemaAndDefaults, useProfileEdit} from "@pages";
-import {MapDialog} from "../../registerPage/section/MapDialog.tsx";
+import {MapDialog} from "../../../../registerPage/section/MapDialog.tsx";
 import {mapProfileEditFormValuesToDTO} from "@pages";
 import {z} from "zod";
-import {genres} from "../../registerPage/section/ArtistSection.tsx";
+import {genres} from "../../../../registerPage/section/ArtistSection.tsx";
 
 type PersonalProfileEditDialogProps = {
     isOpen: boolean;

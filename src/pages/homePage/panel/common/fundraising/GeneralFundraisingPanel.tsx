@@ -1,10 +1,9 @@
 import PanelPaperComponent from "@components/PanelPaperComponent.tsx";
 import {Box} from "@mui/material";
-import AddIcon from '@mui/icons-material/Add';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import AddEditFundraisingDialog from "@pages/homePage/panel/artist/fundraising/AddEditFundraisingDialog.tsx";
 import {useMemo, useState} from "react";
-import {useGetPersonalFundraisingList} from "@pages/homePage/hooks/useFundraising.ts";
+import {useGetFundraising} from "@pages/homePage/hooks/useFundraising.ts";
 import {CheckboxFilterBar, useAuth} from "@components";
 import {type EnrichFundraising, type Fundraising, useGetArtists, useGetVenues} from "@pages";
 import {FundraisingCardComponent} from "@components/FundraisingCardComponent.tsx";
@@ -24,7 +23,7 @@ const filterStatusLabel: Record<FundraisingStatusKey, string> = {
     [FundraisingStatusEnum.CANCELLED]: "Cancellate",
 };
 
-const ArtistFundraisingPanel = () => {
+const GeneralFundraisingPanel = () => {
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const [selectedFundraising, setSelectedFundraising] = useState<Fundraising | undefined>(undefined);
 
@@ -46,13 +45,13 @@ const ArtistFundraisingPanel = () => {
     const {data: venuesData, isLoading: isLoadingVenues} = useGetVenues();
     const {data: artistsData, isLoading: isLoadingArtists} = useGetArtists();
     const {
-        data: personalFundraisingData,
+        data: fundraisingsData,
         isLoading: isLoadingFundraising
-    } = useGetPersonalFundraisingList();
+    } = useGetFundraising();
 
     const venues = venuesData?.venues ?? [];
     const artists = artistsData?.artists ?? [];
-    const personalFundraisings = personalFundraisingData?.fundraisings ?? [];
+    const personalFundraisings = fundraisingsData?.fundraisings ?? [];
 
     const fundraisings: EnrichFundraising[] = useMemo(
         () =>
@@ -67,11 +66,6 @@ const ArtistFundraisingPanel = () => {
 
     //Actions
     const actions: ActionProps[] = [
-        {
-            label: 'Nuova Raccolta Fondi',
-            onClick: () => setIsDialogOpen(true),
-            startIcon: <AddIcon/>
-        },
         {
             label: 'Filtra',
             onClick: () => setShowFilters(prev => !prev),
@@ -96,7 +90,7 @@ const ArtistFundraisingPanel = () => {
 
     return (
         <PanelPaperComponent
-            title="Le tue raccolte fondi"
+            title="Raccolte fondi"
             actions={actions}
             filtersContent={
                 showFilters ? (
@@ -130,4 +124,4 @@ const ArtistFundraisingPanel = () => {
     );
 };
 
-export default ArtistFundraisingPanel;
+export default GeneralFundraisingPanel;

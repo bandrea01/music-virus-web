@@ -4,8 +4,9 @@ import {SelectFormField, type SelectMenuItem, TextFormField} from "@components";
 import {
     type AddEditFundraisingFormValues,
     type Fundraising,
-    type VenueProfileDTO,
-    useAddEditFundraisingForm
+    useAddEditFundraisingForm,
+    useEditFundraising,
+    type VenueProfileDTO
 } from "@pages";
 import {Box} from "@mui/material";
 import {DatePickerFormField} from "@components/formComponent/DatePickerFormField.tsx";
@@ -29,23 +30,33 @@ function getMenuItems(venues: VenueProfileDTO[] | undefined) {
     })) as SelectMenuItem[];
 }
 
-const ArtistCreateFundraisingDialog: React.FC<ArtistCreateFundraisingDialogProps> = ({
-                                                                                         isDialogOpen,
-                                                                                         onClose,
-                                                                                         fundraising,
-                                                                                         venues,
-                                                                                         userId
-                                                                                     }: ArtistCreateFundraisingDialogProps) => {
+const AddEditFundraisingDialog: React.FC<ArtistCreateFundraisingDialogProps> = ({
+                                                                                    isDialogOpen,
+                                                                                    onClose,
+                                                                                    fundraising,
+                                                                                    venues,
+                                                                                    userId
+                                                                                }: ArtistCreateFundraisingDialogProps) => {
 
     const {mutate: createFundraising} = useCreateFundraising();
+    const {mutate: editFundraising} = useEditFundraising();
 
+    const isEditMode = Boolean(fundraising);
     const {form} = useAddEditFundraisingForm({
         fundraising
     });
     const {control, handleSubmit} = form;
 
+
     const onSubmit = (values: AddEditFundraisingFormValues) => {
-        createFundraising(mapFundraisingFormValuesToDTO(userId ?? '', values));
+        if (fundraising) {
+            editFundraising({
+                fundraisingId: fundraising.fundraisingId,
+                payload: mapFundraisingFormValuesToDTO(userId ?? '', values)
+            });
+        } else {
+            createFundraising(mapFundraisingFormValuesToDTO(userId ?? '', values));
+        }
         onClose();
     };
 
@@ -56,7 +67,7 @@ const ArtistCreateFundraisingDialog: React.FC<ArtistCreateFundraisingDialogProps
 
     return (
         <DialogComponent
-            title="Crea nuova raccolta fondi"
+            title={isEditMode ? "Modifica la raccolta fondi" : "Crea nuova raccolta fondi"}
             isOpen={isDialogOpen}
             onClose={onClose}
             actions={[
@@ -66,7 +77,7 @@ const ArtistCreateFundraisingDialog: React.FC<ArtistCreateFundraisingDialogProps
                 },
                 {
                     onClick: handleSubmit(onSubmit),
-                    label: 'Crea raccolta fondi'
+                    label: isEditMode ? 'Modifica raccolta fondi' : 'Crea raccolta fondi',
                 }
             ]}
         >
@@ -124,4 +135,4 @@ const ArtistCreateFundraisingDialog: React.FC<ArtistCreateFundraisingDialogProps
         ;
 }
 
-export default ArtistCreateFundraisingDialog;
+export default AddEditFundraisingDialog;

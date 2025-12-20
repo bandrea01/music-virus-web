@@ -7,23 +7,23 @@ export async function createFundraising(payload: FundraisingRequestDTO) {
     return data;
 }
 
-export async function getFundraisingList() {
-    const {data} = await eventFundraisingApi.get(RoutesEnum.ADMIN_VENUES);
+export async function getOthersFundraisingList() {
+    const {data} = await eventFundraisingApi.get(RoutesEnum.FUNDRAISING);
     return data;
 }
 
-export async function getPersonalFundraisingList(artistId: string) {
-    const {data} = await eventFundraisingApi.get(`${RoutesEnum.ARTIST_FUNDRAISING}`.replace('$1', artistId));
+export async function getPersonalFundraisingList() {
+    const {data} = await eventFundraisingApi.get(RoutesEnum.ARTIST_FUNDRAISING);
     return data;
 }
 
 export async function confirmFundraising(fundraisingId: string) {
-    const {data} = await eventFundraisingApi.post(`${RoutesEnum.APPROVE_ARTIST}`.replace('$1', fundraisingId));
+    const {data} = await eventFundraisingApi.patch(`${RoutesEnum.CONFIRM_FUNDRAISING}`.replace('$1', fundraisingId));
     return data;
 }
 
 export async function editFundraising(fundraisingId: string, payload: FundraisingRequestDTO) {
-    const {data} = await eventFundraisingApi.put(`${RoutesEnum.EDIT_FUNDRAISING}`.replace('$1', fundraisingId), payload);
+    const {data} = await eventFundraisingApi.patch(`${RoutesEnum.EDIT_FUNDRAISING}`.replace('$1', fundraisingId), payload);
     return data;
 }
 

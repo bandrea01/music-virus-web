@@ -5,8 +5,8 @@ import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
 import DeleteIcon from '@mui/icons-material/Delete';
 import React from "react";
 import {FundraisingStatusEnum, type FundraisingStatusKey} from "@utils";
-import {useCancelFundraising} from "@pages/homePage/hooks/useFundraising.ts";
-import {useNavigate} from "react-router-dom";
+import {confirmFundraisingAndCreateEvent, useCancelFundraising} from "@pages/homePage/hooks/useFundraising.ts";
+import type {Fundraising} from "@pages";
 
 export const ArtistFundraisingCardActionsEnum = {
     CONFIRM_FUNDRAISING: "CONFIRM_FUNDRAISING",
@@ -17,15 +17,18 @@ export const ArtistFundraisingCardActionsEnum = {
 
 type ArtistFundraisingActionKey = keyof typeof ArtistFundraisingCardActionsEnum;
 type ArtistFundraisingActionProps = {
-    fundraisingId: string;
+    fundraising: Fundraising;
+    setOpenEditDialog?: (open: boolean) => void;
+    setSelectedFundraising?: (fundraising: Fundraising) => void;
 };
 
-const ArtistFundraisingConfirmAction: React.FC<ArtistFundraisingActionProps> = ({fundraisingId}) => {
+const ArtistFundraisingConfirmAction: React.FC<ArtistFundraisingActionProps> = ({fundraising}) => {
+    const {mutate: confirmFundraising} = confirmFundraisingAndCreateEvent();
     return (
         <Button
             startIcon={<ConfirmationNumberIcon/>}
             onClick={() => {
-                // Handle confirm event action
+                confirmFundraising(fundraising.fundraisingId);
             }}
             sx={{fontSize: "10px !important", backgroundColor: "#224e24 !important"}}
         >
@@ -34,27 +37,27 @@ const ArtistFundraisingConfirmAction: React.FC<ArtistFundraisingActionProps> = (
     );
 };
 
-const ArtistFundraisingCancelAction: React.FC<ArtistFundraisingActionProps> = ({fundraisingId}) => {
+const ArtistFundraisingCancelAction: React.FC<ArtistFundraisingActionProps> = ({fundraising}) => {
     const {mutate: cancelFundraising} = useCancelFundraising();
     return (
         <Button
             onClick={() => {
-                cancelFundraising(fundraisingId);
+                cancelFundraising(fundraising.fundraisingId);
             }}
             startIcon={<DeleteIcon/>}
             sx={{fontSize: "10px !important", backgroundColor: "#7a1c1c !important"}}
-
         >
             Annulla
         </Button>
     );
 };
 
-const ArtistFundraisingEditAction: React.FC<ArtistFundraisingActionProps> = ({fundraisingId}) => {
+const ArtistFundraisingEditAction: React.FC<ArtistFundraisingActionProps> = ({fundraising, setOpenEditDialog, setSelectedFundraising}) => {
     return (
         <Button
             onClick={() => {
-                // Handle edit fundraising action
+                setOpenEditDialog?.(true)
+                setSelectedFundraising?.(fundraising);
             }}
             startIcon={<EditIcon/>}
             sx={{fontSize: "10px !important"}}
@@ -65,8 +68,9 @@ const ArtistFundraisingEditAction: React.FC<ArtistFundraisingActionProps> = ({fu
     );
 };
 
-const ArtistFundraisingViewDonationsAction: React.FC<ArtistFundraisingActionProps> = ({fundraisingId}) => {
-    const navigate = useNavigate();
+const ArtistFundraisingViewDonationsAction: React.FC<ArtistFundraisingActionProps> = ({}) => {
+    // const navigate = useNavigate();
+    //TODO
     return (
         <Button
             onClick={() => {
@@ -92,32 +96,39 @@ const actionsByStatus: Partial<Record<FundraisingStatusKey, ArtistFundraisingAct
         "CANCEL_FUNDRAISING",
         "EDIT_FUNDRAISING",
         "VIEW_DONATIONS",
-        "CONFIRM_FUNDRAISING",
     ],
     [FundraisingStatusEnum.ACHIEVED]: [
         "CANCEL_FUNDRAISING",
-        "VIEW_DONATIONS"
+        "VIEW_DONATIONS",
+        "EDIT_FUNDRAISING",
+        "CONFIRM_FUNDRAISING"
     ],
     [FundraisingStatusEnum.NOT_ACHIEVED]: [
         "CANCEL_FUNDRAISING",
         "EDIT_FUNDRAISING",
         "VIEW_DONATIONS"
     ],
+    [FundraisingStatusEnum.CONFIRMED]: [
+        "VIEW_DONATIONS"
+    ],
     [FundraisingStatusEnum.CANCELLED]: [],
 };
 
 export function getActionsFromStatus(
-    status: FundraisingStatusKey,
-    fundraisingId: string,
+    fundraising: Fundraising,
+    setOpenEditDialog: (open: boolean) => void,
+    setSelectedFundraising: (fundraising: Fundraising) => void,
 ): React.ReactNode[] {
-    const actions = actionsByStatus[status] ?? [];
+    const actions = actionsByStatus[fundraising.status as FundraisingStatusKey] ?? [];
 
     return actions.map((actionKey) => {
         const ActionComponent = actionComponent[actionKey];
         return (
             <ActionComponent
                 key={actionKey}
-                fundraisingId={fundraisingId}
+                fundraising={fundraising}
+                setOpenEditDialog={setOpenEditDialog}
+                setSelectedFundraising={setSelectedFundraising}
             />
         );
     });

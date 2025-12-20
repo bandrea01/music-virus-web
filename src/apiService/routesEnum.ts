@@ -23,7 +23,9 @@ export const RoutesEnum = {
 
     // EVENTS & FUNDRAISING
     FUNDRAISING: '/fundraising',
-    ARTIST_FUNDRAISING: '/fundraising?artistId=$1',
+    ARTIST_FUNDRAISING: '/fundraising/me',
     DELETE_FUNDRAISING: '/fundraising/cancel/$1',
     EDIT_FUNDRAISING: '/fundraising/$1',
+    CONFIRM_FUNDRAISING: '/fundraising/confirm/$1',
+    EVENT: '/event',
 }

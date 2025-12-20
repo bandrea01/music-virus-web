@@ -1,60 +1,92 @@
 import React from "react";
-import {Avatar, Box, Card, Divider, Slider, Typography} from "@mui/material";
-import type {EnrichFundraising} from "@pages";
+import {Avatar, Box, Card, Divider, Slider, Tooltip, Typography} from "@mui/material";
+import {type EnrichFundraising, type Fundraising, getActionsFromStatus} from "@pages";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import LocationPinIcon from '@mui/icons-material/LocationPin';
-import {FundraisingStatusEnum} from "@utils";
+import {formatDateWithTime, FundraisingStatusEnum, type FundraisingStatusKey} from "@utils";
 
 type FundraisingCardComponentProps = {
     fundraising: EnrichFundraising;
-    buttons?: React.ReactNode[];
+    setSelectedFundraising: (fundraising: Fundraising | undefined) => void;
+    setIsEditDialogOpen: (open: boolean) => void;
+}
+type Palette = {
+    backgroundColor: string;
+    statusColor: string;
+    sliderColor: string;
 }
 
-function calculateColor(percentage: number): string {
-    const red = Math.min(255, Math.floor((100 - percentage) * 2.55));
-    const green = Math.min(255, Math.floor(percentage * 2.55));
-    return `rgb(${red}, ${green}, 0)`;
-}
+const STATUS_PALETTE: Record<FundraisingStatusKey, Omit<Palette, 'sliderColor'>> = {
+    [FundraisingStatusEnum.ACTIVE]: {
+        backgroundColor: '#0F172A',
+        statusColor: '#E5E7EB',
+    },
+    [FundraisingStatusEnum.ACHIEVED]: {
+        backgroundColor: '#201735',
+        statusColor: '#E3B7FF',
+    },
+    [FundraisingStatusEnum.CANCELLED]: {
+        backgroundColor: '#1F2933',
+        statusColor: '#9CA3AF',
+    },
+    [FundraisingStatusEnum.NOT_ACHIEVED]: {
+        backgroundColor: 'rgba(59,47,26,0.73)',
+        statusColor: '#FACC15',
+    },
+    [FundraisingStatusEnum.CONFIRMED]: {
+        backgroundColor: '#103827',
+        statusColor: '#BBF7D0',
+    },
+};
 
-function getBackgroundColor(status: string): string {
-    switch (status) {
-        case FundraisingStatusEnum.ACTIVE:
-            return '#0f172a';
-        case FundraisingStatusEnum.ACHIEVED:
-            return '#104E269E';
-        case FundraisingStatusEnum.CANCELLED:
-            return '#2E2E2ED8';
-        case FundraisingStatusEnum.NOT_ACHIEVED:
-            return '#675C2360';
-        default:
-            return '';
+function getSliderColor(status: FundraisingStatusKey, percentage: number): string {
+    if (status === FundraisingStatusEnum.CANCELLED) {
+        return 'rgb(107, 114, 128)';
     }
+    const value = Math.max(0, Math.min(100, percentage));
+
+    if (value === 0) {
+        return 'rgb(220, 38, 38)';
+    }
+    if (value > 0 && value < 50) {
+        return 'rgb(234, 88, 12)';
+    }
+    if (value >= 50 && value < 100) {
+        return 'rgb(250, 204, 21)';
+    }
+    return 'rgb(34, 197, 94)';
 }
 
-function getStatusColor(status: string): string {
-    switch (status) {
-        case FundraisingStatusEnum.ACTIVE:
-            return '#3EE489';
-        case FundraisingStatusEnum.ACHIEVED:
-            return '#ac60ff';
-        case FundraisingStatusEnum.CANCELLED:
-            return '#9CA3AF';
-        case FundraisingStatusEnum.NOT_ACHIEVED:
-            return '#EAB308';
-        default:
-            return '';
-    }
+function getPalette(status: FundraisingStatusKey, percentage: number): Palette {
+    const sliderColor = getSliderColor(status, percentage);
+    const statusPalette = STATUS_PALETTE[status] ?? {
+        backgroundColor: '',
+        statusColor: '',
+    };
+
+    return {
+        ...statusPalette,
+        sliderColor,
+    };
 }
+
 
 export const FundraisingCardComponent: React.FC<FundraisingCardComponentProps> = ({
                                                                                       fundraising,
-                                                                                      buttons
+                                                                                      setIsEditDialogOpen,
+                                                                                      setSelectedFundraising
                                                                                   }) => {
+
+    const {backgroundColor, statusColor, sliderColor} = getPalette(
+        fundraising.status as FundraisingStatusKey,
+        (fundraising.currentAmount / fundraising.targetAmount) * 100
+    );
+
     return (
         <Card
             variant="outlined"
             sx={{
-                backgroundColor: `${getBackgroundColor(fundraising.status)} !important`,
+                backgroundColor: `${backgroundColor} !important`,
                 borderWidth: "3px !important",
                 padding: "20px",
                 borderRadius: "15px",
@@ -64,43 +96,49 @@ export const FundraisingCardComponent: React.FC<FundraisingCardComponentProps> =
                 "&:hover": {cursorPointer: "pointer"}
             }}
         >
-            <Box display="flex" flexDirection="column" justifyContent="space-between" gap={3}>
+            <Box display="flex" flexDirection="column" justifyContent="space-between" gap={1}>
                 <Box display="flex" justifyContent="start" alignItems="center" gap={2}>
-                    <Avatar
-                        sx={{
-                            width: 56,
-                            height: 56,
-                            backgroundColor: "#ac60ff",
-                            ":hover": {cursor: "pointer", backgroundColor: '#33619e'}
-                        }}
-                    >
-                        {fundraising.artistName.split(' ')[0].charAt(0)}
-                        {fundraising.artistName.split(' ')[1].charAt(0)}
-                    </Avatar>
+                    <Box>
+                        <Tooltip title={fundraising.artistName} arrow>
+                            <Avatar
+                                sx={{
+                                    width: 60,
+                                    height: 60,
+                                    borderRadius: '10px',
+                                    objectFit: 'cover',
+                                    backgroundColor: '#335998',
+                                }}
+                                variant="square"
+                            >
+                                {fundraising.artistName.split(' ')[0].charAt(0)}{fundraising.artistName.split(' ')[1].charAt(0)}
+                            </Avatar>
+                        </Tooltip>
+                    </Box>
                     <Box display="flex" flexDirection="column" overflow="hidden">
                         <Box display="flex" justifyContent="space-between" gap={0.5} width="400px">
-                            <Typography fontSize="20px" color="white" fontWeight="bold">
+                            <Typography fontSize="20px" color="white" fontWeight="bold"
+                                        sx={{textDecoration: 'underline'}}>
                                 {fundraising.fundraisingName}
                             </Typography>
                         </Box>
                         <Typography fontSize="12px" color="#fff">
                             Somma raccolta: {fundraising.currentAmount}€ / {fundraising.targetAmount}€<br/>
-                            Scadenza: {new Date(fundraising.eventDate).toLocaleDateString()}
+                            Scadenza: {formatDateWithTime(fundraising.expirationDate)}
                         </Typography>
                     </Box>
-                    <Box alignSelf="start">
-                        <Typography fontSize="9px" color={getStatusColor(fundraising.status)}>
-                            •{fundraising.status}
+                    <Box alignSelf="start" padding={'9px'}>
+                        <Typography fontSize="11px" color={statusColor} noWrap={true} fontWeight="bold">
+                            {fundraising.status.replace('_', ' ')}
                         </Typography>
                     </Box>
                 </Box>
                 <Box display="flex" alignItems="center" width="100%" gap={1}>
                     <CalendarMonthIcon sx={{color: 'white'}}/>
-                    <Typography fontWeight="bold" color="white">
-                        {new Date(fundraising.eventDate).toLocaleDateString()}
+                    <Typography fontWeight="bold" color="white" fontSize="13px">
+                        {formatDateWithTime(fundraising.eventDate)}
                     </Typography>
                     <LocationPinIcon sx={{color: 'white', marginLeft: '20px'}}/>
-                    <Typography fontWeight="bold" color="white">
+                    <Typography fontWeight="bold" color="white" fontSize="13px">
                         {fundraising.venueName}
                     </Typography>
                 </Box>
@@ -109,7 +147,7 @@ export const FundraisingCardComponent: React.FC<FundraisingCardComponentProps> =
                         value={(fundraising.currentAmount / fundraising.targetAmount) * 100}
                         sx={{
                             width: '100%',
-                            color: calculateColor((fundraising.currentAmount / fundraising.targetAmount) * 100),
+                            color: sliderColor,
                             "&:hover": {cursor: 'default'},
                         }}
                     />
@@ -117,9 +155,9 @@ export const FundraisingCardComponent: React.FC<FundraisingCardComponentProps> =
                         {Math.round((fundraising.currentAmount / fundraising.targetAmount) * 100)}%
                     </Typography>
                 </Box>
-                <Divider color={"#25324a"}/>
-                <Box display="flex" justifyContent="space-around" gap={1}>
-                    {buttons}
+                <Divider color={"#25324a"} sx={{marginBottom: '10px'}}/>
+                <Box display="flex" justifyContent="flex-end" gap={1}>
+                    {getActionsFromStatus(fundraising, setIsEditDialogOpen, setSelectedFundraising)}
                 </Box>
             </Box>
         </Card>

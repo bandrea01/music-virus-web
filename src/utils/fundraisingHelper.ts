@@ -2,8 +2,9 @@ import type {EnrichFundraising} from "@pages";
 import {FundraisingStatusEnum, type FundraisingStatusKey} from "@utils";
 
 export const FUNDRAISING_STATUS_ORDER: FundraisingStatusKey[] = [
-    FundraisingStatusEnum.ACTIVE,
     FundraisingStatusEnum.ACHIEVED,
+    FundraisingStatusEnum.ACTIVE,
+    FundraisingStatusEnum.CONFIRMED,
     FundraisingStatusEnum.NOT_ACHIEVED,
     FundraisingStatusEnum.CANCELLED,
 ];

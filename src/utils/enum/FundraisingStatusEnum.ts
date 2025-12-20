@@ -1,4 +1,5 @@
 export const FundraisingStatusEnum = {
+    CONFIRMED: 'CONFIRMED',
     ACTIVE: 'ACTIVE',
     ACHIEVED: 'ACHIEVED',
     NOT_ACHIEVED: 'NOT_ACHIEVED',

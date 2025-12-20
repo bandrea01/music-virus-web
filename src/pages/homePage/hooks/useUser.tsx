@@ -103,6 +103,22 @@ export function useGetVenues(): UseQueryResult<VenueListResponseDTO, AxiosError>
     });
 }
 
+export function useDomainGetArtists(): UseQueryResult<ArtistListResponseDTO, AxiosError> {
+    return useProfileQuery<ArtistListResponseDTO>({
+        queryKey: ['domain','artists'],
+        queryFn: getArtistList,
+        errorMessage: "Errore durante la richiesta della lista di artisti!"
+    });
+}
+
+export function useDomainGetVenues(): UseQueryResult<VenueListResponseDTO, AxiosError> {
+    return useProfileQuery<VenueListResponseDTO>({
+        queryKey: ['domain','venues'],
+        queryFn: getVenuesList,
+        errorMessage: "Errore durante la richiesta della lista dei locali!"
+    });
+}
+
 export function useProfileEdit(): UseMutationResult<unknown, AxiosError, UpdateProfileDTO, unknown> {
     const navigate = useNavigate();
     const {logout} = useAuth();
