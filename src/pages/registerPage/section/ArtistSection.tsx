@@ -1,8 +1,7 @@
-import React from "react";
 import {Box, Chip,} from "@mui/material";
 import {useFormContext} from "react-hook-form";
-import {getSelectOptions, SelectFormField} from "@components/formComponent/SelectFormField.tsx";
-import {TextFormField} from "@components/formComponent/TextFormField.tsx";
+import {getSelectOptions, SelectFormField, TextFormField} from "@components";
+import type {ReactElement} from "react";
 
 export const genres = [
     "Pop", "Rock", "Indie", "Hip-Hop", "Trap", "R&B", "Soul", "Jazz",
@@ -16,7 +15,7 @@ type ArtistFormValues = {
     artistSocial: string;
 };
 
-export const ArtistSection: React.FC = () => {
+export default function ArtistSection(): ReactElement{
     const {control, getValues, setValue} = useFormContext<ArtistFormValues>();
     const genresOptions = getSelectOptions(genres);
 

@@ -1,15 +1,15 @@
-import PanelPaperComponent from "@components/PanelPaperComponent.tsx";
+import PanelPaperComponent from "@components/ui/PanelPaperComponent.tsx";
 import {Box, Button, Typography} from "@mui/material";
-import {useEffect} from "react";
-import {usePopup} from "@components/context/PopupContextProvider.tsx";
+import {type ReactElement, useEffect} from "react";
+import {usePopup} from "@components/providers/PopupContextProvider.tsx";
 import {banUser, unbanUser} from "@pages/homePage/api/admin.ts";
 import {useAppDispatch} from "@store/hook.ts";
 import {setSnackbarSuccess} from "@store/snackbar/slice.ts";
-import UserCardComponent from "@components/UserCardComponent.tsx";
+import UserCardComponent from "@components/domain/UserCardComponent.tsx";
 import PinDropOutlinedIcon from "@mui/icons-material/PinDropOutlined";
-import {useAdminVenues} from "@pages/homePage/hooks/useAdminDomain.ts";
 import NotInterestedIcon from "@mui/icons-material/NotInterested";
 import HowToRegOutlinedIcon from "@mui/icons-material/HowToRegOutlined";
+import {useAdminVenues} from "@api";
 
 const getCardColors = (enabled: boolean) => {
     const backgroundColor = enabled ? '#132543' : '#242835';
@@ -51,7 +51,7 @@ const addressComponent = (venueAddress: { latitude: number, longitude: number })
     );
 }
 
-const AdminVenuePanel = () => {
+export default function AdminVenuePanel (): ReactElement {
     const {data, refetch} = useAdminVenues();
     const {openPopup, closePopup} = usePopup();
     const dispatch = useAppDispatch();
@@ -122,6 +122,4 @@ const AdminVenuePanel = () => {
             </Box>
         </PanelPaperComponent>
     );
-}
-
-export default AdminVenuePanel;
+};

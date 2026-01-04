@@ -1,73 +1,58 @@
-import api from '../../../apiService/axios.ts';
-import type {
-    ArtistRegisterDTO,
-    RegisterBaseDTO as FanRegisterDTO,
-    RegisterDTORequestByType,
-    UserTypeId,
-    VenueRegisterDTO,
-} from '../../../apiService/types.ts';
-import {RoutesEnum} from '../../../apiService/routesEnum.ts';
+import api from "@api/axios.ts";
+import {ApiRoutes} from "@api";
+import type {UserTypeKey} from "@utils";
+import type {JwtSessionResponseDTO} from "@pages/loginPage/api/types.ts";
+import type {AxiosResponse} from "axios";
+import type {RegisterDTORequestByType, VenueRegisterDTO,} from "@pages/registerPage/api/types.ts";
+import type {LatLng} from "leaflet";
 
-const registerPathByType: Record<UserTypeId, string> = {
-    fan: RoutesEnum.FAN_REGISTER,
-    artist: RoutesEnum.ARTIST_REGISTER,
-    venue: RoutesEnum.VENUE_REGISTER,
+function normalizeVenueAddress(p: VenueRegisterDTO): LatLng {
+    const a: any = p.venueAddress;
+    const lat = a?.lat ?? p.venueAddress?.lat;
+    const lng = a?.lng ?? p.venueAddress?.lng;
+
+    if (typeof lat !== "number" || typeof lng !== "number") {
+        throw new Error("Indirizzo non valido: lat/lng mancanti");
+    }
+    return {lat, lng} as LatLng;
+}
+
+type PayloadBuilderMap = {
+    [K in UserTypeKey]: (p: RegisterDTORequestByType[K]) => RegisterDTORequestByType[K];
 };
 
-function toFan(p: FanRegisterDTO) {
-    return {
+const payloadBuilders: PayloadBuilderMap = {
+    FAN: (p) => ({
         name: p.name,
         surname: p.surname,
         email: p.email,
         password: p.password,
-    };
-}
+    }),
 
-function toArtist(p: ArtistRegisterDTO) {
-    return {
+    ARTIST: (p) => ({
         name: p.name,
         surname: p.surname,
         email: p.email,
         password: p.password,
         artistGenres: p.artistGenres,
         artistSocial: p.artistSocial,
-    };
-}
+    }),
 
-function toVenue(p: VenueRegisterDTO) {
-    const lat = (p.address as any)?.lat ?? p.address?.lat;
-    const lng = (p.address as any)?.lng ?? p.address?.lng;
-    if (typeof lat !== 'number' || typeof lng !== 'number') {
-        throw new Error('Indirizzo non valido: lat/lng mancanti');
-    }
-    return {
+    VENUE: (p) => ({
         name: p.name,
         surname: p.surname,
         email: p.email,
         password: p.password,
         venueName: p.venueName,
-        venueAddress: { lat, lng },
-    };
-}
+        venueAddress: normalizeVenueAddress(p),
+    }),
+};
 
-function assertNever(x: never): never {
-    throw new Error(`Unknown user type: ${x as string}`);
-}
-
-export async function registerRequest<T extends UserTypeId>(
+export async function registerRequest<T extends UserTypeKey>(
     type: T,
     payload: RegisterDTORequestByType[T]
-): Promise<void> {
-    const url = registerPathByType[type];
-
-    const body =
-        type === 'fan'
-            ? toFan(payload as FanRegisterDTO)
-            : type === 'artist'
-                ? toArtist(payload as ArtistRegisterDTO)
-                : type === 'venue'
-                    ? toVenue(payload as VenueRegisterDTO)
-                    : assertNever(type as never);
-
-    await api.post<void>(url, body);
+): Promise<AxiosResponse<JwtSessionResponseDTO>> {
+    const url = ApiRoutes.REGISTER.byType(type);
+    const body = payloadBuilders[type](payload) as RegisterDTORequestByType[T];
+    return api.post<JwtSessionResponseDTO>(url, body);
 }

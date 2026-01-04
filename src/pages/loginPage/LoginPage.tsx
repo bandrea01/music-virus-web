@@ -3,12 +3,12 @@ import {zodResolver} from '@hookform/resolvers/zod';
 import {Box, Button, Card, CardContent, Container, Typography,} from '@mui/material';
 import '../../styles/global.scss';
 import './loginPage.scss';
-import {useLogin} from './api/useLogin.ts';
+import {useLogin} from '@api/hooks/useLogin.ts';
 import {initialValuesloginSchema, type LoginFormValues, loginSchema} from "./form/authSchema.ts";
 import {TextFormField, useAuth} from "@/components";
 import {useNavigate} from "react-router-dom";
 import {useEffect} from "react";
-import {MusicVirusRoutesEnum} from "@/utils";
+import {AppRoutes} from "@/utils";
 
 export default function LoginPage() {
     const {logout} = useAuth();
@@ -16,7 +16,7 @@ export default function LoginPage() {
 
     useEffect(() => {
         logout();
-        navigate(MusicVirusRoutesEnum.LOGIN, { replace: true });
+        navigate(AppRoutes.LOGIN, { replace: true });
     }, []);
 
     //Form

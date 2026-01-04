@@ -2,17 +2,21 @@ import {useMemo} from 'react';
 import {Link as RouterLink, Navigate, useParams} from 'react-router-dom';
 import {FormProvider,} from 'react-hook-form';
 import {Box, Button, Card, CardContent, Container, Grid, Link, Stack, Typography,} from '@mui/material';
-import {initialValuesByType, type UserRegisterFormValues, type UserType} from './form/registerSchema.ts';
+import {
+    type UserRegisterFormValues,
+    type UserType,
+    initialValuesByType,
+    ArtistSection,
+    useUserRegisterForm,
+    VenueSection
+} from '@pages';
 import {useDispatch} from 'react-redux';
 import {setSnackbarError} from '@store/snackbar/slice.ts';
-import {ArtistSection} from './section/ArtistSection.tsx';
-import {VenueSection} from './section/VenueSection.tsx';
-import {useUserRegisterUser} from "./api/useUserRegisterUser.ts";
-import {useUserRegisterForm} from "./form/useRegisterForm.ts";
 import '../../styles/global.scss';
 import '../loginPage/loginPage.scss';
 import {TextFormField} from "@/components";
-import {MusicVirusRoutesEnum} from "@/utils";
+import {AppRoutes} from "@/utils";
+import {useRegisterUser} from "@api/hooks/useUser.tsx";
 
 const isUserType = (v: unknown): v is UserType =>
     v === 'fan' || v === 'artist' || v === 'venue';
@@ -45,7 +49,7 @@ export default function RegisterPage() {
         return <Navigate to="/pre-register" replace/>;
     }
     const userType: UserType = typeParam;
-    const registerMutation = useUserRegisterUser(userType);
+    const registerMutation = useRegisterUser(userType);
 
     //Form
     const initialValues = useMemo(
@@ -118,10 +122,7 @@ export default function RegisterPage() {
                     <CardContent className="auth-card__inner">
                         <FormProvider key={userType} {...form}>
                             <Grid container spacing={8} alignItems="center">
-                                <Grid
-                                    item
-                                    xs={12}
-                                    md={5}
+                                <Box
                                     sx={{
                                         position: 'relative',
                                         overflow: 'hidden',
@@ -178,9 +179,8 @@ export default function RegisterPage() {
                                             <Typography variant="body2">{subtitleByType[userType]}</Typography>
                                         </Box>
                                     </Box>
-                                </Grid>
-
-                                <Grid item xs={12} md={7}>
+                                </Box>
+                                <Box>
                                     <Box
                                         component="form"
                                         noValidate
@@ -242,13 +242,13 @@ export default function RegisterPage() {
 
                                             <Typography variant="body2" color="white">
                                                 Hai già un account?{' '}
-                                                <Link component={RouterLink} to={MusicVirusRoutesEnum.LOGIN}>
+                                                <Link component={RouterLink} to={AppRoutes.LOGIN}>
                                                     Accedi
                                                 </Link>
                                             </Typography>
                                         </Stack>
                                     </Box>
-                                </Grid>
+                                </Box>
                             </Grid>
                         </FormProvider>
                     </CardContent>

@@ -35,8 +35,8 @@
       "@components/*": [
         "./src/components/*"
       ],
-      "@apiService/*": [
-        "./src/apiService/*"
+      "@api/*": [
+        "./src/api/*"
       ],
       "@pages/*": [
         "./src/pages/*"

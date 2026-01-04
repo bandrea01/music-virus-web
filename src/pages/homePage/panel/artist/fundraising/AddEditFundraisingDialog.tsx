@@ -1,17 +1,16 @@
-import DialogComponent from "@components/DialogComponent.tsx";
-import React from "react";
-import {SelectFormField, type SelectMenuItem, TextFormField} from "@components";
+import DialogComponent from "@components/ui/DialogComponent.tsx";
+import {type ReactElement} from "react";
+import {DatePickerFormField, SelectFormField, SliderFormField, TextFormField} from "@components";
 import {
     type AddEditFundraisingFormValues,
     type Fundraising,
     useAddEditFundraisingForm,
-    useEditFundraising,
     type VenueProfileDTO
 } from "@pages";
 import {Box} from "@mui/material";
-import {DatePickerFormField} from "@components/formComponent/DatePickerFormField.tsx";
-import {SliderFormField} from "@components/formComponent/SliderFormField.tsx";
-import {mapFundraisingFormValuesToDTO, useCreateFundraising} from "@pages/homePage/hooks/useFundraising.ts";
+import {useCreateFundraising, useEditFundraising} from "@api/hooks/useFundraising.ts";
+import {mapFundraisingFormValuesToDTO} from "@utils";
+import type {SelectMenuItem} from "@components/form/SelectFormField.tsx";
 
 type ArtistCreateFundraisingDialogProps = {
     isDialogOpen: boolean;
@@ -30,13 +29,13 @@ function getMenuItems(venues: VenueProfileDTO[] | undefined) {
     })) as SelectMenuItem[];
 }
 
-const AddEditFundraisingDialog: React.FC<ArtistCreateFundraisingDialogProps> = ({
-                                                                                    isDialogOpen,
-                                                                                    onClose,
-                                                                                    fundraising,
-                                                                                    venues,
-                                                                                    userId
-                                                                                }: ArtistCreateFundraisingDialogProps) => {
+export default function AddEditFundraisingDialog({
+                                                     isDialogOpen,
+                                                     onClose,
+                                                     fundraising,
+                                                     venues,
+                                                     userId
+                                                 }: ArtistCreateFundraisingDialogProps): ReactElement {
 
     const {mutate: createFundraising} = useCreateFundraising();
     const {mutate: editFundraising} = useEditFundraising();
@@ -131,8 +130,5 @@ const AddEditFundraisingDialog: React.FC<ArtistCreateFundraisingDialogProps> = (
                 </form>
             </Box>
         </DialogComponent>
-    )
-        ;
-}
-
-export default AddEditFundraisingDialog;
+    );
+};

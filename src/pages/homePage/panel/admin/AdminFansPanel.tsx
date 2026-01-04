@@ -1,14 +1,14 @@
-import PanelPaperComponent from "@components/PanelPaperComponent.tsx";
+import PanelPaperComponent from "@components/ui/PanelPaperComponent.tsx";
 import {Box, Typography} from "@mui/material";
-import {useEffect} from "react";
-import {usePopup} from "@components/context/PopupContextProvider.tsx";
+import {type ReactElement, useEffect} from "react";
+import {usePopup} from "@components/providers/PopupContextProvider.tsx";
 import {banUser, unbanUser} from "@pages/homePage/api/admin.ts";
 import {useAppDispatch} from "@store/hook.ts";
 import {setSnackbarSuccess} from "@store/snackbar/slice.ts";
-import UserCardComponent from "@components/UserCardComponent.tsx";
+import UserCardComponent from "@components/domain/UserCardComponent.tsx";
 import NotInterestedIcon from "@mui/icons-material/NotInterested";
 import HowToRegOutlinedIcon from "@mui/icons-material/HowToRegOutlined";
-import {useAdminFans} from "@pages";
+import {useAdminFans} from "@api";
 
 const getCardColors = (enabled: boolean) => {
     const backgroundColor = enabled ? '#132543' : '#242835';
@@ -31,7 +31,7 @@ const bannedComponent = (enabled: boolean) => {
     );
 }
 
-const AdminFansPanel = () => {
+export default function AdminFansPanel(): ReactElement {
     const {data, refetch} = useAdminFans();
     const {openPopup, closePopup} = usePopup();
     const dispatch = useAppDispatch();
@@ -50,6 +50,7 @@ const AdminFansPanel = () => {
             title: isEnabled ? "Banna Utente" : "Abilita Utente",
             message: isEnabled ? "Sei sicuro di voler bannare questo utente?" : "Sei sicuro di voler abilitare questo utente?",
             onConfirmFn: async () => {
+                //TODO: refetch logic (ban should invalidate)
                 isEnabled ? await banUser(userId) : await unbanUser(userId);
                 handleRefetchLogic();
             },
@@ -96,6 +97,4 @@ const AdminFansPanel = () => {
             </Box>
         </PanelPaperComponent>
     );
-}
-
-export default AdminFansPanel;
+};

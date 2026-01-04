@@ -1,1 +1,1 @@
-export * from "./GeneralFundraisingPanel.tsx";
+export {default as GeneralFundraisingPanel} from "./GeneralFundraisingPanel.tsx";

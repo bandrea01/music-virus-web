@@ -1,3 +1,3 @@
 export * from './fundraising';
-export * from './ArtistHistoryPanel.tsx';
-export * from './ArtistFeedbackPanel.tsx';
+export {default as ArtistHistoryPanel} from './ArtistHistoryPanel.tsx';
+export {default as ArtistFeedbackPanel} from './ArtistFeedbackPanel.tsx';

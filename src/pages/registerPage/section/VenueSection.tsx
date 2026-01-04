@@ -1,15 +1,15 @@
-import React, {useMemo, useState} from "react";
+import {type ReactElement, useMemo, useState} from "react";
 import type {LatLngLiteral} from "leaflet";
 import {useFormContext} from "react-hook-form";
-import {MapDialog} from "./MapDialog.tsx";
-import {TextFormField} from "@/components";
+import {TextFormField} from "@components";
+import {MapDialog} from "@pages";
 
 type VenueFormValues = {
     venueName: string;
     venueAddress: LatLngLiteral | null;
 };
 
-export const VenueSection: React.FC = () => {
+export default function VenueSection(): ReactElement {
     const [open, setOpen] = useState(false);
     const {control, watch} = useFormContext<VenueFormValues>();
 

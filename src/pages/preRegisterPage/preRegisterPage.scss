@@ -70,8 +70,9 @@
   .card__header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-around;
     margin-bottom: $space-5;
+    gap: $space-4;
   }
 
   .card__title-wrap {

@@ -1,34 +1,46 @@
-import {userIdentityApi} from "@apiService/axios.ts";
-import {RoutesEnum} from "@/apiService/routesEnum.ts";
-import type {ProfileEditFormValues, ProfileResponseDTO, UpdateProfileDTO} from "@pages";
+import {billingApi, userIdentityApi} from "@api/axios.ts";
+import {ApiRoutes} from "@api";
+import type {
+    AccountResponseDTO,
+    ProfileEditFormValues,
+    ProfileResponseDTO,
+    UpdateProfileDTO,
+    VenueListResponseDTO
+} from "@pages";
+import {LatLng} from "leaflet";
 
 export async function profileRequest(): Promise<ProfileResponseDTO> {
-    const {data} = await userIdentityApi.get(RoutesEnum.PERSONAL_PROFILE);
+    const {data} = await userIdentityApi.get(ApiRoutes.PROFILE.ROOT);
     return data;
 }
 
 export async function updateProfileRequest(profile: UpdateProfileDTO) {
-    const {data} = await userIdentityApi.patch(RoutesEnum.PERSONAL_PROFILE, profile);
+    const {data} = await userIdentityApi.patch(ApiRoutes.PROFILE.ROOT, profile);
     return data;
 }
 
 export async function getArtistList() {
-    const {data} = await userIdentityApi.get(RoutesEnum.ARTIST_LIST);
+    const {data} = await userIdentityApi.get(ApiRoutes.PROFILE.ARTISTS);
     return data;
 }
 
 export async function getFansList() {
-    const {data} = await userIdentityApi.get(RoutesEnum.FAN_LIST);
+    const {data} = await userIdentityApi.get(ApiRoutes.PROFILE.FANS);
     return data;
 }
 
-export async function getVenuesList() {
-    const {data} = await userIdentityApi.get(RoutesEnum.VENUE_LIST);
+export async function getVenuesList(): Promise<VenueListResponseDTO> {
+    const {data} = await userIdentityApi.get(ApiRoutes.PROFILE.VENUES);
+    return data;
+}
+
+export async function getBankAccount(): Promise<AccountResponseDTO> {
+    const {data} = await billingApi.get(ApiRoutes.PROFILE.ACCOUNT);
     return data;
 }
 
 export async function getAdminStatistics() {
-    const {data} = await userIdentityApi.get(RoutesEnum.ADMIN_STATS);
+    const {data} = await userIdentityApi.get(ApiRoutes.ADMIN.STATS);
     return data;
 }
 
@@ -43,6 +55,6 @@ export function mapProfileEditFormValuesToDTO(values: ProfileEditFormValues): Up
         artistGenres: values.artistGenres?.length ? values.artistGenres : undefined,
         artistSocial: values.artistSocial || undefined,
         venueName: values.venueName || undefined,
-        venueAddress: values.venueAddress || undefined,
+        venueAddress: values.venueAddress ? new LatLng(values.venueAddress.latitude, values.venueAddress.longitude) : undefined,
     }
 }

@@ -1,12 +1,10 @@
-import PanelPaperComponent from "@components/PanelPaperComponent.tsx";
+import {CheckboxFilterBar, FundraisingCardComponent, PanelPaperComponent, useAuth} from "@components";
 import {Box} from "@mui/material";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import AddEditFundraisingDialog from "@pages/homePage/panel/artist/fundraising/AddEditFundraisingDialog.tsx";
-import {useMemo, useState} from "react";
-import {useGetFundraising} from "@pages/homePage/hooks/useFundraising.ts";
-import {CheckboxFilterBar, useAuth} from "@components";
-import {type EnrichFundraising, type Fundraising, useGetArtists, useGetVenues} from "@pages";
-import {FundraisingCardComponent} from "@components/FundraisingCardComponent.tsx";
+import {type ReactElement, useMemo, useState} from "react";
+import {useGetFundraising} from "@api/hooks/useFundraising.ts";
+import {type EnrichFundraising, type Fundraising} from "@pages";
 import {
     buildEnrichedFundraisings,
     FUNDRAISING_STATUS_ORDER,
@@ -14,6 +12,7 @@ import {
     type FundraisingStatusKey
 } from "@utils";
 import type {ActionProps} from "@utils/types/types.ts";
+import {useDomainGetArtists, useDomainGetVenues} from "@api";
 
 const filterStatusLabel: Record<FundraisingStatusKey, string> = {
     [FundraisingStatusEnum.CONFIRMED]: "Confermate",
@@ -23,7 +22,7 @@ const filterStatusLabel: Record<FundraisingStatusKey, string> = {
     [FundraisingStatusEnum.CANCELLED]: "Cancellate",
 };
 
-const GeneralFundraisingPanel = () => {
+export default function GeneralFundraisingPanel(): ReactElement {
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const [selectedFundraising, setSelectedFundraising] = useState<Fundraising | undefined>(undefined);
 
@@ -38,19 +37,17 @@ const GeneralFundraisingPanel = () => {
     });
 
     //User ID
-    const {profileUser} = useAuth();
-    const userId = profileUser?.userId ?? "";
+    const {authUser} = useAuth();
+    const userId = authUser?.userId ?? "";
 
     //datas
-    const {data: venuesData, isLoading: isLoadingVenues} = useGetVenues();
-    const {data: artistsData, isLoading: isLoadingArtists} = useGetArtists();
+    const {data: venues, isLoading: isLoadingVenues} = useDomainGetVenues();
+    const {data: artists, isLoading: isLoadingArtists} = useDomainGetArtists();
     const {
         data: fundraisingsData,
         isLoading: isLoadingFundraising
     } = useGetFundraising();
 
-    const venues = venuesData?.venues ?? [];
-    const artists = artistsData?.artists ?? [];
     const personalFundraisings = fundraisingsData?.fundraisings ?? [];
 
     const fundraisings: EnrichFundraising[] = useMemo(
@@ -116,12 +113,10 @@ const GeneralFundraisingPanel = () => {
                     isDialogOpen={isDialogOpen}
                     onClose={() => setIsDialogOpen(false)}
                     fundraising={selectedFundraising}
-                    venues={venues}
+                    venues={venues ?? []}
                     userId={userId}
                 />
             )}
         </PanelPaperComponent>
     );
 };
-
-export default GeneralFundraisingPanel;

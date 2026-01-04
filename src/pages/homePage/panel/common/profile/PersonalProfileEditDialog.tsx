@@ -1,27 +1,29 @@
-import React, {useEffect, useMemo, useRef} from "react";
+import {type ReactElement, useEffect, useMemo, useRef} from "react";
 import {Box, Chip} from "@mui/material";
-import {getSelectOptions, type IUserProfile, SelectFormField, TextFormField, useAuth} from "@components";
-import DialogComponent from "@components/DialogComponent.tsx";
+import {DialogComponent, getSelectOptions, SelectFormField, TextFormField, useAuth} from "@components";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {getProfileEditSchemaAndDefaults, useProfileEdit} from "@pages";
-import {MapDialog} from "../../../../registerPage/section/MapDialog.tsx";
-import {mapProfileEditFormValuesToDTO} from "@pages";
+import {getProfileEditSchemaAndDefaults, mapProfileEditFormValuesToDTO} from "@pages";
+import {MapDialog} from "@pages";
 import {z} from "zod";
-import {genres} from "../../../../registerPage/section/ArtistSection.tsx";
+import {genres} from "@pages/registerPage/section/ArtistSection.tsx";
+import type {IProfileUserLocalStorage} from "@components/providers/AuthContext.tsx";
+import {useProfileEdit} from "@api";
+
+//TODO refactor
 
 type PersonalProfileEditDialogProps = {
     isOpen: boolean;
     onClose: () => void;
-    profile: IUserProfile;
+    profile: IProfileUserLocalStorage;
 };
 
-const PersonalProfileEditDialog: React.FC<PersonalProfileEditDialogProps> = ({
-                                                                                 isOpen,
-                                                                                 onClose,
-                                                                             }) => {
+export default function PersonalProfileEditDialog({
+                                                      isOpen,
+                                                      onClose,
+                                                  }: PersonalProfileEditDialogProps): ReactElement {
 
-    const {profileUser} = useAuth();
+    const {profileUser, authUser} = useAuth();
     //Form
     const {schema, defaultValues} = useMemo(
         () => getProfileEditSchemaAndDefaults(profileUser),
@@ -115,7 +117,7 @@ const PersonalProfileEditDialog: React.FC<PersonalProfileEditDialogProps> = ({
                     type="password"
                     label="Nuova password"
                 />
-                {profileUser?.role?.substring(0) === 'ARTIST' && (
+                {authUser?.role?.substring(0) === 'ARTIST' && (
                     <>
                         <SelectFormField
                             control={control}
@@ -156,7 +158,7 @@ const PersonalProfileEditDialog: React.FC<PersonalProfileEditDialogProps> = ({
                         />
                     </>
                 )}
-                {profileUser?.role?.substring(0) === 'VENUE' && (
+                {authUser?.role?.substring(0) === 'VENUE' && (
                     <>
                         <TextFormField
                             control={control}
@@ -176,8 +178,5 @@ const PersonalProfileEditDialog: React.FC<PersonalProfileEditDialogProps> = ({
                 )}
             </Box>
         </DialogComponent>
-    )
-        ;
-}
-
-export default PersonalProfileEditDialog;
+    );
+};

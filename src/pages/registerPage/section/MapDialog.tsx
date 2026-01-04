@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from "react";
+import React, {type ReactElement, useEffect, useState} from "react";
 import {Box} from "@mui/material";
 import {useFormContext} from "react-hook-form";
 import type {LatLngLiteral} from "leaflet";
 import {MapPicker, TextFormField} from "@/components";
-import DialogComponent from "@components/DialogComponent.tsx";
+import DialogComponent from "@components/ui/DialogComponent.tsx";
 
 type FormValues = {
     venueName: string;
@@ -16,14 +16,19 @@ type MapDialogProps = {
     control: any;
 };
 
-export const MapDialog: React.FC<MapDialogProps> = ({open, onClose, control}) => {
-    const { getValues, setValue, trigger} = useFormContext<FormValues>();
+export default function MapDialog({
+                                      open,
+                                      onClose,
+                                      control
+                                  }: MapDialogProps): ReactElement {
+    const {getValues, setValue, trigger} = useFormContext<FormValues>();
 
     const [tempVenueName, setTempVenueName] = useState<string>("");
     const [tempVenueAddress, setTempVenueAddress] = useState<LatLngLiteral | null>(null);
 
     console.log("Temp Venue Address:", tempVenueAddress);
-    console.log("Temp Venue Name:", tempVenueName);;
+    console.log("Temp Venue Name:", tempVenueName);
+    ;
 
     useEffect(() => {
         if (open) {

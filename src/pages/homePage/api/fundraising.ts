@@ -1,33 +1,33 @@
-import {eventFundraisingApi} from "@apiService/axios.ts";
-import {RoutesEnum} from "@apiService/routesEnum.ts";
+import {eventFundraisingApi} from "@api/axios.ts";
+import {ApiRoutes} from "@api";
 import type {FundraisingRequestDTO} from "@pages";
 
 export async function createFundraising(payload: FundraisingRequestDTO) {
-    const {data} = await eventFundraisingApi.post(RoutesEnum.FUNDRAISING, payload);
+    const {data} = await eventFundraisingApi.post(ApiRoutes.FUNDRAISING.ROOT, payload);
     return data;
 }
 
 export async function getOthersFundraisingList() {
-    const {data} = await eventFundraisingApi.get(RoutesEnum.FUNDRAISING);
+    const {data} = await eventFundraisingApi.get(ApiRoutes.FUNDRAISING.ROOT);
     return data;
 }
 
 export async function getPersonalFundraisingList() {
-    const {data} = await eventFundraisingApi.get(RoutesEnum.ARTIST_FUNDRAISING);
+    const {data} = await eventFundraisingApi.get(ApiRoutes.FUNDRAISING.ME);
     return data;
 }
 
 export async function confirmFundraising(fundraisingId: string) {
-    const {data} = await eventFundraisingApi.patch(`${RoutesEnum.CONFIRM_FUNDRAISING}`.replace('$1', fundraisingId));
+    const {data} = await eventFundraisingApi.patch(`${ApiRoutes.FUNDRAISING.CONFIRM(fundraisingId)}`);
     return data;
 }
 
 export async function editFundraising(fundraisingId: string, payload: FundraisingRequestDTO) {
-    const {data} = await eventFundraisingApi.patch(`${RoutesEnum.EDIT_FUNDRAISING}`.replace('$1', fundraisingId), payload);
+    const {data} = await eventFundraisingApi.patch(`${ApiRoutes.FUNDRAISING.EDIT(fundraisingId)}`, payload);
     return data;
 }
 
 export async function cancelFundraising(fundraisingId: string) {
-    const {data} = await eventFundraisingApi.patch(`${RoutesEnum.DELETE_FUNDRAISING}`.replace('$1', fundraisingId));
+    const {data} = await eventFundraisingApi.patch(`${ApiRoutes.FUNDRAISING.CANCEL(fundraisingId)}`);
     return data;
 }

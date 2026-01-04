@@ -1,4 +1,3 @@
-export * from './ArtistFundraisingPanel.tsx';
+export {default as ArtistFundraisingPanel} from './ArtistFundraisingPanel.tsx';
 export * from './ArtistFundraisingCardActions.tsx';
-export * from './AddEditFundraisingDialog.tsx';
-
+export {default as AddEditFundraisingDialog} from './AddEditFundraisingDialog.tsx';

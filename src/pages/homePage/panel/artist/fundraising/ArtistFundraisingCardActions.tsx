@@ -5,7 +5,7 @@ import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
 import DeleteIcon from '@mui/icons-material/Delete';
 import React from "react";
 import {FundraisingStatusEnum, type FundraisingStatusKey} from "@utils";
-import {confirmFundraisingAndCreateEvent, useCancelFundraising} from "@pages/homePage/hooks/useFundraising.ts";
+import {confirmFundraisingAndCreateEvent, useCancelFundraising} from "@api/hooks/useFundraising.ts";
 import type {Fundraising} from "@pages";
 
 export const ArtistFundraisingCardActionsEnum = {

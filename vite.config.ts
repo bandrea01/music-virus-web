@@ -16,13 +16,17 @@ export default defineConfig({
                 target: 'http://localhost:8083',
                 changeOrigin: true,
             },
+            '/api/billing': {
+                target: 'http://localhost:8084',
+                changeOrigin: true,
+            },
         },
     },
     resolve: {
         alias: {
             '@': r('./src'),
             '@components': r('./src/components'),
-            '@apiService': r('./src/apiService'),
+            '@api': r('./src/api'),
             '@pages': r('./src/pages'),
             '@store': r('./src/store'),
             '@styles': r('./src/styles'),

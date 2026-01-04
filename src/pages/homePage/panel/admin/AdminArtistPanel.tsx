@@ -1,21 +1,22 @@
-import PanelPaperComponent from "@components/PanelPaperComponent.tsx";
+import PanelPaperComponent from "@components/ui/PanelPaperComponent.tsx";
 import {Box, Chip, Typography} from "@mui/material";
-import {usePopup} from "@components/context/PopupContextProvider.tsx";
+import {usePopup} from "@components/providers/PopupContextProvider.tsx";
 import {useAppDispatch} from "@store/hook.ts";
 import {setSnackbarSuccess} from "@store/snackbar/slice.ts";
-import UserCardComponent from "@components/UserCardComponent.tsx";
+import UserCardComponent from "@components/domain/UserCardComponent.tsx";
 import {sortArtists} from "@/utils";
 import NotInterestedIcon from "@mui/icons-material/NotInterested";
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import HowToRegOutlinedIcon from '@mui/icons-material/HowToRegOutlined';
+import type {ReactElement} from "react";
 import {
+    useAdminApproveArtist,
     useAdminArtists,
     useAdminBanUser,
-    useAdminUnbanUser,
-    useAdminApproveArtist,
-    useAdminUnapproveArtist
-} from "@pages";
+    useAdminUnapproveArtist,
+    useAdminUnbanUser
+} from "@api";
 
 const getCardColors = (approved: boolean, enabled: boolean) => {
     const backgroundColor = enabled ? '#132543' : '#242835';
@@ -54,7 +55,7 @@ const enabledStatusComponent = (enabled: boolean) => {
     );
 };
 
-const AdminArtistPanel = () => {
+export default function AdminArtistPanel (): ReactElement {
     const {data} = useAdminArtists();
     const {openPopup, closePopup} = usePopup();
     const dispatch = useAppDispatch();
@@ -164,5 +165,3 @@ const AdminArtistPanel = () => {
         </PanelPaperComponent>
     );
 };
-
-export default AdminArtistPanel;

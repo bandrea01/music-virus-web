@@ -19,11 +19,11 @@ export interface ArtistRegisterDTO extends RegisterBaseDTO {
 
 export interface VenueRegisterDTO extends RegisterBaseDTO {
     venueName: string;
-    address: LatLng;
+    venueAddress: LatLng;
 }
 
 export type RegisterDTORequestByType = {
-    fan: RegisterBaseDTO;
-    artist: ArtistRegisterDTO;
-    venue: VenueRegisterDTO;
+    FAN: RegisterBaseDTO;
+    ARTIST: ArtistRegisterDTO;
+    VENUE: VenueRegisterDTO;
 }

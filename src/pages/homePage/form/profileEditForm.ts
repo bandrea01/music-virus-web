@@ -1,5 +1,5 @@
 import {z} from 'zod';
-import type {IUserProfile} from "@/components";
+import type {IProfileUserLocalStorage} from "@/components";
 
 export const baseProfileEditSchema = z.object({
     name: z.string().min(1, 'Inserisci un nome valido'),
@@ -60,7 +60,7 @@ export const profileEditSchemaByRole = (role: string) => {
     }
 };
 
-export const buildProfileEditDefaults = (user: IUserProfile | null) => {
+export const buildProfileEditDefaults = (user: IProfileUserLocalStorage | null) => {
     // @ts-ignore
     const isArtist = 'ARTIST' === user?.role;
     // @ts-ignore
@@ -81,7 +81,7 @@ export const buildProfileEditDefaults = (user: IUserProfile | null) => {
 
 export type ProfileEditFormValues = z.infer<ReturnType<typeof profileEditSchemaByRole>>;
 
-export const getProfileEditSchemaAndDefaults = (user: IUserProfile | null) => {
+export const getProfileEditSchemaAndDefaults = (user: IProfileUserLocalStorage | null) => {
     const role = user?.role ?? 'ROLE_FAN';
     const schema = profileEditSchemaByRole(role);
     const defaultValues = buildProfileEditDefaults(user);

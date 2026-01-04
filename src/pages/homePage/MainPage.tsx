@@ -1,18 +1,35 @@
 import {Box} from "@mui/material";
 import {Outlet} from "react-router-dom";
-import {useAuth} from "@/components";
-import SidebarComponent from "@components/SidebarComponent.tsx";
-import TopbarComponent from "@components/TopbarComponent.tsx";
+import {SidebarComponent, TopbarComponent, useAuth} from "@components";
 import "./mainPage.scss";
-import {getTabsByRole} from "@/utils";
+import {DOMAIN_FETCH_QUERY_WAIT_TIME, getTabsByRole} from "@/utils";
+import {useQueryClient} from "@tanstack/react-query";
+import {useEffect} from "react";
+import {getArtistList, getVenuesList} from "@pages";
+
+export function usePrefetchBaseDomain(enabled = true) {
+    const qc = useQueryClient();
+    useEffect(() => {
+        if (!enabled) return;
+
+        void qc.prefetchQuery({
+            queryKey: ['domain', 'artists'],
+            queryFn: getArtistList,
+            staleTime: DOMAIN_FETCH_QUERY_WAIT_TIME,
+        });
+
+        void qc.prefetchQuery({
+            queryKey: ['domain', 'venues'],
+            queryFn: getVenuesList,
+            staleTime: DOMAIN_FETCH_QUERY_WAIT_TIME,
+        });
+    }, [qc, enabled]);
+}
 
 export default function MainPage() {
-    const {profileUser} = useAuth();
-
-    const menu = getTabsByRole(profileUser?.role);
-
-    console.log("Profile user:", profileUser)
-    console.log("Menu tabs:", menu)
+    usePrefetchBaseDomain(true);
+    const {authUser} = useAuth();
+    const menu = getTabsByRole(authUser?.role);
 
     return (
         <Box
@@ -30,7 +47,7 @@ export default function MainPage() {
                     top: 0,
                 }}
             >
-                <TopbarComponent profileUser={profileUser} />
+                <TopbarComponent/>
             </Box>
 
             <Box
@@ -64,7 +81,7 @@ export default function MainPage() {
                         p: 3,
                     }}
                 >
-                    <Outlet />
+                    <Outlet/>
                 </Box>
             </Box>
         </Box>

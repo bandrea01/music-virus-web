@@ -1,0 +1,1 @@
+export {default as AdminGeneralPanel} from "./AdminGeneralPanel.tsx";

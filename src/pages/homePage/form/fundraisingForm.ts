@@ -13,7 +13,7 @@ export const addEditFundraisingSchema = z.object({
         .max(3000, "L'importo non può superare 3000 euro"),
 });
 
-export const getDefaultValues = (fundraising: Fundraising | null | undefined) => {
+export const getFundraisingDefaultValues = (fundraising: Fundraising | null | undefined) => {
     return {
         fundraisingName: fundraising?.fundraisingName ?? '',
         venueId: fundraising?.venueId ?? '',
@@ -26,7 +26,7 @@ export type AddEditFundraisingFormValues = z.infer<typeof addEditFundraisingSche
 
 export const getAddEditFundriasingSchemaAndDefaults = (fundraising: Fundraising | null | undefined) => {
     const schema = addEditFundraisingSchema;
-    const defaultValues = getDefaultValues(fundraising);
+    const defaultValues = getFundraisingDefaultValues(fundraising);
     return {schema, defaultValues};
 };
 

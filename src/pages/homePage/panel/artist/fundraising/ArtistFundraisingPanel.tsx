@@ -1,13 +1,13 @@
-import PanelPaperComponent from "@components/PanelPaperComponent.tsx";
+import PanelPaperComponent from "@components/ui/PanelPaperComponent.tsx";
 import {Box} from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import AddEditFundraisingDialog from "@pages/homePage/panel/artist/fundraising/AddEditFundraisingDialog.tsx";
-import {useMemo, useState} from "react";
-import {useGetPersonalFundraisingList} from "@pages/homePage/hooks/useFundraising.ts";
-import {CheckboxFilterBar, useAuth} from "@components";
-import {type EnrichFundraising, type Fundraising, useGetArtists, useGetVenues} from "@pages";
-import {FundraisingCardComponent} from "@components/FundraisingCardComponent.tsx";
+import {type ReactElement, useMemo, useState} from "react";
+import {useGetPersonalFundraisingList} from "@api/hooks/useFundraising.ts";
+import {CheckboxFilterBar, FullScreenSpinner, useAuth} from "@components";
+import {type EnrichFundraising, type Fundraising} from "@pages";
+import {FundraisingCardComponent} from "@components";
 import {
     buildEnrichedFundraisings,
     FUNDRAISING_STATUS_ORDER,
@@ -15,6 +15,7 @@ import {
     type FundraisingStatusKey
 } from "@utils";
 import type {ActionProps} from "@utils/types/types.ts";
+import {useDomainGetArtists, useDomainGetVenues} from "@api";
 
 const filterStatusLabel: Record<FundraisingStatusKey, string> = {
     [FundraisingStatusEnum.CONFIRMED]: "Confermate",
@@ -24,7 +25,7 @@ const filterStatusLabel: Record<FundraisingStatusKey, string> = {
     [FundraisingStatusEnum.CANCELLED]: "Cancellate",
 };
 
-const ArtistFundraisingPanel = () => {
+export default function ArtistFundraisingPanel(): ReactElement {
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const [selectedFundraising, setSelectedFundraising] = useState<Fundraising | undefined>(undefined);
 
@@ -39,19 +40,16 @@ const ArtistFundraisingPanel = () => {
     });
 
     //User ID
-    const {profileUser} = useAuth();
-    const userId = profileUser?.userId ?? "";
+    const {authUser} = useAuth();
+    const userId = authUser?.userId ?? "";
 
     //datas
-    const {data: venuesData, isLoading: isLoadingVenues} = useGetVenues();
-    const {data: artistsData, isLoading: isLoadingArtists} = useGetArtists();
-    const {
-        data: personalFundraisingData,
-        isLoading: isLoadingFundraising
-    } = useGetPersonalFundraisingList();
+    const {data: artistsData, isLoading: isLoadingArtists} = useDomainGetArtists();
+    const {data: venuesData, isLoading: isLoadingVenues} = useDomainGetVenues();
+    const {data: personalFundraisingData, isLoading: isLoadingFundraising} = useGetPersonalFundraisingList();
 
-    const venues = venuesData?.venues ?? [];
-    const artists = artistsData?.artists ?? [];
+    const venues = venuesData ?? [];
+    const artists = artistsData ?? [];
     const personalFundraisings = personalFundraisingData?.fundraisings ?? [];
 
     const fundraisings: EnrichFundraising[] = useMemo(
@@ -94,40 +92,42 @@ const ArtistFundraisingPanel = () => {
         checked: statusFilters[status],
     }));
 
-    return (
-        <PanelPaperComponent
-            title="Le tue raccolte fondi"
-            actions={actions}
-            filtersContent={
-                showFilters ? (
-                    <CheckboxFilterBar
-                        options={filterOptions}
-                        onChange={handleToggleStatusFilter}
-                    />
-                ) : null
-            }
-        >
-            <Box display="grid" gridTemplateColumns="repeat(2, 1fr)" gap={2} mb={2}>
-                {!isLoading && fundraisings.map((fundraising) => (
-                    <FundraisingCardComponent
-                        fundraising={fundraising}
-                        setSelectedFundraising={setSelectedFundraising}
-                        setIsEditDialogOpen={setIsDialogOpen}
-                    />
-                ))}
-            </Box>
+    const isLoadingPage = isLoadingArtists || isLoadingVenues || isLoadingFundraising;
 
-            {isDialogOpen && (
-                <AddEditFundraisingDialog
-                    isDialogOpen={isDialogOpen}
-                    onClose={() => setIsDialogOpen(false)}
-                    fundraising={selectedFundraising}
-                    venues={venues}
-                    userId={userId}
-                />
-            )}
-        </PanelPaperComponent>
+    return (
+        isLoadingPage ?
+            <FullScreenSpinner/> :
+            <PanelPaperComponent
+                title="Le tue raccolte fondi"
+                actions={actions}
+                filtersContent={
+                    showFilters ? (
+                        <CheckboxFilterBar
+                            options={filterOptions}
+                            onChange={handleToggleStatusFilter}
+                        />
+                    ) : null
+                }
+            >
+                <Box display="grid" gridTemplateColumns="repeat(2, 1fr)" gap={2} mb={2}>
+                    {!isLoading && fundraisings.map((fundraising) => (
+                        <FundraisingCardComponent
+                            fundraising={fundraising}
+                            setSelectedFundraising={setSelectedFundraising}
+                            setIsEditDialogOpen={setIsDialogOpen}
+                        />
+                    ))}
+                </Box>
+
+                {isDialogOpen && (
+                    <AddEditFundraisingDialog
+                        isDialogOpen={isDialogOpen}
+                        onClose={() => setIsDialogOpen(false)}
+                        fundraising={selectedFundraising}
+                        venues={venues}
+                        userId={userId}
+                    />
+                )}
+            </PanelPaperComponent>
     );
 };
-
-export default ArtistFundraisingPanel;
