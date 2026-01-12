@@ -1,4 +1,4 @@
-import axios, {AxiosError, type AxiosInstance} from 'axios';
+import axios, {type AxiosInstance} from 'axios';
 import {TOKEN_KEY} from "@utils";
 
 /**
@@ -48,14 +48,38 @@ export function createApi(baseURL: string): AxiosInstance {
  * @returns string - The extracted error message
  */
 export function getAxiosErrorMessage(e: unknown, fallback = 'Errore'): string {
-    const err = e as AxiosError<any>;
-    if (err?.response?.data) {
-        const data = err.response.data;
-        if (typeof data === 'string') return data;
-        if (data?.details) return data.details.join('\n');
-        if (typeof data?.message === 'string') return data.message;
+    if (typeof e === 'string') return e;
+    if (axios.isAxiosError(e)) {
+        const data = e.response?.data;
+
+        if (typeof data === 'string' && data !== "") return data;
+        if (Array.isArray(data)) return data.map(String).join('\n');
+
+        if (data && typeof data === 'object') {
+            const details = (data as any).details;
+            if (Array.isArray(details)) {
+                return details
+                    .map(d => (typeof d === 'string' ? d : d?.message ?? JSON.stringify(d)))
+                    .join('\n');
+            }
+
+            const errors = (data as any).errors;
+            if (Array.isArray(errors)) {
+                return errors
+                    .map(errItem => (typeof errItem === 'string' ? errItem : errItem?.message ?? JSON.stringify(errItem)))
+                    .join('\n');
+            }
+
+            const message = (data as any).message ?? (data as any).error;
+            if (typeof message === 'string') return message;
+        }
+
+        return fallback;
     }
-    return err?.message || fallback;
+
+
+    if (e instanceof Error) return e.message;
+    return fallback;
 }
 
 /**

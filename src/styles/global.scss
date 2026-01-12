@@ -311,12 +311,13 @@ body {
 }
 
 .mv-dialog__content {
+  background-color: #0f172a;
   padding: $space-14;
 }
 
 /* Footer azioni */
 .mv-dialog__actions {
-
+  background-color: #122341;
   padding: $space-3 $space-5 $space-4;
   border-top: 1px solid var(--border);
   display: flex;
@@ -587,4 +588,12 @@ body {
   color: #fff !important;
 }
 
+.MuiRating-root {
+  .MuiRating-icon {
+    color: #eaa53a;
+  }
+  .MuiRating-iconEmpty {
+    color: #453c2e;
+  }
+}
 

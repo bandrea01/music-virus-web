@@ -1,4 +1,4 @@
-import {type VenueProfileDTO} from "@pages";
+import {type Venue} from "@pages";
 import {type ReactElement} from "react";
 import {useDomainGetVenues, useGetEventVenueCounter} from "@api";
 import {MapContainer, TileLayer} from "react-leaflet";
@@ -20,7 +20,7 @@ export default function EventMapSection(): ReactElement {
                 url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
             />
             {eventVenueCounters?.map((counter) => {
-                const venue: VenueProfileDTO | undefined = venues?.find(v => v.userId === counter.venueId);
+                const venue: Venue | undefined = venues?.find(v => v.userId === counter.venueId);
                 if (!venue || !venue.venueAddress) return null;
                 const position: LatLng = new L.LatLng(
                     venue.venueAddress.latitude,

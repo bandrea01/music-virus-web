@@ -69,6 +69,7 @@ export const ApiRoutes = {
 
     BILLING: {
         ROOT: '/',
-        DEPOSIT: (accountId: string) => `/account/deposit/${accountId}`,
+        DEPOSIT: '/account/deposit',
+        CONTRIBUTION: '/contribution'
     }
 } as const;

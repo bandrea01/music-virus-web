@@ -35,15 +35,11 @@ export type Account = {
     lastUpdate: string;
 }
 
-export type AccountResponseDTO = {
-    accounts: Account[];
-}
-
 export type DepositRequestDTO = {
     amount: number;
 }
 
-export type ArtistProfileDTO = {
+export type Artist = {
     userId: string;
     name: string;
     surname: string;
@@ -54,7 +50,7 @@ export type ArtistProfileDTO = {
     approved?: boolean;
 }
 
-export type VenueProfileDTO = {
+export type Venue = {
     userId: string;
     name: string;
     surname: string;
@@ -67,13 +63,15 @@ export type VenueProfileDTO = {
     enabled?: boolean;
 }
 
-export type FanProfileDTO = {
+export type Fan = {
     userId: string;
     name: string;
     surname: string;
     email: string;
     enabled?: boolean;
 }
+
+export type UserProfile = Artist | Venue | Fan;
 
 export type ProfileCounterDTO = {
     type: string;
@@ -86,15 +84,15 @@ export type StatisticDTO = {
 }
 
 export type ArtistListResponseDTO = {
-    artists: ArtistProfileDTO[];
+    artists: Artist[];
 }
 
 export type FanListResponseDTO = {
-    fans: FanProfileDTO[];
+    fans: Fan[];
 }
 
 export type VenueListResponseDTO = {
-    venues: VenueProfileDTO[];
+    venues: Venue[];
 }
 
 export type FundraisingRequestDTO = {
@@ -196,4 +194,57 @@ export type TaxRequestDTO = {
     taxName?: TaxNameKey;
     percentageOnTotal?: number;
     activeSince?: string;
+}
+
+export const ContributionVisibilityEnum = {
+    PUBLIC: "PUBLIC",
+    ANONYMOUS: "ANONYMOUS"
+} as const;
+export type ContributionVisibilityKey = keyof typeof ContributionVisibilityEnum;
+
+export const ContributionStatusEnum = {
+    CAPTURED: "CAPTURED",
+    REFUNDED: "REFUNDED"
+}
+export type ContributionStatusKey = keyof typeof ContributionStatusEnum;
+
+export type ContributionRequestDTO = {
+    fundraisingId: string;
+    artistId: string;
+    userId: string;
+    amount: number;
+    contributionVisibility: ContributionVisibilityKey;
+}
+
+export type Contribution = {
+    contributionId: string;
+    fundraisingId: string;
+    fanId: string;
+    amount: number;
+    contributionVisibility: ContributionVisibilityKey;
+    contributionStatus: ContributionStatusKey;
+    createdAt: string;
+    lastUpdate: string;
+}
+
+export type ContributionListResponseDTO = {
+    contributions: Contribution[];
+}
+
+export type Feedback = {
+    feedbackId: string;
+    eventId: string;
+    userId: string;
+    rating: number;
+    comment: string;
+}
+export type FeedbackListResponseDTO = {
+    feedbacks: Feedback[];
+}
+
+export type FeedbackRequestDTO = {
+    eventId: string;
+    userId: string;
+    rating: number;
+    comment: string;
 }

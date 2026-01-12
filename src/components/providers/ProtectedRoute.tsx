@@ -2,7 +2,7 @@ import {type ReactElement} from "react";
 import {Navigate} from "react-router-dom";
 import {useAuth} from "@/components";
 import {AppRoutes} from "@/utils";
-import FullScreenSpinner from "@components/ui/FullScreenSpinner.tsx";
+import ScreenSpinner from "@components/ui/ScreenSpinner.tsx";
 
 type ProtectedRouteProps = {
     children: ReactElement;
@@ -12,7 +12,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps): React
     const { isAuthenticated, loading } = useAuth();
 
     if (loading) {
-        return <FullScreenSpinner/>
+        return <ScreenSpinner/>
     }
 
     if (!isAuthenticated) {

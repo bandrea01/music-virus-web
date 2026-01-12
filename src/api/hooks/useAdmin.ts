@@ -209,8 +209,36 @@ export function useAdminApproveArtist() {
         }
     });
 }
-
 export function useAdminUnapproveArtist() {
+    const queryClient = useQueryClient();
+
+    return useHookMutation<string>({
+        mutationFn: (artistId) => unapproveArtist(artistId),
+        errorMessage: "Errore durante la revoca dell'approvazione dell'artista!",
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: ['domain', 'artists']}).then(() => {
+            });
+            queryClient.invalidateQueries({queryKey: ['admin', 'artists']}).then(() => {
+            });
+        }
+    });
+}
+
+export function useAdminApproveVenue() {
+    const queryClient = useQueryClient();
+
+    return useHookMutation<string>({
+        mutationFn: (artistId) => approveArtist(artistId),
+        errorMessage: "Errore durante l'approvazione dell'artista!",
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: ['domain', 'artists']}).then(() => {
+            });
+            queryClient.invalidateQueries({queryKey: ['admin', 'artists']}).then(() => {
+            });
+        }
+    });
+}
+export function useAdminUnapproveVenue() {
     const queryClient = useQueryClient();
 
     return useHookMutation<string>({

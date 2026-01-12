@@ -1,9 +1,8 @@
-import {CheckboxFilterBar, FullScreenSpinner, PanelPaperComponent} from "@components";
+import {CheckboxFilterBar, ScreenSpinner, PanelPaperComponent} from "@components";
 import {Box, Divider} from "@mui/material";
-import EventSection from "./EventSection.tsx";
 import {type ReactElement, useMemo, useState} from "react";
 import {useDomainGetArtists, useDomainGetVenues, useGetEvents} from "@api";
-import {type EnrichEvent, EventMapSection, EventPanelActions} from "@pages";
+import {type EnrichEvent, EventMapSection, EventPanelActions, EventSection} from "@pages";
 import {
     type ActionProps,
     type EventStatusKey,
@@ -71,7 +70,7 @@ export default function EventPanel(): ReactElement {
         <>
             {
                 isLoading ?
-                    <FullScreenSpinner/> :
+                    <ScreenSpinner/> :
                     <PanelPaperComponent
                         title="Eventi"
                         actions={actions}
@@ -85,11 +84,11 @@ export default function EventPanel(): ReactElement {
                         }
                     >
                         <Box display="flex" gap={1}>
-                            <Box width="50%">
+                            <Box width="60%">
                                 <EventSection events={filteredAndSortedEvents}/>
                             </Box>
                             <Divider color={"#fafafa"} orientation="vertical" variant="middle" flexItem/>
-                            <Box width="50%">
+                            <Box width="40%">
                                 <EventMapSection/>
                             </Box>
                         </Box>

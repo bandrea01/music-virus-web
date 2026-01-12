@@ -1,13 +1,13 @@
 import {type ReactElement, useEffect, useMemo, useRef} from "react";
 import {Box, Chip} from "@mui/material";
-import {DialogComponent, getSelectOptions, SelectFormField, TextFormField, useAuth} from "@components";
+import {DialogComponent, getSelectOptions, SelectFormField, TextFormField} from "@components";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {getProfileEditSchemaAndDefaults, mapProfileEditFormValuesToDTO} from "@pages";
 import {MapDialog} from "@pages";
 import {z} from "zod";
 import {genres} from "@pages/registerPage/section/ArtistSection.tsx";
-import type {IProfileUserLocalStorage} from "@components/providers/AuthContext.tsx";
+import type {IAuthUserLocalStorage, IProfileUserLocalStorage} from "@components/providers/AuthContext.tsx";
 import {useProfileEdit} from "@api";
 
 //TODO refactor
@@ -15,15 +15,17 @@ import {useProfileEdit} from "@api";
 type PersonalProfileEditDialogProps = {
     isOpen: boolean;
     onClose: () => void;
-    profile: IProfileUserLocalStorage;
+    profileUser?: IProfileUserLocalStorage | null;
+    authUser?: IAuthUserLocalStorage | null;
 };
 
 export default function PersonalProfileEditDialog({
                                                       isOpen,
                                                       onClose,
+                                                      profileUser,
+                                                      authUser
                                                   }: PersonalProfileEditDialogProps): ReactElement {
 
-    const {profileUser, authUser} = useAuth();
     //Form
     const {schema, defaultValues} = useMemo(
         () => getProfileEditSchemaAndDefaults(profileUser),

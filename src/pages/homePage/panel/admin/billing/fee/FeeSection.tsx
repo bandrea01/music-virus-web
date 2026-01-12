@@ -1,5 +1,5 @@
 import {type ReactElement, useState} from "react";
-import {FullScreenSpinner, PanelPaperComponent} from "@components";
+import {ScreenSpinner, PanelPaperComponent} from "@components";
 import {Box, Divider, Typography} from "@mui/material";
 import {
     AddEditSubscriptionDialog, AddEditTaxDialog,
@@ -49,7 +49,7 @@ export default function FeeSection(): ReactElement {
             {/*Subscriptions*/}
             {
                 isFeePlansLoading ?
-                    (<FullScreenSpinner/>) :
+                    (<ScreenSpinner/>) :
                     isSubscriptionsEmpty ?
                         (
                             <Typography color="white">Nessun piano tariffario impostato.</Typography>
@@ -73,7 +73,7 @@ export default function FeeSection(): ReactElement {
             {/*Taxes*/}
             {
                 isTaxesLoading ?
-                    (<FullScreenSpinner/>) :
+                    (<ScreenSpinner/>) :
                     isTaxesEmpty ?
                         (
                             <Typography color="white">Nessuna tassa impostata.</Typography>

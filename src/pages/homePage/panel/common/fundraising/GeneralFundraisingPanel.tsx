@@ -4,7 +4,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import AddEditFundraisingDialog from "@pages/homePage/panel/artist/fundraising/AddEditFundraisingDialog.tsx";
 import {type ReactElement, useMemo, useState} from "react";
 import {useGetFundraising} from "@api/hooks/useFundraising.ts";
-import {type EnrichFundraising, type Fundraising} from "@pages";
+import {ContributionDialog, type EnrichFundraising, type Fundraising} from "@pages";
 import {
     buildEnrichedFundraisings,
     FUNDRAISING_STATUS_ORDER,
@@ -23,7 +23,8 @@ const filterStatusLabel: Record<FundraisingStatusKey, string> = {
 };
 
 export default function GeneralFundraisingPanel(): ReactElement {
-    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+    const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false);
+    const [isContributionDialogOpen, setIsContributionDialogOpen] = useState<boolean>(false);
     const [selectedFundraising, setSelectedFundraising] = useState<Fundraising | undefined>(undefined);
 
     //Filters
@@ -103,17 +104,26 @@ export default function GeneralFundraisingPanel(): ReactElement {
                     <FundraisingCardComponent
                         fundraising={fundraising}
                         setSelectedFundraising={setSelectedFundraising}
-                        setIsEditDialogOpen={setIsDialogOpen}
+                        setIsEditDialogOpen={setIsEditDialogOpen}
+                        setIsContributionDialogOpen={setIsContributionDialogOpen}
                     />
                 ))}
             </Box>
 
-            {isDialogOpen && (
+            {isEditDialogOpen && (
                 <AddEditFundraisingDialog
-                    isDialogOpen={isDialogOpen}
-                    onClose={() => setIsDialogOpen(false)}
+                    isDialogOpen={isEditDialogOpen}
+                    onClose={() => setIsEditDialogOpen(false)}
                     fundraising={selectedFundraising}
                     venues={venues ?? []}
+                    userId={userId}
+                />
+            )}
+            {isContributionDialogOpen && (
+                <ContributionDialog
+                    isDialogOpen={isContributionDialogOpen}
+                    onClose={() => setIsContributionDialogOpen(false)}
+                    fundraising={selectedFundraising!}
                     userId={userId}
                 />
             )}

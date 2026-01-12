@@ -1,4 +1,4 @@
 export * from "./api";
 export * from './form';
 export * from './panel';
-export * from "./MainPage.tsx";
+export {default as MainPage} from "./MainPage.tsx";

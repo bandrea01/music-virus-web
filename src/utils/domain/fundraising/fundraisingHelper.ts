@@ -1,4 +1,10 @@
-import type {AddEditFundraisingFormValues, EnrichFundraising, Fundraising, FundraisingRequestDTO} from "@pages";
+import {
+    type AddEditFundraisingFormValues, type ContributionFormValues,
+    type ContributionRequestDTO, ContributionVisibilityEnum,
+    type EnrichFundraising,
+    type Fundraising,
+    type FundraisingRequestDTO
+} from "@pages";
 import {FundraisingStatusEnum, type FundraisingStatusKey} from "@utils";
 
 export const FUNDRAISING_STATUS_ORDER: FundraisingStatusKey[] = [
@@ -70,4 +76,19 @@ export function mapFundraisingFormValuesToDTO(
         targetAmount: values.targetAmount,
         eventDate: values.eventDate.toISOString()
     };
+}
+
+export function mapContributionFormValuesToDTO(
+    fundraisingId: string,
+    artistId: string,
+    userId: string,
+    values: ContributionFormValues
+): ContributionRequestDTO {
+    return {
+        fundraisingId: fundraisingId,
+        artistId: artistId,
+        userId: userId,
+        amount: values.amount,
+        contributionVisibility: (values.contributionVisibility ? ContributionVisibilityEnum.PUBLIC : ContributionVisibilityEnum.ANONYMOUS)
+    }
 }

@@ -1,23 +1,24 @@
 import {type ReactElement, useState} from "react";
 import {DialogComponent} from "@components";
-import type {Account} from "@pages";
 import {TextField} from "@mui/material";
 import {useDeposit} from "@api/hooks/useBilling.ts";
+import useDepositHelper from "@pages/homePage/panel/common/profile/bankAccount/useDepositHelper.tsx";
 
 type DepositDialogProps = {
     isOpen: boolean;
     onClose: () => void;
-    account: Account;
 }
 
 export default function DepositDialog({
                                           isOpen,
                                           onClose,
-                                          account
                                       }: DepositDialogProps): ReactElement {
 
     const [amount, setAmount] = useState<number>(0);
     const {mutate: deposit} = useDeposit();
+    const {errors, helperText} = useDepositHelper(amount);
+
+
 
     return (
         <DialogComponent
@@ -32,10 +33,7 @@ export default function DepositDialog({
                 {
                     label: "Deposita",
                     onClick: () => {
-                        deposit({
-                            accountId: account.accountId,
-                            payload: {amount: amount}
-                        });
+                        deposit({amount});
                         onClose();
                     }
                 }
@@ -48,6 +46,8 @@ export default function DepositDialog({
                 onChange={(e) => setAmount(parseFloat(e.target.value))}
                 margin="normal"
                 variant="outlined"
+                error={errors}
+                helperText={helperText}
                 fullWidth
             />
         </DialogComponent>

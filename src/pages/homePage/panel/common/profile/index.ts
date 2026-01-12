@@ -1,3 +1,3 @@
-export {default as PersonalProfileEditDialog} from "./PersonalProfileEditDialog.tsx";
-export {default as PersonalProfilePanel} from "./PersonalProfilePanel.tsx";
-export {default as DepositDialog} from "./DepositDialog.tsx";
+export {default as PersonalProfilePanel} from './PersonalProfilePanel.tsx';
+export * from './infos';
+export * from './bankAccount';

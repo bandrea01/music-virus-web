@@ -1,7 +1,7 @@
 import {billingApi, userIdentityApi} from "@api/axios.ts";
 import {ApiRoutes} from "@api";
 import type {
-    AccountResponseDTO,
+    Account,
     ProfileEditFormValues,
     ProfileResponseDTO,
     UpdateProfileDTO,
@@ -34,7 +34,7 @@ export async function getVenuesList(): Promise<VenueListResponseDTO> {
     return data;
 }
 
-export async function getBankAccount(): Promise<AccountResponseDTO> {
+export async function getPersonalBankAccount(): Promise<Account> {
     const {data} = await billingApi.get(ApiRoutes.PROFILE.ACCOUNT);
     return data;
 }

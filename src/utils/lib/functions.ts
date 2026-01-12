@@ -1,6 +1,6 @@
-import type {ArtistProfileDTO} from "@pages/homePage/api/types.ts";
+import type {Artist} from "@pages/homePage/api/types.ts";
 
-export function sortArtists(artists: ArtistProfileDTO[]): ArtistProfileDTO[] {
+export function sortArtists(artists: Artist[]): Artist[] {
     return [...artists].sort((a, b) => {
         if (a.enabled !== b.enabled) {
             return a.enabled ? -1 : 1;

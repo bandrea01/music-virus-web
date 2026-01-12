@@ -1,12 +1,12 @@
 import type {ActionProps} from "@utils";
-import type {ArtistProfileDTO, VenueProfileDTO} from "@pages";
+import type {Artist, Venue} from "@pages";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import HomeWorkIcon from "@mui/icons-material/HomeWork";
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
 
 export default function EventPanelActions(
-    artists: ArtistProfileDTO[] | undefined,
-    venues: VenueProfileDTO[] | undefined,
+    artists: Artist[] | undefined,
+    venues: Venue[] | undefined,
     setShowStatusFilters: (value: boolean | ((prevVar: boolean) => boolean)) => void,
     setVenueFilter: (value: string) => void,
     setArtistFilter: (value: string) => void,

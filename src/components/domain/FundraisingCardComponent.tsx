@@ -9,6 +9,8 @@ type FundraisingCardComponentProps = {
     fundraising: EnrichFundraising;
     setSelectedFundraising: (fundraising: Fundraising | undefined) => void;
     setIsEditDialogOpen: (open: boolean) => void;
+    setIsContributionDialogOpen: (open: boolean) => void;
+    isInPersonalPanel?: boolean;
 }
 type Palette = {
     backgroundColor: string;
@@ -74,7 +76,9 @@ function getPalette(status: FundraisingStatusKey, percentage: number): Palette {
 export default function FundraisingCardComponent({
                                                      fundraising,
                                                      setIsEditDialogOpen,
-                                                     setSelectedFundraising
+                                                     setIsContributionDialogOpen,
+                                                     setSelectedFundraising,
+                                                     isInPersonalPanel = false,
                                                  }: FundraisingCardComponentProps): ReactElement {
 
     const {backgroundColor, statusColor, sliderColor} = getPalette(
@@ -157,7 +161,7 @@ export default function FundraisingCardComponent({
                 </Box>
                 <Divider color={"#25324a"} sx={{marginBottom: '10px'}}/>
                 <Box display="flex" justifyContent="flex-end" gap={1}>
-                    {getActionsFromStatus(fundraising, setIsEditDialogOpen, setSelectedFundraising)}
+                    {getActionsFromStatus(fundraising, setIsEditDialogOpen, setIsContributionDialogOpen, setSelectedFundraising, isInPersonalPanel)}
                 </Box>
             </Box>
         </Card>

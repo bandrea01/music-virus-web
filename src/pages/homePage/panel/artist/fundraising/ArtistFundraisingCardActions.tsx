@@ -3,12 +3,14 @@ import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
 import EditIcon from '@mui/icons-material/Edit';
 import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
 import DeleteIcon from '@mui/icons-material/Delete';
+import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
 import React from "react";
 import {FundraisingStatusEnum, type FundraisingStatusKey} from "@utils";
 import {confirmFundraisingAndCreateEvent, useCancelFundraising} from "@api/hooks/useFundraising.ts";
 import type {Fundraising} from "@pages";
 
 export const ArtistFundraisingCardActionsEnum = {
+    CONTRIBUTE_FUNDRAISING: "CONTRIBUTE_FUNDRAISING",
     CONFIRM_FUNDRAISING: "CONFIRM_FUNDRAISING",
     CANCEL_FUNDRAISING: "CANCEL_FUNDRAISING",
     EDIT_FUNDRAISING: "EDIT_FUNDRAISING",
@@ -19,7 +21,23 @@ type ArtistFundraisingActionKey = keyof typeof ArtistFundraisingCardActionsEnum;
 type ArtistFundraisingActionProps = {
     fundraising: Fundraising;
     setOpenEditDialog?: (open: boolean) => void;
+    setOpenContributionDialog?: (open: boolean) => void;
     setSelectedFundraising?: (fundraising: Fundraising) => void;
+};
+
+const ArtistFundraisingContributeAction: React.FC<ArtistFundraisingActionProps> = ({fundraising, setOpenContributionDialog, setSelectedFundraising}) => {
+    return (
+        <Button
+            startIcon={<CardGiftcardIcon/>}
+            onClick={() => {
+                setOpenContributionDialog?.(true);
+                setSelectedFundraising?.(fundraising);
+            }}
+            sx={{fontSize: "10px !important", backgroundColor: "#b155e7 !important"}}
+        >
+            Contribuisci
+        </Button>
+    );
 };
 
 const ArtistFundraisingConfirmAction: React.FC<ArtistFundraisingActionProps> = ({fundraising}) => {
@@ -85,13 +103,14 @@ const ArtistFundraisingViewDonationsAction: React.FC<ArtistFundraisingActionProp
 };
 
 const actionComponent: Record<ArtistFundraisingActionKey, React.FC<ArtistFundraisingActionProps>> = {
+    CONTRIBUTE_FUNDRAISING: ArtistFundraisingContributeAction,
     CONFIRM_FUNDRAISING: ArtistFundraisingConfirmAction,
     CANCEL_FUNDRAISING: ArtistFundraisingCancelAction,
     EDIT_FUNDRAISING: ArtistFundraisingEditAction,
     VIEW_DONATIONS: ArtistFundraisingViewDonationsAction,
 };
 
-const actionsByStatus: Partial<Record<FundraisingStatusKey, ArtistFundraisingActionKey[]>> = {
+const personalActionsByStatus: Partial<Record<FundraisingStatusKey, ArtistFundraisingActionKey[]>> = {
     [FundraisingStatusEnum.ACTIVE]: [
         "CANCEL_FUNDRAISING",
         "EDIT_FUNDRAISING",
@@ -113,13 +132,38 @@ const actionsByStatus: Partial<Record<FundraisingStatusKey, ArtistFundraisingAct
     ],
     [FundraisingStatusEnum.CANCELLED]: [],
 };
+const generalActionsByStatus: Partial<Record<FundraisingStatusKey, ArtistFundraisingActionKey[]>> = {
+    [FundraisingStatusEnum.ACTIVE]: [
+        "VIEW_DONATIONS",
+        "CONTRIBUTE_FUNDRAISING",
+    ],
+    [FundraisingStatusEnum.ACHIEVED]: [
+        "VIEW_DONATIONS",
+    ],
+    [FundraisingStatusEnum.NOT_ACHIEVED]: [
+        "VIEW_DONATIONS"
+    ],
+    [FundraisingStatusEnum.CONFIRMED]: [
+        "VIEW_DONATIONS"
+    ],
+    [FundraisingStatusEnum.CANCELLED]: [],
+};
+
 
 export function getActionsFromStatus(
     fundraising: Fundraising,
     setOpenEditDialog: (open: boolean) => void,
+    setOpenContributionDialog: (open: boolean) => void,
     setSelectedFundraising: (fundraising: Fundraising) => void,
+    isInPersonalPanel: boolean,
 ): React.ReactNode[] {
-    const actions = actionsByStatus[fundraising.status as FundraisingStatusKey] ?? [];
+    let actions = [];
+
+    if (isInPersonalPanel) {
+        actions = personalActionsByStatus[fundraising.status as FundraisingStatusKey] ?? [];
+    } else {
+        actions = generalActionsByStatus[fundraising.status as FundraisingStatusKey] ?? [];
+    }
 
     return actions.map((actionKey) => {
         const ActionComponent = actionComponent[actionKey];
@@ -128,6 +172,7 @@ export function getActionsFromStatus(
                 key={actionKey}
                 fundraising={fundraising}
                 setOpenEditDialog={setOpenEditDialog}
+                setOpenContributionDialog={setOpenContributionDialog}
                 setSelectedFundraising={setSelectedFundraising}
             />
         );

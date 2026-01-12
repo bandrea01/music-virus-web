@@ -5,7 +5,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import AddEditFundraisingDialog from "@pages/homePage/panel/artist/fundraising/AddEditFundraisingDialog.tsx";
 import {type ReactElement, useMemo, useState} from "react";
 import {useGetPersonalFundraisingList} from "@api/hooks/useFundraising.ts";
-import {CheckboxFilterBar, FullScreenSpinner, useAuth} from "@components";
+import {CheckboxFilterBar, ScreenSpinner, useAuth} from "@components";
 import {type EnrichFundraising, type Fundraising} from "@pages";
 import {FundraisingCardComponent} from "@components";
 import {
@@ -96,7 +96,7 @@ export default function ArtistFundraisingPanel(): ReactElement {
 
     return (
         isLoadingPage ?
-            <FullScreenSpinner/> :
+            <ScreenSpinner/> :
             <PanelPaperComponent
                 title="Le tue raccolte fondi"
                 actions={actions}
@@ -115,6 +115,7 @@ export default function ArtistFundraisingPanel(): ReactElement {
                             fundraising={fundraising}
                             setSelectedFundraising={setSelectedFundraising}
                             setIsEditDialogOpen={setIsDialogOpen}
+                            isInPersonalPanel={true}
                         />
                     ))}
                 </Box>

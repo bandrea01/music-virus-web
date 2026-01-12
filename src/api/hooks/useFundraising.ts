@@ -14,7 +14,8 @@ export function useGetFundraising() {
     return useHookQuery<FundraisingListResponseDTO>({
         queryKey: ['fundraising'],
         queryFn: () => getOthersFundraisingList(),
-        errorMessage: "Errore durante la richiesta della lista delle raccolte fondi!"
+        errorMessage: "Errore durante la richiesta della lista delle raccolte fondi!",
+        staleTime: 5 * 60 * 1000,
     });
 }
 
@@ -22,7 +23,8 @@ export function useGetPersonalFundraisingList() {
     return useHookQuery<FundraisingListResponseDTO>({
         queryKey: ['personal-fundraising'],
         queryFn: () => getPersonalFundraisingList(),
-        errorMessage: "Errore durante la richiesta della lista delle tue raccolte fondi!"
+        errorMessage: "Errore durante la richiesta della lista delle tue raccolte fondi!",
+        staleTime: 5 * 60 * 1000,
     });
 }
 

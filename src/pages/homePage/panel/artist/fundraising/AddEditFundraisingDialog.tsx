@@ -5,7 +5,7 @@ import {
     type AddEditFundraisingFormValues,
     type Fundraising,
     useAddEditFundraisingForm,
-    type VenueProfileDTO
+    type Venue
 } from "@pages";
 import {Box} from "@mui/material";
 import {useCreateFundraising, useEditFundraising} from "@api/hooks/useFundraising.ts";
@@ -15,12 +15,12 @@ import type {SelectMenuItem} from "@components/form/SelectFormField.tsx";
 type ArtistCreateFundraisingDialogProps = {
     isDialogOpen: boolean;
     onClose: () => void;
-    venues: VenueProfileDTO[];
+    venues: Venue[];
     fundraising?: Fundraising;
     userId: string;
 }
 
-function getMenuItems(venues: VenueProfileDTO[] | undefined) {
+function getMenuItems(venues: Venue[] | undefined) {
     if (!venues) return [];
     return venues.map((venue, index) => ({
         key: index,

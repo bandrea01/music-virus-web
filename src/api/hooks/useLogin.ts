@@ -6,11 +6,12 @@ import {setSnackbarError, setSnackbarSuccess} from '@store/snackbar/slice.ts';
 import {useNavigate} from "react-router-dom";
 import {getAxiosErrorMessage} from "@api/axios.ts";
 import type {AxiosError} from "axios";
-import {type IProfileUserLocalStorage, useAuth} from "@components";
+import {useAuth} from "@components";
 import type {UserAuthRoleKey} from "@utils";
 import {AppRoutes} from "@utils";
 import type {ProfileResponseDTO} from "@pages";
 import {profileRequest} from "@pages";
+import type {IProfileUserLocalStorage} from "@components/providers/AuthContext.tsx";
 
 export function useLogin(): UseMutationResult<JwtSessionResponseDTO, unknown, LoginDTO, unknown> {
     const dispatch = useAppDispatch();
