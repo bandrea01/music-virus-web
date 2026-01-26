@@ -9,7 +9,20 @@ export default defineConfig(({mode}) => {
 
   //vite.config.ts for production build on AWS machine
   if (mode === "prod" || mode === "production") {
-    return { plugins: [react()] };
+    return {
+      plugins: [react()],
+      resolve: {
+        alias: {
+          '@': r('./src'),
+          '@components': r('./src/components'),
+          '@api': r('./src/api'),
+          '@pages': r('./src/pages'),
+          '@store': r('./src/store'),
+          '@styles': r('./src/styles'),
+          '@utils': r('./src/utils'),
+        },
+      },
+    };
   }
 
   //vite.config.ts for local development with proxies
