@@ -7,6 +7,12 @@ const r = (p: string) => fileURLToPath(new URL(p, import.meta.url));
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, process.cwd(), '');
 
+  //vite.config.ts for production build on AWS machine
+  if (mode === "prod" || mode === "production") {
+    return { plugins: [react()] };
+  }
+
+  //vite.config.ts for local development with proxies
   const USER_IDENTITY_TARGET = env.USER_IDENTITY_TARGET;
   const EVENT_FUNDRAISING_TARGET = env.EVENT_FUNDRAISING_TARGET;
   const BILLING_TARGET = env.BILLING_TARGET;
@@ -20,9 +26,9 @@ export default defineConfig(({mode}) => {
     throw new Error(
       `Missing proxy targets for mode=${mode}.
         Expected:
-        - VITE_USER_TARGET
-        - VITE_EVENT_TARGET
-        - VITE_BILLING_TARGET`
+        - USER_IDENTITY_TARGET
+        - EVENT_FUNDRAISING_TARGET
+        - BILLING_TARGET`
     );
   }
 

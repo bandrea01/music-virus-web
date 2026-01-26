@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --mode dev",
-    "prod": "vite --mode prod",
-    "build": "vite build",
+    "dev:local": "vite --mode local",
+    "dev:oracle": "vite --mode oracle",
+    "build:prod": "vite build --mode prod",
     "preview": "vite preview",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "format": "prettier --write ."
