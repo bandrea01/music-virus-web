@@ -26,7 +26,7 @@ export default function LoginPage() {
         control
     } = useForm<LoginFormValues>({
         resolver: zodResolver(loginSchema),
-        mode: 'onChange',
+        mode: 'onTouched',
         defaultValues: initialValuesloginSchema,
     });
 

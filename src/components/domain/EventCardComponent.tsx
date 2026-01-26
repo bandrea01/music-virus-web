@@ -1,6 +1,6 @@
 import {type ReactElement, useState} from "react";
 import {type EnrichEvent, FeedbackDialog} from "@pages";
-import {formatDateWithTime} from "@utils";
+import {EventStatusEnum, formatDateWithTime} from "@utils";
 import {Avatar, Box, Button, Card, Divider, Tooltip, Typography} from "@mui/material";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import LocationPinIcon from '@mui/icons-material/LocationPin';
@@ -30,7 +30,7 @@ export default function EventCardComponent({
   ];
 
   //Adding feedbacks
-  if (new Date(event.eventDate) < new Date()) {
+  if (event.status === EventStatusEnum.FINISHED) {
     actions.push({
       label: 'Lascia un feedback',
       startIcon: <ChatBubbleIcon/>,
@@ -72,10 +72,13 @@ export default function EventCardComponent({
             </Tooltip>
           </Box>
           <Box display="flex" flexDirection="column" overflow="hidden">
-            <Box display="flex" justifyContent="space-between" gap={0.5}>
+            <Box display="flex" flexDirection="column" justifyContent="space-between" gap={0.5}>
               <Typography fontSize="18px" color="white" fontWeight="bold"
                           sx={{textDecoration: 'underline'}}>
                 {event.eventName}
+              </Typography>
+              <Typography fontSize="10px" color="white">
+                {event.status}
               </Typography>
             </Box>
           </Box>
@@ -115,6 +118,7 @@ export default function EventCardComponent({
       {
         isFeedbackDialogOpen && (
           <FeedbackDialog
+            eventId={event.eventId}
             isDialogOpen={isFeedbackDialogOpen}
             onClose={() => setIsFeedbackDialogOpen(false)}
           />

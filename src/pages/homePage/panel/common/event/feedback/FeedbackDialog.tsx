@@ -1,12 +1,13 @@
-import {DialogComponent} from "@components";
+import {DialogComponent, useAuth} from "@components";
 import {type ReactElement, useState} from "react";
 import {type Feedback, FeedbackComponent, type UserProfile} from "@pages";
-import {useGetFans} from "@api";
+import {useGetFans, useGetFeedbacks, useSendFeedback} from "@api";
 import {Box, Divider, IconButton, InputAdornment, TextField, Typography} from "@mui/material";
 import SendIcon from '@mui/icons-material/Send';
 import Rating from "@mui/material/Rating";
 
 type FeedbackDialogProps = {
+  eventId: string;
   isDialogOpen: boolean;
   onClose: () => void;
 }
@@ -16,32 +17,22 @@ type EnrichFeedback = Feedback & {
 }
 
 export default function FeedbackDialog({
+                                         eventId,
                                          isDialogOpen,
                                          onClose
                                        }: FeedbackDialogProps): ReactElement {
 
+  const [feedbackDescription, setFeedbackDescription] = useState<string>("");
   const [feedbackRating, setFeedbackRating] = useState<number | null>(1);
 
-  const feedbacks: Feedback[] = [
-    {
-      feedbackId: "fb1",
-      eventId: "Concerto di Natale",
-      userId: "68e3bc8afe65ad477f7c4085",
-      rating: 5,
-      comment: "Evento fantastico! Mi sono divertito molto."
-    },
-    {
-      feedbackId: "fb2",
-      eventId: "Concerto di Natale",
-      userId: "68e3bc8afe65ad477f7c4085",
-      rating: 4,
-      comment: "Ottimo evento, ma il suono poteva essere migliore."
-    }
-  ];
+  const isSendButtonDisabled = feedbackDescription.trim() === "" || feedbackRating === null;
 
   const {data: fans} = useGetFans();
+  const {data: feedbacks} = useGetFeedbacks(eventId)
+  const {mutate: sendFeedback} = useSendFeedback(eventId);
+  const {authUser} = useAuth();
 
-  feedbacks.forEach((feedback) => {
+  feedbacks?.forEach((feedback) => {
     const user = fans?.find((user: UserProfile) => user.userId === feedback.userId);
     if (user) {
       (feedback as EnrichFeedback).userName = user.name + " " + user.surname;
@@ -56,12 +47,19 @@ export default function FeedbackDialog({
       maxWidth="sm"
     >
       <Box display="flex" flexDirection="column" gap={3}>
-        <Box display="flex" flexDirection="column" gap={2}>
-          {feedbacks.map((feedback) => (
-            <FeedbackComponent
-              user={(feedback as EnrichFeedback).userName}
-              rating={feedback.rating}
-              comment={feedback.comment}/>
+        <Box display="flex" flexDirection="column" gap={2} sx={{maxHeight: 300, overflowY: 'scroll'}}>
+          {feedbacks?.length === 0 && (
+            <Typography color="white">Nessun feedback disponibile per questo evento.</Typography>
+          )}
+          {feedbacks?.map((feedback) => (
+            <Box>
+              <FeedbackComponent
+                user={(feedback as EnrichFeedback).userName}
+                rating={feedback.rating}
+                comment={feedback.comment}
+                createdAt={feedback.createdAt}
+              />
+            </Box>
           ))}
         </Box>
         <Divider color={"#122341"}/>
@@ -83,12 +81,25 @@ export default function FeedbackDialog({
           <TextField
             multiline
             rows={3}
+            value={feedbackDescription}
+            onChange={(e) => setFeedbackDescription(e.target.value)}
             slotProps={{
               input: {
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton onClick={() => {
-                    }}>
+                    <IconButton
+                      disabled={isSendButtonDisabled}
+                      onClick={() => {
+                        sendFeedback({
+                          userId: authUser?.userId ?? "",
+                          rating: feedbackRating ?? 1,
+                          comment: feedbackDescription,
+                        })
+                        setFeedbackDescription("");
+                        setFeedbackRating(1);
+                      }}
+                      sx={{color: isSendButtonDisabled ? 'gray !important' : 'white'}}
+                    >
                       <SendIcon/>
                     </IconButton>
                   </InputAdornment>

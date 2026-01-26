@@ -1,23 +1,21 @@
 import {z} from 'zod';
-
-export const userTypeEnum = z.enum(["fan", "artist", "venue"]);
-export type UserType = z.infer<typeof userTypeEnum>
+import {UserTypeEnum} from "@utils";
 
 export const initialValuesByType: {
-    fan: FanValues;
-    artist: ArtistValues;
-    venue: VenueValues;
+    FAN: FanValues;
+    ARTIST: ArtistValues;
+    VENUE: VenueValues;
 } = {
-    fan: {
-        userType: "fan",
+    FAN: {
+        userType: UserTypeEnum.FAN,
         name: "",
         surname: "",
         email: "",
         password: "",
         confirmPassword: "",
     },
-    artist: {
-        userType: "artist",
+    ARTIST: {
+        userType: UserTypeEnum.ARTIST,
         name: "",
         surname: "",
         email: "",
@@ -26,8 +24,8 @@ export const initialValuesByType: {
         artistGenres: [],
         artistSocial: "",
     },
-    venue: {
-        userType: "venue",
+    VENUE: {
+        userType: UserTypeEnum.VENUE,
         name: "",
         surname: "",
         email: "",
@@ -39,7 +37,7 @@ export const initialValuesByType: {
 };
 
 const baseCommonSchema = z.object({
-    userType: userTypeEnum,
+    userType: z.nativeEnum(UserTypeEnum),
     name: z.string().min(1, "Inserisci il nome"),
     surname: z.string().min(1, "Inserisci il cognome"),
     email: z.string().email("Inserisci una email valida"),
@@ -48,17 +46,17 @@ const baseCommonSchema = z.object({
 });
 
 const fanSchema = baseCommonSchema.extend({
-    userType: z.literal("fan"),
+    userType: z.literal(UserTypeEnum.FAN),
 });
 
 const artistSchema = baseCommonSchema.extend({
-    userType: z.literal("artist"),
+    userType: z.literal(UserTypeEnum.ARTIST),
     artistGenres: z.array(z.string()).min(2, "Inserisci almeno due generi musicali"),
     artistSocial: z.string().min(1, "Inserisci un social"),
 });
 
 const venueSchema = baseCommonSchema.extend({
-    userType: z.literal("venue"),
+    userType: z.literal(UserTypeEnum.VENUE),
     venueName: z.string().min(2, "Inserisci il nome della tua location"),
     venueAddress: z
         .object({
@@ -76,6 +74,13 @@ const userRegisterSchema = z
                 code: z.ZodIssueCode.custom,
                 path: ["confirmPassword"],
                 message: "Le password non coincidono",
+            });
+        }
+        if (/\s/.test(data.password) || /[^A-Za-z0-9]/.test(data.password)) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['password'],
+                message: 'La password non può contenere spazi o caratteri speciali',
             });
         }
     });

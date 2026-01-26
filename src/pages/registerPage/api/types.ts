@@ -1,8 +1,4 @@
-//Common
 import type {LatLng} from "leaflet";
-
-export type UserTypeId = "fan" | "artist" | "venue";
-
 
 //Register
 export type RegisterBaseDTO = {

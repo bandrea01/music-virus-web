@@ -237,13 +237,13 @@ export type Feedback = {
     userId: string;
     rating: number;
     comment: string;
+    createdAt: string;
 }
 export type FeedbackListResponseDTO = {
     feedbacks: Feedback[];
 }
 
 export type FeedbackRequestDTO = {
-    eventId: string;
     userId: string;
     rating: number;
     comment: string;

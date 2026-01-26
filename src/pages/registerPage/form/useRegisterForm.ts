@@ -3,10 +3,11 @@ import {
     initialValuesByType,
     type UserRegisterFormValues,
     type UserRegisterRequest,
-} from "./registerSchema.ts";
-import {useForm, type UseFormReturn} from "react-hook-form";
-import {useEffect} from "react";
+} from "@pages";
+import {useForm, type UseFormReturn, useWatch} from "react-hook-form";
+import {useEffect, useMemo} from "react";
 import {zodResolver} from "@hookform/resolvers/zod";
+import {UserTypeEnum} from "@utils";
 
 
 export interface UseUserRegisterFormProps {
@@ -18,51 +19,60 @@ export interface UseUserRegisterFormReturn {
 }
 
 export function useUserRegisterForm({
-                                        initialValues
+                                        initialValues,
                                     }: UseUserRegisterFormProps): UseUserRegisterFormReturn {
-    const schema = getUserRegisterSchema();
-    const form =
-        useForm<UserRegisterRequest>({
-            defaultValues: initialValues,
-            resolver: zodResolver(schema),
-            mode: 'onChange',
-        });
+
+    const schema = useMemo(() => getUserRegisterSchema(), []);
+
+    const form = useForm<UserRegisterRequest>({
+        defaultValues: initialValues,
+        resolver: zodResolver(schema),
+        mode: "onChange",
+    });
+
+    const userType = useWatch({ control: form.control, name: "userType" });
 
     useEffect(() => {
-        const subscription = form.watch((_values, info) => {
-            if (info.name !== "userType") return;
-
-            const type = form.getValues("userType");
-
-            const commons = {
-                userType: type,
-                name: form.getValues("name"),
-                surname: form.getValues("surname"),
-                email: form.getValues("email"),
-                password: form.getValues("password"),
-                confirmPassword: form.getValues("confirmPassword"),
-            };
-
-            form.reset(
-                {
-                    ...commons,
-                    ...initialValuesByType[type],
-                } as any,
-                {
-                    keepDefaultValues: false,
-                    keepDirty: false,
-                    keepTouched: false,
-                }
-            );
+        form.reset(initialValues, {
+            keepDefaultValues: false,
+            keepDirty: false,
+            keepTouched: false,
         });
-
-        return () => subscription.unsubscribe();
-    }, [form]);
-
-
-    useEffect(() => {
-        form.reset(initialValues);
     }, [initialValues, form]);
 
-    return {form};
+    useEffect(() => {
+        if (!userType) return;
+
+        const valid =
+          userType === UserTypeEnum.FAN ||
+          userType === UserTypeEnum.ARTIST ||
+          userType === UserTypeEnum.VENUE;
+
+        if (!valid) return;
+
+        const values = form.getValues();
+
+        const commons = {
+            userType: values.userType,
+            name: values.name,
+            surname: values.surname,
+            email: values.email,
+            password: values.password,
+            confirmPassword: values.confirmPassword,
+        };
+
+        form.reset(
+          {
+              ...commons,
+              ...initialValuesByType[userType],
+          } as any,
+          {
+              keepDefaultValues: false,
+              keepDirty: false,
+              keepTouched: false,
+          }
+        );
+    }, [userType, form]);
+
+    return { form };
 }

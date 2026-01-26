@@ -26,10 +26,6 @@ export default function MapDialog({
     const [tempVenueName, setTempVenueName] = useState<string>("");
     const [tempVenueAddress, setTempVenueAddress] = useState<LatLngLiteral | null>(null);
 
-    console.log("Temp Venue Address:", tempVenueAddress);
-    console.log("Temp Venue Name:", tempVenueName);
-    ;
-
     useEffect(() => {
         if (open) {
             setTempVenueName(getValues("venueName") ?? "");

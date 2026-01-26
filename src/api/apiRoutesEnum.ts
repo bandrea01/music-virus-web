@@ -4,7 +4,6 @@ export const ApiRoutes = {
     PRE_REGISTER: "/pre-register",
 
     REGISTER: {
-        TYPE: "/register/:type",
         byType: (type: string) => `/register/${type}`, // route builder for register
     },
 
@@ -23,6 +22,7 @@ export const ApiRoutes = {
     EVENT: {
         ROOT: "/event",
         EVENT_COUNTER: "/event/venues/count",
+        FEEDBACK: (eventId: string) => `/event/${eventId}/feedbacks`,
     },
 
     // Admin

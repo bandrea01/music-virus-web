@@ -1,36 +1,60 @@
-import {defineConfig} from 'vite';
+import {defineConfig, loadEnv} from 'vite';
 import react from '@vitejs/plugin-react';
 import {fileURLToPath} from 'url';
 
 const r = (p: string) => fileURLToPath(new URL(p, import.meta.url));
 
-export default defineConfig({
+export default defineConfig(({mode}) => {
+  const env = loadEnv(mode, process.cwd(), '');
+
+  const USER_IDENTITY_TARGET = env.USER_IDENTITY_TARGET;
+  const EVENT_FUNDRAISING_TARGET = env.EVENT_FUNDRAISING_TARGET;
+  const BILLING_TARGET = env.BILLING_TARGET;
+
+  console.info(`Running in mode=${mode}`);
+  console.info(USER_IDENTITY_TARGET ? `User target: ${USER_IDENTITY_TARGET}` : 'No user target set');
+  console.info(EVENT_FUNDRAISING_TARGET ? `Event target: ${EVENT_FUNDRAISING_TARGET}` : 'No event target set');
+  console.info(BILLING_TARGET ? `Billing target: ${BILLING_TARGET}` : 'No billing target set');
+
+  if (!USER_IDENTITY_TARGET || !EVENT_FUNDRAISING_TARGET || !BILLING_TARGET) {
+    throw new Error(
+      `Missing proxy targets for mode=${mode}.
+        Expected:
+        - VITE_USER_TARGET
+        - VITE_EVENT_TARGET
+        - VITE_BILLING_TARGET`
+    );
+  }
+
+  return {
     plugins: [react()],
     server: {
-        proxy: {
-            '/api/user': {
-                target: 'http://localhost:8082',
-                changeOrigin: true,
-            },
-            '/api/event': {
-                target: 'http://localhost:8083',
-                changeOrigin: true,
-            },
-            '/api/billing': {
-                target: 'http://localhost:8084',
-                changeOrigin: true,
-            },
+      port: 5173,
+      proxy: {
+        '/api/user': {
+          target: USER_IDENTITY_TARGET,
+          changeOrigin: true,
         },
+        '/api/event-fundraising': {
+          target: EVENT_FUNDRAISING_TARGET,
+          changeOrigin: true,
+        },
+        '/api/billing': {
+          target: BILLING_TARGET,
+          changeOrigin: true,
+        },
+      },
     },
     resolve: {
-        alias: {
-            '@': r('./src'),
-            '@components': r('./src/components'),
-            '@api': r('./src/api'),
-            '@pages': r('./src/pages'),
-            '@store': r('./src/store'),
-            '@styles': r('./src/styles'),
-            '@utils': r('./src/utils'),
-        },
+      alias: {
+        '@': r('./src'),
+        '@components': r('./src/components'),
+        '@api': r('./src/api'),
+        '@pages': r('./src/pages'),
+        '@store': r('./src/store'),
+        '@styles': r('./src/styles'),
+        '@utils': r('./src/utils'),
+      },
     },
+  };
 });

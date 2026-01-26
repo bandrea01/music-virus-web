@@ -1,4 +1,4 @@
-import api from "@api/axios.ts";
+import {userIdentityApi} from "@api/axios.ts";
 import {ApiRoutes} from "@api";
 import type {UserTypeKey} from "@utils";
 import type {JwtSessionResponseDTO} from "@pages/loginPage/api/types.ts";
@@ -18,41 +18,41 @@ function normalizeVenueAddress(p: VenueRegisterDTO): LatLng {
 }
 
 type PayloadBuilderMap = {
-    [K in UserTypeKey]: (p: RegisterDTORequestByType[K]) => RegisterDTORequestByType[K];
+    [K in UserTypeKey]: (payload: RegisterDTORequestByType[K]) => RegisterDTORequestByType[K];
 };
 
 const payloadBuilders: PayloadBuilderMap = {
-    FAN: (p) => ({
-        name: p.name,
-        surname: p.surname,
-        email: p.email,
-        password: p.password,
+    FAN: (payload) => ({
+        name: payload.name,
+        surname: payload.surname,
+        email: payload.email,
+        password: payload.password,
     }),
 
-    ARTIST: (p) => ({
-        name: p.name,
-        surname: p.surname,
-        email: p.email,
-        password: p.password,
-        artistGenres: p.artistGenres,
-        artistSocial: p.artistSocial,
+    ARTIST: (payload) => ({
+        name: payload.name,
+        surname: payload.surname,
+        email: payload.email,
+        password: payload.password,
+        artistGenres: payload.artistGenres,
+        artistSocial: payload.artistSocial,
     }),
 
-    VENUE: (p) => ({
-        name: p.name,
-        surname: p.surname,
-        email: p.email,
-        password: p.password,
-        venueName: p.venueName,
-        venueAddress: normalizeVenueAddress(p),
+    VENUE: (payload) => ({
+        name: payload.name,
+        surname: payload.surname,
+        email: payload.email,
+        password: payload.password,
+        venueName: payload.venueName,
+        venueAddress: normalizeVenueAddress(payload),
     }),
 };
 
-export async function registerRequest<T extends UserTypeKey>(
-    type: T,
-    payload: RegisterDTORequestByType[T]
+export async function registerRequest(
+    userTypeKey: UserTypeKey,
+    payload: RegisterDTORequestByType[UserTypeKey]
 ): Promise<AxiosResponse<JwtSessionResponseDTO>> {
-    const url = ApiRoutes.REGISTER.byType(type);
-    const body = payloadBuilders[type](payload) as RegisterDTORequestByType[T];
-    return api.post<JwtSessionResponseDTO>(url, body);
+    const url = ApiRoutes.REGISTER.byType(userTypeKey.toLowerCase());
+    const body = payloadBuilders[userTypeKey](payload as any);
+    return userIdentityApi.post<JwtSessionResponseDTO>(url, body);
 }

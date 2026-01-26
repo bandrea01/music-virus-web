@@ -1,13 +1,13 @@
 upstream user_identity_service {
-    server 10.0.0.144:8082;
+    server ${USER_IDENTITY_TARGET};
 }
 
 upstream event_fundraising_service {
-    server 10.0.0.144:8083;
+    server ${EVENT_FUNDRAISING_TARGET};
 }
 
 upstream billing_service {
-    server 10.0.0.144:8084;
+    server ${BILLING_TARGET};
 }
 
 server {

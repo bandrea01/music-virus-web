@@ -13,6 +13,7 @@ export function sortArtists(artists: Artist[]): Artist[] {
 }
 
 export function formatDate(dateString: string, withWeekDay: boolean = false): string {
+    console.log("Formatting date:", dateString, "withWeekDay:", withWeekDay);
     const date = new Date(dateString);
     const formattedDate = date.toLocaleDateString("it-IT");
     if (!withWeekDay) return formattedDate;
