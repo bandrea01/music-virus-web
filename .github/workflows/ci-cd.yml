@@ -27,7 +27,7 @@ jobs:
         run: npm ci
 
       - name: Build (prod mode)
-        run: npm run build -- --mode prod
+        run: npm run build:prod
 
       - name: Prepare SSH
         run: |
@@ -48,7 +48,7 @@ jobs:
       - name: Upload dist/ to AWS (/home/ubuntu/app/site)
         run: |
           RSYNC_SSH="ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=yes"
-          rsync -az --delete -e "$RSYNC_SSH" dist/ "${{ secrets.AWS_USER }}@${{ secrets.AWS_HOST }}:/home/ubuntu/app/site/"
+          rsync -az --delete -e "$RSYNC_SSH" dist/ "${{ secrets.AWS_USER }}@${{ secrets.AWS_HOST }}:/home/ubuntu/app/website/"
 
       - name: Upload nginx.conf.template to EC2 (/home/ubuntu/app/nginx.conf.template)
         run: |
