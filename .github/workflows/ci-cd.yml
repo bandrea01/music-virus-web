@@ -1,79 +1,61 @@
-name: Build & Deploy frontend (Oracle VM)
+name: Deploy Vite Frontend (dist) + Nginx config to AWS
 
 on:
   push:
-    branches: [ master ]
+    branches: ["master"]
+  workflow_dispatch:
 
 concurrency:
-  group: deploy-frontend-${{ github.ref }}
+  group: deploy-frontend
   cancel-in-progress: true
 
 jobs:
-  build_test_sync_deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
+          node-version: "20"
+          cache: "npm"
 
-      - name: Install dependencies
-        working-directory: .
+      - name: Install deps
+        run: npm ci
+
+      - name: Build (prod mode)
+        run: npm run build -- --mode prod
+
+      - name: Prepare SSH
         run: |
-          npm ci
+          mkdir -p ~/.ssh
+      
+          echo "${{ secrets.AWS_KEY }}" | tr -d '\r' > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+      
+          ssh-keygen -y -f ~/.ssh/id_rsa > /dev/null
+      
+          ssh-keyscan -p 22 -H "${{ secrets.AWS_HOST }}" >> ~/.ssh/known_hosts
 
-      - name: Build frontend (Vite)
-        working-directory: .
+      - name: Ensure folders exist on AWS
         run: |
-          npm run build
-          ls -la dist
+          ssh -i ~/.ssh/id_rsa "${{ secrets.AWS_USER }}@${{ secrets.AWS_HOST }}" \
+            "mkdir -p /home/ubuntu/app/site /home/ubuntu/app/nginx"
 
-      - name: Start ssh-agent
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.ORACLE_SSH_KEY }}
-
-      # ===================== SYNC FILES SU ORACLE ===================== #
-      - name: Ensure remote frontend dirs
+      - name: Upload dist/ to AWS (/home/ubuntu/app/site)
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.ORACLE_USER }}@${{ secrets.ORACLE_HOST }} "\
-            mkdir -p /home/${{ secrets.ORACLE_USER }}/app/frontend && \
-            mkdir -p /home/${{ secrets.ORACLE_USER }}/app/frontend/dist \
-          "
+          RSYNC_SSH="ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=yes"
+          rsync -az --delete -e "$RSYNC_SSH" dist/ "${{ secrets.AWS_USER }}@${{ secrets.AWS_HOST }}:/home/ubuntu/app/site/"
 
-      - name: Upload frontend artifacts (dist, Dockerfile, nginx.conf)
+      - name: Upload nginx.conf.template to EC2 (/home/ubuntu/app/nginx.conf.template)
         run: |
-          # dist (output build Vite)
-          scp -o StrictHostKeyChecking=no -r dist \
-            ${{ secrets.ORACLE_USER }}@${{ secrets.ORACLE_HOST }}:/home/${{ secrets.ORACLE_USER }}/app/frontend/
+          scp -i ~/.ssh/id_rsa nginx.conf.template \
+            "${{ secrets.AWS_USER }}@${{ secrets.AWS_HOST }}:/home/ubuntu/app/nginx.conf.template"
 
-          # Dockerfile e nginx.conf del frontend (sono nella root del repo)
-          scp -o StrictHostKeyChecking=no Dockerfile \
-            ${{ secrets.ORACLE_USER }}@${{ secrets.ORACLE_HOST }}:/home/${{ secrets.ORACLE_USER }}/app/frontend/Dockerfile
-
-          scp -o StrictHostKeyChecking=no nginx.conf \
-            ${{ secrets.ORACLE_USER }}@${{ secrets.ORACLE_HOST }}:/home/${{ secrets.ORACLE_USER }}/app/frontend/nginx.conf
-
-      - name: Deploy frontend service with Docker Compose
+      - name: Docker compose up (nginx)
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.ORACLE_USER }}@${{ secrets.ORACLE_HOST }} "\
-            cd /home/${{ secrets.ORACLE_USER }}/app && \
-            docker compose up -d --build frontend && \
-            docker compose ps \
-          "
-
-      - name: Optional HTTP healthcheck
-        if: ${{ success() && vars.FRONTEND_HEALTHCHECK_URL != '' }}
-        run: |
-          for i in {1..12}; do
-            code=$(curl -s -o /dev/null -w "%{http_code}" "${{ vars.FRONTEND_HEALTHCHECK_URL }}") || true
-            if [ "$code" = "200" ]; then exit 0; fi
-            sleep 5
-          done
-          exit 1
+          ssh -i ~/.ssh/id_rsa "${{ secrets.AWS_USER }}@${{ secrets.AWS_HOST }}" \
+            "cd /home/ubuntu/app && docker compose up -d --remove-orphans && docker compose restart nginx"
