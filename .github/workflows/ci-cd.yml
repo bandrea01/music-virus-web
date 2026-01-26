@@ -48,12 +48,12 @@ jobs:
       - name: Upload dist/ to AWS (/home/ubuntu/app/site)
         run: |
           RSYNC_SSH="ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=yes"
-          rsync -az --delete -e "$RSYNC_SSH" dist/ "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ubuntu/app/site/"
+          rsync -az --delete -e "$RSYNC_SSH" dist/ "${{ secrets.AWS_USER }}@${{ secrets.AWS_HOST }}:/home/ubuntu/app/site/"
 
       - name: Upload nginx.conf.template to EC2 (/home/ubuntu/app/nginx.conf.template)
         run: |
           scp -i ~/.ssh/id_rsa nginx.conf.template \
-            "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ubuntu/app/nginx.conf.template"
+            "${{ secrets.AWS_USER }}@${{ secrets.AWS_HOST }}:/home/ubuntu/app/nginx.conf.template"
 
       - name: Docker compose up (nginx)
         run: |
