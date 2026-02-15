@@ -4,181 +4,178 @@ import {DialogComponent, getSelectOptions, SelectFormField, TextFormField} from 
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {getProfileEditSchemaAndDefaults, mapProfileEditFormValuesToDTO} from "@pages";
-import {MapDialog} from "@pages";
 import {z} from "zod";
 import {genres} from "@pages/registerPage/section/ArtistSection.tsx";
 import type {IAuthUserLocalStorage, IProfileUserLocalStorage} from "@components/providers/AuthContext.tsx";
 import {useProfileEdit} from "@api";
 
-//TODO refactor
-
 type PersonalProfileEditDialogProps = {
-    isOpen: boolean;
-    onClose: () => void;
-    profileUser?: IProfileUserLocalStorage | null;
-    authUser?: IAuthUserLocalStorage | null;
+  isOpen: boolean;
+  onClose: () => void;
+  profileUser?: IProfileUserLocalStorage | null;
+  authUser?: IAuthUserLocalStorage | null;
 };
 
 export default function PersonalProfileEditDialog({
-                                                      isOpen,
-                                                      onClose,
-                                                      profileUser,
-                                                      authUser
+                                                    isOpen,
+                                                    onClose,
+                                                    profileUser,
+                                                    authUser
                                                   }: PersonalProfileEditDialogProps): ReactElement {
 
-    //Form
-    const {schema, defaultValues} = useMemo(
-        () => getProfileEditSchemaAndDefaults(profileUser),
-        [profileUser]
-    );
-    const {
-        control,
-        handleSubmit,
-        formState,
-        watch,
-        reset,
-        getValues,
-        setValue
-    } = useForm<z.infer<typeof schema>>({
-        resolver: zodResolver(schema),
-        mode: 'onChange',
-        defaultValues: defaultValues,
-    });
-    useEffect(() => {
-        reset(defaultValues);
-        initialGenresRef.current = defaultValues.artistGenres ?? [];
-    }, [defaultValues, reset]);
-    const [venueAddress] = watch(["venueAddress"]);
-    const initialGenresRef = useRef<string[]>(getValues('artistGenres') ?? []);
+  //Form
+  const {schema, defaultValues} = useMemo(
+    () => getProfileEditSchemaAndDefaults(profileUser),
+    [profileUser]
+  );
+  const {
+    control,
+    handleSubmit,
+    formState,
+    watch,
+    reset,
+    getValues,
+    setValue
+  } = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    mode: 'onChange',
+    defaultValues: defaultValues,
+  });
+  useEffect(() => {
+    reset(defaultValues);
+    initialGenresRef.current = defaultValues.artistGenres ?? [];
+  }, [defaultValues, reset]);
+  const [venueAddress] = watch(["venueAddress"]);
+  const initialGenresRef = useRef<string[]>(getValues('artistGenres') ?? []);
 
-    //API call
-    const {mutate: profileEdit, isPending} = useProfileEdit();
-    const onSubmit = handleSubmit((values) => {
-        profileEdit(mapProfileEditFormValuesToDTO(values));
-    });
+  //API call
+  const {mutate: profileEdit, isPending} = useProfileEdit();
+  const onSubmit = handleSubmit((values) => {
+    profileEdit(mapProfileEditFormValuesToDTO(values));
+  });
 
-    const coordsDisplay = useMemo(() => {
-        if (!venueAddress) return "";
-        const {latitude, longitude} = venueAddress;
-        return `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
-    }, [venueAddress]);
+  const coordsDisplay = useMemo(() => {
+    if (!venueAddress) return "";
+    const {latitude, longitude} = venueAddress;
+    return `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
+  }, [venueAddress]);
 
-    return (
-        <DialogComponent
-            isOpen={isOpen}
-            onClose={onClose}
-            title="Modifica il tuo profilo"
-            actions={[
-                {
-                    label: "Chiudi",
-                    onClick: () => {
-                        onClose();
-                        reset()
-                    },
-                    variant: "contained",
-                    disabled: isPending
-                },
-                {
-                    label: "Salva",
-                    onClick: onSubmit,
-                    variant: "contained",
-                    disabled: isPending || !formState.isValid || !formState.isDirty,
-                    sx: {
-                        bgcolor: '#452a7c !important',
-                        color: '#fff',
-                        '&:hover': {bgcolor: 'rgba(18,35,66,0.9)'},
-                    },
-                }
-            ]}
-        >
-            <Box display="flex" flexDirection="column" className="auth-form" gap={2}>
-                <TextFormField
-                    control={control}
-                    name="name"
-                    label="Nome"
-                />
-                <TextFormField
-                    control={control}
-                    name="surname"
-                    label="Cognome"
-                />
-                <TextFormField
-                    control={control}
-                    name="email"
-                    label="Email"
-                />
-                <TextFormField
-                    control={control}
-                    name="oldPassword"
-                    type="password"
-                    label="Vecchia password"
-                />
-                <TextFormField
-                    control={control}
-                    name="newPassword"
-                    type="password"
-                    label="Nuova password"
-                />
-                {authUser?.role?.substring(0) === 'ARTIST' && (
-                    <>
-                        <SelectFormField
-                            control={control}
-                            name="artistGenres"
-                            label="I tuoi generi musicali"
-                            menuItems={getSelectOptions(genres)}
-                            renderValue={(selected) => {
-                                const arr = Array.isArray(selected) ? selected : [];
-                                if (arr.length === 0) return <em>Seleziona generi…</em>;
-                                return (
-                                    <Box sx={{display: 'flex', overflow: 'clip', gap: 0.5, maxWidth: '100%'}}>
-                                        {arr.map((v) => (
-                                            <Chip
-                                                key={v}
-                                                label={v}
-                                                size="small"
-                                                onMouseDown={(e) => e.stopPropagation()}
-                                                onDelete={() => {
-                                                    const current = getValues('artistGenres') ?? [];
-                                                    const next = Array.isArray(current) ? current.filter(x => x !== v) : [];
-                                                    setValue('artistGenres', next, {
-                                                        shouldValidate: true,
-                                                        shouldDirty: true
-                                                    });
-                                                }}
-                                            />
-                                        ))}
-                                    </Box>
-                                );
-                            }}
-                            multiple
-                        />
-                        <TextFormField
-                            control={control}
-                            name="artistSocial"
-                            label="Social media"
-                            fullWidth
-                        />
-                    </>
-                )}
-                {authUser?.role?.substring(0) === 'VENUE' && (
-                    <>
-                        <TextFormField
-                            control={control}
-                            name="venueName"
-                            label="Indirizzo"
-                        />
-                        <span>{coordsDisplay}</span>
-                        <MapDialog
-                            control={control}
-                            open={isOpen}
-                            onClose={() => {
-                                onClose();
-                                reset();
-                            }}
-                        />
-                    </>
-                )}
-            </Box>
-        </DialogComponent>
-    );
+  return (
+    <DialogComponent
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Modifica il tuo profilo"
+      actions={[
+        {
+          label: "Chiudi",
+          onClick: () => {
+            onClose();
+            reset()
+          },
+          variant: "contained",
+          disabled: isPending
+        },
+        {
+          label: "Salva",
+          onClick: onSubmit,
+          variant: "contained",
+          disabled: isPending || !formState.isValid || !formState.isDirty,
+          sx: {
+            bgcolor: '#452a7c !important',
+            color: '#fff',
+            '&:hover': {bgcolor: 'rgba(18,35,66,0.9)'},
+          },
+        }
+      ]}
+    >
+      <Box display="flex" flexDirection="column" className="auth-form" gap={2}>
+        <TextFormField
+          control={control}
+          name="name"
+          label="Nome"
+        />
+        <TextFormField
+          control={control}
+          name="surname"
+          label="Cognome"
+        />
+        <TextFormField
+          control={control}
+          name="email"
+          label="Email"
+        />
+        <TextFormField
+          control={control}
+          name="oldPassword"
+          type="password"
+          label="Vecchia password"
+        />
+        <TextFormField
+          control={control}
+          name="newPassword"
+          type="password"
+          label="Nuova password"
+        />
+        {authUser?.role?.substring(0) === 'ARTIST' && (
+          <>
+            <SelectFormField
+              control={control}
+              name="artistGenres"
+              label="I tuoi generi musicali"
+              menuItems={getSelectOptions(genres)}
+              renderValue={(selected) => {
+                const arr = Array.isArray(selected) ? selected : [];
+                if (arr.length === 0) return <em>Seleziona generi…</em>;
+                return (
+                  <Box sx={{display: 'flex', overflow: 'clip', gap: 0.5, maxWidth: '100%'}}>
+                    {arr.map((v) => (
+                      <Chip
+                        key={v}
+                        label={v}
+                        size="small"
+                        onMouseDown={(e) => e.stopPropagation()}
+                        onDelete={() => {
+                          const current = getValues('artistGenres') ?? [];
+                          const next = Array.isArray(current) ? current.filter(x => x !== v) : [];
+                          setValue('artistGenres', next, {
+                            shouldValidate: true,
+                            shouldDirty: true
+                          });
+                        }}
+                      />
+                    ))}
+                  </Box>
+                );
+              }}
+              multiple
+            />
+            <TextFormField
+              control={control}
+              name="artistSocial"
+              label="Social media"
+              fullWidth
+            />
+          </>
+        )}
+        {authUser?.role?.substring(0) === 'VENUE' && (
+          <>
+            <TextFormField
+              control={control}
+              name="venueName"
+              label="Indirizzo"
+            />
+            <span>{coordsDisplay}</span>
+            <MapDialog
+              control={control}
+              open={isOpen}
+              onClose={() => {
+                onClose();
+                reset();
+              }}
+            />
+          </>
+        )}
+      </Box>
+    </DialogComponent>
+  );
 };

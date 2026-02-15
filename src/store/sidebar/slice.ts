@@ -1,11 +1,12 @@
 import {createSlice, type PayloadAction} from "@reduxjs/toolkit";
+import {AppRoutes} from "@utils";
 
 export interface ISidebarState {
     activeTab: string;
 }
 
 const initialState: ISidebarState = {
-    activeTab: ''
+    activeTab: AppRoutes.SECTION.EVENT,
 };
 
 const sidebarSlice = createSlice({

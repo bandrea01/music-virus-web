@@ -1,37 +1,50 @@
 import {type ReactElement, useMemo, useState} from "react";
-import type {LatLngLiteral} from "leaflet";
-import {useFormContext} from "react-hook-form";
 import {TextFormField} from "@components";
-import {MapDialog} from "@pages";
-
-type VenueFormValues = {
-    venueName: string;
-    venueAddress: LatLngLiteral | null;
-};
+import {type UserFormValues, VenueMapPicker} from "@pages";
+import {Box} from "@mui/material";
+import {useFormContext, useWatch} from "react-hook-form";
 
 export default function VenueSection(): ReactElement {
-    const [open, setOpen] = useState(false);
-    const {control, watch} = useFormContext<VenueFormValues>();
+  const [open, setOpen] = useState(false);
 
-    const currentVenueAddress = watch("venueAddress");
+  //Form
+  const {control} = useFormContext<UserFormValues>();
 
-    const coordsDisplay = useMemo(() => {
-        if (!currentVenueAddress) return "";
-        const {lat, lng} = currentVenueAddress;
-        return `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
-    }, [currentVenueAddress]);
+  const venueName = useWatch({control, name: "venueName"});
+  const venueAddress = useWatch({control, name: "venueAddress"});
 
-    return (
-        <>
-            <TextFormField
-                control={control}
-                name="venueName"
-                label="Indirizzo"
-                onClick={() => setOpen(true)}
-                sx={{cursor: "pointer"}}
-            />
-            <span>{coordsDisplay}</span>
-            <MapDialog control={control} open={open} onClose={() => setOpen(false)}/>
-        </>
-    );
+  const normalizedCoordinates = useMemo(() => {
+    if (!venueName || !venueAddress) return "";
+    const {lat, lng} = venueAddress;
+    return `${lat.toFixed(2)}, ${lng.toFixed(2)}`;
+  }, [venueAddress]);
+
+  return (
+    <>
+      <TextFormField
+        control={control}
+        name="venueName"
+        label="Indirizzo"
+        onClick={() => setOpen(true)}
+        sx={{
+          cursor: "pointer",
+          "& .MuiInputBase-input": {
+            cursor: "pointer",
+          },
+        }}
+        slotProps={{
+          textField: {
+            readOnly: true
+          }
+        }}
+      />
+      {venueAddress && (
+        <span style={{color: "#d551b6", fontSize: "11px"}}>Coordinate selezionate: {normalizedCoordinates}</span>
+      )}
+      <VenueMapPicker
+        open={open}
+        onClose={() => setOpen(false)}
+      />
+    </>
+  );
 };

@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev:local": "vite --mode local",
+    "dev:local": "vite --mode localdev",
     "dev:oracle": "vite --mode oracle",
     "build:prod": "vite build --mode prod",
     "preview": "vite preview",
@@ -30,6 +30,7 @@
     "react-gmap-picker": "^1.0.3",
     "react-hook-form": "^7.53.0",
     "react-leaflet": "^4.2.1",
+    "react-qr-code": "^2.0.18",
     "react-router-dom": "^6.26.0",
     "sass": "^1.80.4",
     "zod": "^3.23.8"

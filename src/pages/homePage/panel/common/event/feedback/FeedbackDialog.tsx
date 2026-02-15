@@ -1,7 +1,7 @@
 import {DialogComponent, useAuth} from "@components";
 import {type ReactElement, useState} from "react";
 import {type Feedback, FeedbackComponent, type UserProfile} from "@pages";
-import {useGetFans, useGetFeedbacks, useSendFeedback} from "@api";
+import {useDomainGetFans, useGetFeedbacks, useSendFeedback} from "@api";
 import {Box, Divider, IconButton, InputAdornment, TextField, Typography} from "@mui/material";
 import SendIcon from '@mui/icons-material/Send';
 import Rating from "@mui/material/Rating";
@@ -27,7 +27,7 @@ export default function FeedbackDialog({
 
   const isSendButtonDisabled = feedbackDescription.trim() === "" || feedbackRating === null;
 
-  const {data: fans} = useGetFans();
+  const {data: fans} = useDomainGetFans();
   const {data: feedbacks} = useGetFeedbacks(eventId)
   const {mutate: sendFeedback} = useSendFeedback(eventId);
   const {authUser} = useAuth();

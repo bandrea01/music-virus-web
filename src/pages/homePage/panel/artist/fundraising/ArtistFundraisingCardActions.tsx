@@ -1,7 +1,6 @@
 import {Button} from "@mui/material";
 import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
 import EditIcon from '@mui/icons-material/Edit';
-import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
 import React from "react";
@@ -14,7 +13,6 @@ export const ArtistFundraisingCardActionsEnum = {
     CONFIRM_FUNDRAISING: "CONFIRM_FUNDRAISING",
     CANCEL_FUNDRAISING: "CANCEL_FUNDRAISING",
     EDIT_FUNDRAISING: "EDIT_FUNDRAISING",
-    VIEW_DONATIONS: "VIEW_DONATIONS",
 } as const;
 
 type ArtistFundraisingActionKey = keyof typeof ArtistFundraisingCardActionsEnum;
@@ -86,66 +84,35 @@ const ArtistFundraisingEditAction: React.FC<ArtistFundraisingActionProps> = ({fu
     );
 };
 
-const ArtistFundraisingViewDonationsAction: React.FC<ArtistFundraisingActionProps> = ({}) => {
-    // const navigate = useNavigate();
-    //TODO
-    return (
-        <Button
-            onClick={() => {
-                // Handle view donations action
-            }}
-            sx={{fontSize: "10px !important"}}
-            startIcon={<RequestQuoteIcon/>}
-        >
-            Donazioni
-        </Button>
-    );
-};
-
 const actionComponent: Record<ArtistFundraisingActionKey, React.FC<ArtistFundraisingActionProps>> = {
     CONTRIBUTE_FUNDRAISING: ArtistFundraisingContributeAction,
     CONFIRM_FUNDRAISING: ArtistFundraisingConfirmAction,
     CANCEL_FUNDRAISING: ArtistFundraisingCancelAction,
     EDIT_FUNDRAISING: ArtistFundraisingEditAction,
-    VIEW_DONATIONS: ArtistFundraisingViewDonationsAction,
 };
 
 const personalActionsByStatus: Partial<Record<FundraisingStatusKey, ArtistFundraisingActionKey[]>> = {
     [FundraisingStatusEnum.ACTIVE]: [
         "CANCEL_FUNDRAISING",
         "EDIT_FUNDRAISING",
-        "VIEW_DONATIONS",
     ],
     [FundraisingStatusEnum.ACHIEVED]: [
         "CANCEL_FUNDRAISING",
-        "VIEW_DONATIONS",
         "EDIT_FUNDRAISING",
         "CONFIRM_FUNDRAISING"
     ],
     [FundraisingStatusEnum.NOT_ACHIEVED]: [
         "CANCEL_FUNDRAISING",
         "EDIT_FUNDRAISING",
-        "VIEW_DONATIONS"
     ],
-    [FundraisingStatusEnum.CONFIRMED]: [
-        "VIEW_DONATIONS"
-    ],
+    [FundraisingStatusEnum.CONFIRMED]: [],
     [FundraisingStatusEnum.CANCELLED]: [],
 };
 const generalActionsByStatus: Partial<Record<FundraisingStatusKey, ArtistFundraisingActionKey[]>> = {
-    [FundraisingStatusEnum.ACTIVE]: [
-        "VIEW_DONATIONS",
-        "CONTRIBUTE_FUNDRAISING",
-    ],
-    [FundraisingStatusEnum.ACHIEVED]: [
-        "VIEW_DONATIONS",
-    ],
-    [FundraisingStatusEnum.NOT_ACHIEVED]: [
-        "VIEW_DONATIONS"
-    ],
-    [FundraisingStatusEnum.CONFIRMED]: [
-        "VIEW_DONATIONS"
-    ],
+    [FundraisingStatusEnum.ACTIVE]: ["CONTRIBUTE_FUNDRAISING"],
+    [FundraisingStatusEnum.ACHIEVED]: [],
+    [FundraisingStatusEnum.NOT_ACHIEVED]: [],
+    [FundraisingStatusEnum.CONFIRMED]: [],
     [FundraisingStatusEnum.CANCELLED]: [],
 };
 

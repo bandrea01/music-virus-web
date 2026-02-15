@@ -1,16 +1,28 @@
 import {type ReactElement, useState} from "react";
-import {type EnrichEvent, FeedbackDialog} from "@pages";
-import {EventStatusEnum, formatDateWithTime} from "@utils";
+import {
+  type EnrichEvent,
+  type EnrichTopContributor,
+  FeedbackDialog,
+  PromotionType,
+  type PromotionTypeKey
+} from "@pages";
+import {type ActionProps, EventStatusEnum, formatDateWithTime} from "@utils";
 import {Avatar, Box, Button, Card, Divider, Tooltip, Typography} from "@mui/material";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import LocationPinIcon from '@mui/icons-material/LocationPin';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
+import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
+import {useDomainGetArtists, useDomainGetFans, useDomainGetVenues, useGetTopContributors} from "@api";
+import LocalActivityIcon from "@mui/icons-material/LocalActivity";
 
 type EventCardComponentProps = {
   event: EnrichEvent;
 }
 
+function getContributorBorderColor(index: number) {
+  const colors = ['#ffae00', '#C0C0C0', '#CD7F32'];
+  return colors[index];
+}
 
 export default function EventCardComponent({
                                              event,
@@ -18,17 +30,56 @@ export default function EventCardComponent({
 
   const [isFeedbackDialogOpen, setIsFeedbackDialogOpen] = useState(false);
 
-  const actions = [
-    {
-      label: 'Donazioni',
-      startIcon: <AttachMoneyIcon/>,
-      onClick: () => {
-        // setSelectedFundraising(fundraising);
-        // setIsEditDialogOpen(true);
-      },
-    },
-  ];
+  const {data: topContributors} = useGetTopContributors(event.fundraisingId);
+  const {data: artists} = useDomainGetArtists();
+  const {data: venues} = useDomainGetVenues();
+  const {data: fans} = useDomainGetFans();
 
+  //enrich top contributors with name and surname only if contributor is not anonymous
+  const enrichedTopContributors: EnrichTopContributor[] | undefined = topContributors?.map(contributor => {
+    if (contributor.anonymous) {
+      return contributor;
+    }
+
+    const fan = fans?.find(f => f.userId === contributor.userId);
+    const artist = artists?.find(a => a.userId === contributor.userId);
+    const venue = venues?.find(v => v.userId === contributor.userId);
+
+    if (fan) {
+      return {
+        ...contributor,
+        name: fan.name ?? "Utente",
+        surname: fan.surname ?? ""
+      };
+    }
+
+    if (artist) {
+      const display = (artist.name ?? (artist.surname as string) ?? "").trim();
+      const [first, ...rest] = display.split(/\s+/);
+      return {
+        ...contributor,
+        name: first || "Artista",
+        surname: rest.join(' ') || ""
+      };
+    }
+
+    if (venue) {
+      const display = (venue.name ?? (venue.venueName as string) ?? "").trim();
+      return {
+        ...contributor,
+        name: display || "Venue",
+        surname: ""
+      };
+    }
+
+    return {
+      ...contributor,
+      name: "Utente",
+      surname: ""
+    };
+  });
+
+  let actions: ActionProps[] = [];
   //Adding feedbacks
   if (event.status === EventStatusEnum.FINISHED) {
     actions.push({
@@ -95,6 +146,45 @@ export default function EventCardComponent({
             <Typography fontWeight="bold" color="white" fontSize="13px">
               {event.venueName}
             </Typography>
+            {
+              event.venuePromotion !== "NONE" && (
+                <Tooltip
+                  title={`Promozione attiva: ${PromotionType[event.venuePromotion as PromotionTypeKey]}`}
+                  arrow
+                >
+                  <LocalActivityIcon sx={{color: '#BBF7D0', marginLeft: '20px'}}/>
+                </Tooltip>
+              )
+            }
+          </Box>
+          <Box display="flex" alignItems="center" gap={1}>
+            <MilitaryTechIcon sx={{color: 'white'}}/>
+            <Typography fontWeight="bold" color="white" fontSize="13px">
+              Contributori principali:
+            </Typography>
+            {enrichedTopContributors && enrichedTopContributors.length > 0 && (
+              enrichedTopContributors.map((contributor, index) => (
+                <Tooltip
+                  key={contributor.userId}
+                  title={contributor.anonymous ? "Anonimo" : `${contributor.name} ${contributor.surname}`}
+                  arrow
+                >
+                  <Avatar
+                    sx={{
+                      width: 20,
+                      height: 20,
+                      objectFit: 'cover',
+                      backgroundColor: '#643398',
+                      border: `2px solid ${getContributorBorderColor(index)}`,
+                      fontSize: '8px',
+                    }}
+                    variant="circular"
+                  >
+                    {contributor.anonymous ? "?" : contributor.name!.charAt(0)}{contributor.surname!.charAt(0)}
+                  </Avatar>
+                </Tooltip>
+              ))
+            )}
           </Box>
         </Box>
         <Box display="flex" alignItems="center" width="100%" gap={1}>

@@ -16,6 +16,7 @@ export const ApiRoutes = {
         CANCEL: (id: string) => `/fundraising/cancel/${id}`,
         EDIT: (id: string) => `/fundraising/${id}`,
         CONFIRM: (id: string) => `/fundraising/confirm/${id}`,
+        ADD_PROMOTION: (id: string) => `/fundraising/${id}/promotion`,
     },
 
     // Event
@@ -31,8 +32,8 @@ export const ApiRoutes = {
         VENUES: "/admin/venues",
         ARTISTS: "/admin/artists",
         FANS: "/admin/fans",
-        APPROVE_ARTIST: (artistId: string) => `/admin/artist/approve/${artistId}`,
-        UNAPPROVE_ARTIST: (artistId: string) => `/admin/artist/unapprove/${artistId}`,
+        APPROVE_ARTIST: (artistId: string) => `/admin/artist/${artistId}/approve`,
+        UNAPPROVE_ARTIST: (artistId: string) => `/admin/artist/${artistId}/unapprove`,
         BAN_USER: (userId: string) => `/admin/disable/${userId}`,
         UNBAN_USER: (userId: string) => `/admin/enable/${userId}`,
         SUBSCRIPTIONS: {
@@ -70,6 +71,10 @@ export const ApiRoutes = {
     BILLING: {
         ROOT: '/',
         DEPOSIT: '/account/deposit',
-        CONTRIBUTION: '/contribution'
+        TRANSACTIONS: '/account/transactions',
+        CONTRIBUTION: '/contribution',
+        TOP_CONTRIBUTORS: (fundraisingId: string) => `/contribution/${fundraisingId}/top-contributors`,
+        TICKETS: '/tickets',
+        TICKET: (ticketId: string) => `/tickets/${ticketId}`,
     }
 } as const;

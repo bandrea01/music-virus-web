@@ -1,9 +1,9 @@
-import {ApiRoutes, eventFundraisingApi} from "@api";
+import {ApiRoutes, billingApi, eventFundraisingApi} from "@api";
 import type {
     EventListResponseDTO,
     EventVenueCounterResponseDTO,
     FeedbackListResponseDTO,
-    FeedbackRequestDTO
+    FeedbackRequestDTO, TopContributorsListResponseDTO
 } from "@pages";
 
 export async function getEvents(): Promise<EventListResponseDTO> {
@@ -16,12 +16,17 @@ export async function getEventVenueCounter(): Promise<EventVenueCounterResponseD
     return data;
 }
 
+export async function getTopContributors(fundraisingId: string): Promise<TopContributorsListResponseDTO> {
+    const { data } = await billingApi.get<TopContributorsListResponseDTO>(ApiRoutes.BILLING.TOP_CONTRIBUTORS(fundraisingId));
+    return data;
+}
+
 export async function getEventFeedbacks(eventId: string): Promise<FeedbackListResponseDTO> {
-    const { data } = await eventFundraisingApi.get<FeedbackListResponseDTO>(`${ApiRoutes.EVENT.FEEDBACK(eventId)}`);
+    const { data } = await eventFundraisingApi.get<FeedbackListResponseDTO>(ApiRoutes.EVENT.FEEDBACK(eventId));
     return data;
 }
 
 export async function sendFeedback(eventId: string, payload: FeedbackRequestDTO){
-    const { data } = await eventFundraisingApi.post(`${ApiRoutes.EVENT.FEEDBACK(eventId)}`, payload);
+    const { data } = await eventFundraisingApi.post(ApiRoutes.EVENT.FEEDBACK(eventId), payload);
     return data;
 }

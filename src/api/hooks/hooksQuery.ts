@@ -19,6 +19,7 @@ export type THookMutationProps<TVariables, TData> = {
     errorMessage: string;
     successMessage?: string;
     onSuccess?: (data: TData, variables: TVariables) => void;
+    staleTime?: number;
 }
 
 /**
@@ -70,7 +71,7 @@ export function useHookQuery<TQueryFnData, TData = TQueryFnData>(
  * @returns The result of the useMutation hook.
  */
 
-export function useHookMutation<TVariables, TData = void>(options: THookMutationProps<TVariables, TData>) {
+export function useHookMutation<TVariables, TData = void>(options: Partial<THookMutationProps<TVariables, TData>>) {
     const dispatch = useAppDispatch();
 
     return useMutation<TData, AxiosError, TVariables>({

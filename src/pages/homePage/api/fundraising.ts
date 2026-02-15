@@ -1,6 +1,6 @@
 import {eventFundraisingApi} from "@api/axios.ts";
 import {ApiRoutes} from "@api";
-import type {FundraisingRequestDTO} from "@pages";
+import type {FundraisingRequestDTO, VenuePromotionRequestDTO} from "@pages";
 
 export async function createFundraising(payload: FundraisingRequestDTO) {
     const {data} = await eventFundraisingApi.post(ApiRoutes.FUNDRAISING.ROOT, payload);
@@ -29,5 +29,11 @@ export async function editFundraising(fundraisingId: string, payload: Fundraisin
 
 export async function cancelFundraising(fundraisingId: string) {
     const {data} = await eventFundraisingApi.patch(`${ApiRoutes.FUNDRAISING.CANCEL(fundraisingId)}`);
+    return data;
+}
+
+export async function addPromotion(fundraisingId: string, payload: VenuePromotionRequestDTO) {
+    console.log("Adding promotion with payload:", payload);
+    const {data} = await eventFundraisingApi.patch(`${ApiRoutes.FUNDRAISING.ADD_PROMOTION(fundraisingId)}`, payload);
     return data;
 }

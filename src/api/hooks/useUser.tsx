@@ -1,6 +1,7 @@
-import {type UseMutationResult} from '@tanstack/react-query';
+import {type UseMutationResult, useQueryClient} from '@tanstack/react-query';
 import type {AxiosError} from "axios";
 import {
+  createBankAccount,
   getArtistList,
   getFansList,
   getPersonalBankAccount,
@@ -29,7 +30,7 @@ import type {JwtSessionResponseDTO} from "@pages/loginPage/api/types.ts";
 
 type RegisterPayload<T extends UserTypeKey> = RegisterDTORequestByType[T];
 
-export function useGetFans() {
+export function useDomainGetFans() {
   return useHookQuery<FanListResponseDTO, Fan[]>({
     queryKey: ['domain', 'fans'],
     queryFn: getFansList,
@@ -91,12 +92,25 @@ export function useProfileEdit(): UseMutationResult<unknown, AxiosError, UpdateP
   });
 }
 
-export function useGetBankAccount() {
+export function useGetBankAccount(userId: string | undefined) {
   return useHookQuery<Account>({
-    queryKey: ['account'],
+    queryKey: [userId, 'account'],
     queryFn: getPersonalBankAccount,
     select: (data: Account) => data,
     errorMessage: "Errore durante la richiesta della conto!"
+  });
+}
+
+export function useCreateBankAccount(userId: string | undefined): UseMutationResult<unknown, AxiosError, void, unknown> {
+  const queryClient = useQueryClient();
+
+  return useHookMutation({
+    mutationFn: createBankAccount,
+    errorMessage: "Errore durante la creazione del conto bancario associato!",
+    successMessage: "Conto associato con successo",
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: [userId, 'account']}).then(() => {});
+    },
   });
 }
 

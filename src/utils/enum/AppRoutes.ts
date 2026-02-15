@@ -18,6 +18,7 @@ export const AppRoutes = {
         PROFILE: "profile",
         FUNDRAISING: "fundraising",
         EVENT: "event",
+        TICKET: "ticket"
     },
 
     // Admin
@@ -27,13 +28,16 @@ export const AppRoutes = {
         FAN_MANAGEMENT: "admin-fan-management",
         VENUE_MANAGEMENT: "admin-venue-management",
         PAYMENTS_MANAGEMENT: "admin-payments-management",
-        REPORT_MANAGEMENT: "admin-report-management",
     },
 
     // Artist
     ARTIST: {
         PERSONAL_FUNDRAISING: "artist-personal-fundraising",
     },
+
+    VENUE: {
+        PERSONAL_FUNDRAISING: "venue-personal-fundraising",
+    }
 } as const;
 
 type DeepValues<T> =

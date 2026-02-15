@@ -8,8 +8,8 @@ import {
   type FeedbackRequestDTO,
   getEventFeedbacks,
   getEvents,
-  getEventVenueCounter,
-  sendFeedback
+  getEventVenueCounter, getTopContributors,
+  sendFeedback, type TopContributor, type TopContributorsListResponseDTO
 } from "@pages";
 import {useHookMutation, useHookQuery} from "@api/hooks/hooksQuery.ts";
 import {useQueryClient} from "@tanstack/react-query";
@@ -19,7 +19,6 @@ export function useGetEvents() {
     queryKey: ["event"],
     queryFn: getEvents,
     select: (res) => res.events ?? [],
-    errorMessage: "Errore durante la richiesta della lista degli eventi!",
   });
 }
 
@@ -28,7 +27,14 @@ export function useGetEventVenueCounter() {
     queryKey: ["event-venue-counter"],
     queryFn: getEventVenueCounter,
     select: (res) => res.eventVenueCounters ?? [],
-    errorMessage: "Errore durante la richiesta del conteggio degli eventi per location!",
+  });
+}
+
+export function useGetTopContributors(fundraisingId: string) {
+  return useHookQuery<TopContributorsListResponseDTO, TopContributor[]>({
+    queryKey: [fundraisingId, "top-contributors"],
+    queryFn: () => getTopContributors(fundraisingId),
+    select: (res) => res.topContributors ?? [],
   });
 }
 
@@ -37,7 +43,6 @@ export function useGetFeedbacks(eventId: string) {
     queryKey: [eventId, "feedback"],
     queryFn: () => getEventFeedbacks(eventId),
     select: (res) => res.feedbacks ?? [],
-    errorMessage: "Errore durante la richiesta del conteggio degli eventi per location!",
   });
 }
 
@@ -45,7 +50,6 @@ export function useSendFeedback(eventId: string) {
   const queryClient = useQueryClient();
   return useHookMutation<FeedbackRequestDTO>({
     mutationFn: (payload) => sendFeedback(eventId, payload),
-    errorMessage: "Errore durante l'invio del feedback sull'evento!",
     successMessage: "Feedback inviato con successo!",
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: [eventId, 'feedback']}).then(() => {

@@ -42,6 +42,8 @@ export interface UseAddEditFundraisingFormReturn {
 export function useAddEditFundraisingForm({
                                               fundraising
                                           }: UseFundraisingFormProps): UseAddEditFundraisingFormReturn {
+
+
     const {schema, defaultValues} = useMemo(() => getAddEditFundriasingSchemaAndDefaults(fundraising), [fundraising]);
     const form =
         useForm<AddEditFundraisingFormValues>({

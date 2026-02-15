@@ -1,4 +1,5 @@
 @use './variables' as *;
+
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
@@ -396,7 +397,7 @@ body {
   width: 100%;
 
   .MuiFormHelperText-root {
-    margin-left: 0;
+    margin-left: 8px !important;
   }
 }
 
@@ -453,31 +454,28 @@ body {
 }
 
 .MuiInputLabel-root {
-  color: var(--text-dim);
+  color: var(--text-dim) !important;
 
-  &.MuiInputLabel-outlined:not(.MuiInputlLabel-shrink) {
-    top: 50% !important;
-    transform: translate(14px, -50%) scale(1) !important;
-    transform-origin: left top;
-  }
-
-  &.MuiInputLabel-root.MuiInputLabel-outlined.MuiInputLabel-shrink {
-    transform: translate(14px, -9px) scale(0.75) !important;
+  &.MuiInputLabel-outlined {
     top: 0 !important;
   }
 
-  &.MuiInputLabel-root.MuiInputLabel-standard:not(.MuiInputLabel-shrink) {
-    top: 50% !important;
-    transform: translate(0, -50%) scale(1) !important;
+  &.MuiInputLabel-outlined:not(.MuiInputLabel-shrink) {
+    transform: translate(15px, 11px) scale(1) !important;
+    transform-origin: left top;
   }
 
-  &.MuiInputLabel-root.MuiInputLabel-standard.MuiInputLabel-shrink {
-    transform: translate(0, -1.5em) scale(0.75) !important;
+  &.MuiInputLabel-outlined.MuiInputLabel-shrink {
+    transform: translate(14px, -9px) scale(0.75) !important;
+    transform-origin: left top;
   }
+}
 
-  &.Mui-focused {
-    color: #c084fc;
-  }
+.MuiFormControl-root .MuiInputLabel-outlined:not(.MuiInputLabel-shrink) {
+}
+
+.MuiFormControl-root .MuiOutlinedInput-root.MuiInputBase-sizeSmall .MuiInputLabel-outlined:not(.MuiInputLabel-shrink) {
+  transform: translate(14px, 9px) scale(1) !important;
 }
 
 //Button
@@ -592,6 +590,7 @@ body {
   .MuiRating-icon {
     color: #eaa53a;
   }
+
   .MuiRating-iconEmpty {
     color: #453c2e;
   }

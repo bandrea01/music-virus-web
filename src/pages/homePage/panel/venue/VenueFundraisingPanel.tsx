@@ -1,12 +1,10 @@
 import PanelPaperComponent from "@components/ui/PanelPaperComponent.tsx";
 import {Box, Typography} from "@mui/material";
-import AddIcon from '@mui/icons-material/Add';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import AddEditFundraisingDialog from "@pages/homePage/panel/artist/fundraising/AddEditFundraisingDialog.tsx";
 import {type ReactElement, useMemo, useState} from "react";
 import {useGetPersonalFundraisingList} from "@api/hooks/useFundraising.ts";
 import {CheckboxFilterBar, ScreenSpinner, useAuth} from "@components";
-import {type EnrichFundraising, type Fundraising} from "@pages";
+import {type EnrichFundraising, type Fundraising, PromotionDialog} from "@pages";
 import {FundraisingCardComponent} from "@components";
 import {
   buildEnrichedFundraisings,
@@ -25,8 +23,8 @@ const filterStatusLabel: Record<FundraisingStatusKey, string> = {
   [FundraisingStatusEnum.CANCELLED]: "Cancellate",
 };
 
-export default function ArtistFundraisingPanel(): ReactElement {
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+export default function VenueFundraisingPanel(): ReactElement {
+  const [isPromotionDialogOpen, setIsPromotionDialogOpen] = useState<boolean>(false);
   const [selectedFundraising, setSelectedFundraising] = useState<Fundraising | undefined>(undefined);
 
   //Filters
@@ -65,11 +63,6 @@ export default function ArtistFundraisingPanel(): ReactElement {
 
   //Actions
   const actions: ActionProps[] = [
-    {
-      label: 'Nuova Raccolta Fondi',
-      onClick: () => setIsDialogOpen(true),
-      startIcon: <AddIcon/>
-    },
     {
       label: 'Filtra',
       onClick: () => setShowFilters(prev => !prev),
@@ -121,21 +114,21 @@ export default function ArtistFundraisingPanel(): ReactElement {
             <FundraisingCardComponent
               fundraising={fundraising}
               setSelectedFundraising={setSelectedFundraising}
-              setIsEditDialogOpen={setIsDialogOpen}
+              setIsPromotionDialogOpen={setIsPromotionDialogOpen}
               isInPersonalPanel={true}
+              isVenuePanel={true}
             />
           ))}
         </Box>
 
-        {isDialogOpen && (
-          <AddEditFundraisingDialog
-            isDialogOpen={isDialogOpen}
+        {isPromotionDialogOpen && (
+          <PromotionDialog
+            isDialogOpen={isPromotionDialogOpen}
             onClose={() => {
-              setIsDialogOpen(false);
+              setIsPromotionDialogOpen(false);
               setSelectedFundraising(undefined);
             }}
             fundraising={selectedFundraising}
-            venues={venues}
             userId={userId}
           />
         )}

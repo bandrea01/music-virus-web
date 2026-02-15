@@ -43,44 +43,41 @@ export function createApi(baseURL: string): AxiosInstance {
 }
 
 /** Extract a user-friendly error message from an Axios error
- * @param e - The error object
+ * @param error
  * @param fallback - Fallback message if no specific message is found
  * @returns string - The extracted error message
  */
-export function getAxiosErrorMessage(e: unknown, fallback = 'Errore'): string {
-    if (typeof e === 'string') return e;
-    if (axios.isAxiosError(e)) {
-        const data = e.response?.data;
+export function getAxiosErrorMessage(error: unknown, fallback = "Errore imprevisto") {
+    if (axios.isAxiosError(error)) {
+        const data = error.response?.data as any;
 
-        if (typeof data === 'string' && data !== "") return data;
-        if (Array.isArray(data)) return data.map(String).join('\n');
+        const detail = data?.detail;
+        if (typeof detail === "string" && detail.trim().length > 0) {
+            return detail;
+        }
+        const details = data?.details;
+        if (Array.isArray(details) && details.length > 0 && typeof details[0] === "string" && details[0].trim().length > 0) {
+            return details[0];
+        }
 
-        if (data && typeof data === 'object') {
-            const details = (data as any).details;
-            if (Array.isArray(details)) {
-                return details
-                    .map(d => (typeof d === 'string' ? d : d?.message ?? JSON.stringify(d)))
-                    .join('\n');
-            }
+        const message = data?.message;
+        if (typeof message === "string" && message.trim().length > 0) {
+            return message;
+        }
 
-            const errors = (data as any).errors;
-            if (Array.isArray(errors)) {
-                return errors
-                    .map(errItem => (typeof errItem === 'string' ? errItem : errItem?.message ?? JSON.stringify(errItem)))
-                    .join('\n');
-            }
-
-            const message = (data as any).message ?? (data as any).error;
-            if (typeof message === 'string') return message;
+        if (typeof data === "string" && data.trim().length > 0) {
+            return data;
         }
 
         return fallback;
     }
 
+    if (error instanceof Error && error.message) return error.message;
+    if (typeof error === "string" && error.trim()) return error;
 
-    if (e instanceof Error) return e.message;
     return fallback;
 }
+
 
 /**
  * Axios instances for different microservices

@@ -2,14 +2,14 @@ import {useQueryClient} from '@tanstack/react-query';
 import type {
     ArtistListResponseDTO,
     FanListResponseDTO,
-    StatisticDTO,
+    UsersStatisticDTO,
     Subscription,
     SubscriptionListResponseDTO,
     SubscriptionRequestDTO,
     Tax,
     TaxListResponseDTO,
     TaxRequestDTO,
-    VenueListResponseDTO
+    VenueListResponseDTO, EventsStatisticDTO
 } from "@pages/homePage/api/types.ts";
 import {
     approveArtist,
@@ -18,9 +18,9 @@ import {
     createTax, deleteSubscription, deleteTax,
     editSubscription,
     editTax,
-    getAdminArtistsList,
+    getAdminArtistsList, getAdminEventsStatistic,
     getAdminFansList,
-    getAdminStatistics,
+    getAdminUsersStatistic,
     getAdminVenuesList,
     getSubscriptions,
     getTaxes,
@@ -53,10 +53,18 @@ export function useAdminFans() {
     });
 }
 
-export function useAdminStats() {
-    return useHookQuery<StatisticDTO>({
-        queryKey: ['admin', 'stats'],
-        queryFn: getAdminStatistics,
+export function useAdminUsersStats() {
+    return useHookQuery<UsersStatisticDTO>({
+        queryKey: ['admin', 'user-stats'],
+        queryFn: getAdminUsersStatistic,
+        errorMessage: "Errore durante la richiesta delle statistiche per l'admin!"
+    });
+}
+
+export function useAdminEventsStats() {
+    return useHookQuery<EventsStatisticDTO>({
+        queryKey: ['admin', 'event-stats'],
+        queryFn: getAdminEventsStatistic,
         errorMessage: "Errore durante la richiesta delle statistiche per l'admin!"
     });
 }
@@ -151,7 +159,7 @@ export function useAdminDeleteTax() {
         successMessage: "Tassa eliminata con successo!",
         onSuccess: async () => {
             const keys = [
-                ['admin','tax'],
+                ['admin','taxes'],
                 ['artist','tax'],
                 ['fan','tax'],
                 ['venue','tax'],
@@ -169,7 +177,7 @@ export function useAdminCreateTax() {
         successMessage: "Tassa creata con successo!",
         onSuccess: async () => {
             const keys = [
-                ['admin','tax'],
+                ['admin','taxes'],
             ];
             await Promise.all(keys.map(queryKey => queryClient.invalidateQueries({ queryKey })));
         },
@@ -188,7 +196,7 @@ export function useAdminEditTax() {
         successMessage: "Tassa modificata con successo!",
         onSuccess: async () => {
             const keys = [
-                ['admin','tax'],
+                ['admin','taxes'],
             ];
             await Promise.all(keys.map(queryKey => queryClient.invalidateQueries({ queryKey })));
         },

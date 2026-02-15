@@ -3,13 +3,15 @@ import {Box, Icon, Typography} from "@mui/material";
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import HeadphonesOutlinedIcon from '@mui/icons-material/HeadphonesOutlined';
 import StoreOutlinedIcon from '@mui/icons-material/StoreOutlined';
+import FestivalIcon from '@mui/icons-material/Festival';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import type {SvgIconComponent} from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
-import {useDispatch} from "react-redux";
-import {setActiveTab} from "@store/sidebar/slice.ts";
 import './adminGeneralPanel.scss'
-import {AppRoutes, type AppRouteValue, UserTypeEnum, type UserTypeKey} from "@utils";
-import {useAdminStats} from "@api";
+import {AppRoutes, type AppRouteValue, handleRedirectCardClick, UserTypeEnum, type UserTypeKey} from "@utils";
+import {useAdminEventsStats, useAdminUsersStats, useGetTransactions} from "@api";
+import {useAppDispatch} from "@store/hook.ts";
+import {TransactionCardComponent, useAuth} from "@components";
 
 function getUserCounterIconAndLink(type: UserTypeKey): {
   icon: SvgIconComponent,
@@ -27,35 +29,94 @@ function getUserCounterIconAndLink(type: UserTypeKey): {
   }
 }
 
+function getEventCounterIconAndLink(type: string): {
+  icon: SvgIconComponent,
+  redirectRoute?: AppRouteValue
+} {
+  switch (type) {
+    case "EVENTS":
+      return {icon: FestivalIcon, redirectRoute: AppRoutes.SECTION.EVENT};
+    case "FUNDRAISING":
+      return {icon: MonetizationOnIcon, redirectRoute: AppRoutes.SECTION.FUNDRAISING};
+    default:
+      return {icon: PeopleOutlineIcon};
+  }
+}
+
+function translateLabel(label: string): string {
+  switch (label) {
+    case "FAN":
+      return "Fan";
+    case "ARTIST":
+      return "Artisti";
+    case "VENUE":
+      return "Location";
+    case "EVENTS":
+      return "Eventi";
+    case "FUNDRAISING":
+      return "Campagne";
+    default:
+      return label;
+  }
+}
+
 const AdminGeneralPanel = () => {
-  const {data} = useAdminStats();
+  const {authUser} = useAuth();
+
+  const {data: userStats} = useAdminUsersStats();
+  const {data: eventsStats} = useAdminEventsStats();
+  const {data: adminTransactions} = useGetTransactions(authUser!.userId);
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const handleRedirectCardClick = (redirectRoute: AppRouteValue | undefined) => {
-    if (redirectRoute) {
-      navigate(AppRoutes.MUSIC_VIRUS + "/" + redirectRoute);
-      dispatch(setActiveTab(redirectRoute as string));
-    }
-  }
+  const dispatch = useAppDispatch();
 
   return (
     <PanelPaperComponent title="Statistiche piattaforma">
       <Box display="flex" gap={3}>
-        <Box display="flex" flexDirection="column" gap={3} width="50%">
-          <Box className="counterContainer">
-            {data?.counters.map((counter) => {
-                const {icon, redirectRoute} = getUserCounterIconAndLink(counter.type as UserTypeKey);
+        <Box display="flex" flexDirection="column" gap={1} width="50%">
+          <PanelPaperComponent subtitle="Utenti in piattaforma">
+            <Box className="counterContainer">
+              {userStats?.counters.map((counter, idx) => {
+                  const {icon, redirectRoute} = getUserCounterIconAndLink(counter.type as UserTypeKey);
+                  return (
+                    <Box
+                      key={idx}
+                      className="counterCard"
+                      onClick={() => handleRedirectCardClick(redirectRoute, navigate, dispatch) }
+                    >
+                      <Box display="flex" flexDirection="column" alignItems="center">
+                        <Icon component={icon} sx={{fontSize: 50, color: "#fafafa"}}/>
+                        <Typography color="white" fontWeight="bold">
+                          {translateLabel(counter.type)}
+                        </Typography>
+                      </Box>
+                      <Box>
+                        <Typography color={"#de80ff"} fontWeight="bold" fontSize="30px">
+                          {counter.count}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  )
+                }
+              )}
+            </Box>
+          </PanelPaperComponent>
+          <PanelPaperComponent subtitle="Eventi e campagne">
+            <Box
+              className="counterContainer"
+            >
+              {eventsStats?.counters.map(((counter, idx) => {
+                const {icon, redirectRoute} = getEventCounterIconAndLink(counter.type);
                 return (
                   <Box
+                    key={idx}
                     className="counterCard"
-                    onClick={() => handleRedirectCardClick(redirectRoute)}
+                    onClick={() => handleRedirectCardClick(redirectRoute, navigate, dispatch)}
                   >
                     <Box display="flex" flexDirection="column" alignItems="center">
                       <Icon component={icon} sx={{fontSize: 50, color: "#fafafa"}}/>
                       <Typography color="white" fontWeight="bold">
-                        {counter.type}
+                        {translateLabel(counter.type)}
                       </Typography>
                     </Box>
                     <Box>
@@ -65,38 +126,48 @@ const AdminGeneralPanel = () => {
                     </Box>
                   </Box>
                 )
-              }
-            )}
-          </Box>
+              }))}
+            </Box>
+          </PanelPaperComponent>
           <Box
             className="approveRequestCard"
-            onClick={() => handleRedirectCardClick(AppRoutes.ADMIN.ARTIST_MANAGEMENT)}
+            onClick={() => handleRedirectCardClick(AppRoutes.ADMIN.ARTIST_MANAGEMENT, navigate, dispatch)}
           >
             <Typography fontWeight="normal" color="#fafafa">
-              {data?.artistApprovingRequestsCounter === 0 ?
+              {userStats?.artistApprovingRequestsCounter === 0 ?
                 (<>Nessuna richiesta di approvazione da parte di artisti</>) :
                 (<>
-                  Hai <span style={{color: "#fbaa2f"}}> {data?.artistApprovingRequestsCounter} </span>
+                  Hai <span style={{color: "#fbaa2f"}}> {userStats?.artistApprovingRequestsCounter} </span>
                   richieste di approvazione da parte di artisti
                 </>)
               }
             </Typography>
           </Box>
-          <Box
-            className="approveRequestCard"
-            onClick={() => handleRedirectCardClick(AppRoutes.ADMIN.REPORT_MANAGEMENT)}
-          >
-            {/*TODO*/}
-            <Typography color='white'>Segnalazioni</Typography>
-          </Box>
         </Box>
 
-        <Box
-          className="approveRequestCard"
-          onClick={() => handleRedirectCardClick(AppRoutes.ADMIN.PAYMENTS_MANAGEMENT)}
-        >
-          {/*TODO*/}
-          <Typography color='white'>Pagamenti</Typography>
+        <Box display="flex" flexDirection="column" gap={1} width="50%">
+          <PanelPaperComponent subtitle="Movimenti in entrata">
+            {adminTransactions?.length === 0 ?
+              (
+                <Box
+                  className="approveRequestCard"
+                  onClick={() => handleRedirectCardClick(AppRoutes.ADMIN.ARTIST_MANAGEMENT, navigate, dispatch)}
+                >
+                  <Typography fontWeight="normal" color="#fafafa">
+                    Nessun movimento registrato
+                  </Typography>
+                </Box>
+              ) :
+              (
+                adminTransactions?.map((transaction) => (
+                  <TransactionCardComponent
+                    key={transaction.transactionId}
+                    transaction={transaction}
+                  />
+                ))
+              )
+            }
+          </PanelPaperComponent>
         </Box>
       </Box>
     </PanelPaperComponent>

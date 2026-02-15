@@ -1,4 +1,4 @@
-import {billingApi, userIdentityApi} from "@api/axios.ts";
+import {billingApi, eventFundraisingApi, userIdentityApi} from "@api/axios.ts";
 import {ApiRoutes} from "@api";
 import type {
     Account,
@@ -34,13 +34,23 @@ export async function getVenuesList(): Promise<VenueListResponseDTO> {
     return data;
 }
 
+export async function createBankAccount() {
+    const {data} = await billingApi.post(ApiRoutes.PROFILE.ACCOUNT);
+    return data;
+}
+
 export async function getPersonalBankAccount(): Promise<Account> {
     const {data} = await billingApi.get(ApiRoutes.PROFILE.ACCOUNT);
     return data;
 }
 
-export async function getAdminStatistics() {
+export async function getAdminUsersStatistic() {
     const {data} = await userIdentityApi.get(ApiRoutes.ADMIN.STATS);
+    return data;
+}
+
+export async function getAdminEventsStatistic() {
+    const {data} = await eventFundraisingApi.get(ApiRoutes.ADMIN.STATS);
     return data;
 }
 
