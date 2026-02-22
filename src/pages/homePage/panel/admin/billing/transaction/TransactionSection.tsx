@@ -1,5 +1,6 @@
 import {PanelPaperComponent, TransactionCardComponent, useAuth} from "@components";
 import {useGetAllPersonalTransactions} from "@api";
+import {Typography} from "@mui/material";
 
 export default function TransactionSection() {
 
@@ -10,7 +11,9 @@ export default function TransactionSection() {
   return (
     <PanelPaperComponent subtitle="Transazioni conto">
       {transactions?.length === 0 ? (
-        <p>Nessuna transazione trovata.</p>
+        <Typography variant="h6" color="white" align="center" mt={4}>
+        Nessuna transazione trovata.
+        </Typography>
       ) : (
         transactions?.map((transaction) => (
           <TransactionCardComponent transaction={transaction} key={transaction.transactionId}/>
