@@ -1,6 +1,6 @@
 import {type ReactElement} from "react";
 import {PanelPaperComponent, TransactionCardComponent, useAuth} from "@components";
-import {Box} from "@mui/material";
+import {Box, Typography} from "@mui/material";
 import {useGetLast10PersonalTransactions} from "@api";
 import {TransactionType} from "@pages";
 
@@ -21,7 +21,9 @@ export default function TransactionPanel(): ReactElement {
       <Box display="flex" flexDirection="column" gap={1}>
         {filteredTransactions?.length === 0 ? (
           <Box display="flex" justifyContent="center" mt={4}>
-            Non hai ancora effettuato nessuna transazione
+            <Typography variant="h6" color="white" align="center" mt={4}>
+              Non hai ancora effettuato nessuna transazione
+            </Typography>
           </Box>
         ) : (
           filteredTransactions?.map((transaction) => (
