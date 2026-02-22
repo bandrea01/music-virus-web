@@ -35,6 +35,7 @@ export default function EventCardComponent({
   const {data: venues} = useDomainGetVenues();
   const {data: fans} = useDomainGetFans();
 
+
   //enrich top contributors with name and surname only if contributor is not anonymous
   const enrichedTopContributors: EnrichTopContributor[] | undefined = topContributors?.map(contributor => {
     if (contributor.anonymous) {
@@ -180,7 +181,7 @@ export default function EventCardComponent({
                     }}
                     variant="circular"
                   >
-                    {contributor.anonymous ? "?" : contributor.name!.charAt(0)}{contributor.surname!.charAt(0)}
+                    {contributor.anonymous ? "?" : `${contributor.name!.charAt(0)} ${contributor.surname!.charAt(0)}`}
                   </Avatar>
                 </Tooltip>
               ))

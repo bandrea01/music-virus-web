@@ -1,7 +1,7 @@
 import type {ReactElement} from "react";
 import {PanelPaperComponent, TicketCardComponent, useAuth} from "@components";
 import {useGetEvents, useGetTickets} from "@api";
-import type {EnrichTicket} from "@pages";
+import {type EnrichTicket, PromotionType} from "@pages";
 import {Typography} from "@mui/material";
 
 type TicketPanelProps = {};
@@ -18,7 +18,7 @@ export default function TicketPanel({}: TicketPanelProps): ReactElement {
         ...ticket,
         eventName: event.eventName,
         eventDate: event.eventDate,
-        venuePromotion: event.venuePromotion,
+        venuePromotion: event?.venuePromotion ?? PromotionType.NONE,
       };
     }
     return ticket;

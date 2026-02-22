@@ -4,21 +4,18 @@ import type {EnrichEvent, Event} from "@pages";
 export const EVENT_STATUS_ORDER: EventStatusKey[] = [
     EventStatusEnum.FINISHED,
     EventStatusEnum.CONFIRMED,
-    EventStatusEnum.PENDING,
     EventStatusEnum.CANCELLED,
 ];
 
 export const filterStatusLabel: Record<EventStatusKey, string> = {
     [EventStatusEnum.CONFIRMED]: "CONFERMATI",
     [EventStatusEnum.CANCELLED]: "CANCELLATI",
-    [EventStatusEnum.PENDING]: "IN ATTESA",
     [EventStatusEnum.FINISHED]: "CONCLUSI",
 };
 
 export const filterStatusInitialState: Record<EventStatusKey, boolean> = {
     [EventStatusEnum.CONFIRMED]: true,
     [EventStatusEnum.CANCELLED]: true,
-    [EventStatusEnum.PENDING]: true,
     [EventStatusEnum.FINISHED]: true,
 }
 

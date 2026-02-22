@@ -37,6 +37,12 @@ const tabs: Tab[] = [
     icon: ConfirmationNumberIcon,
     route: AppRoutes.SECTION.TICKET
   },
+  {
+    key: "transaction",
+    label: "Movimenti conto",
+    icon: CurrencyExchangeIcon,
+    route: AppRoutes.SECTION.TRANSACTION,
+  },
 
   // ADMIN
   {
@@ -91,7 +97,8 @@ const tabs: Tab[] = [
 const commonTabKeys: Tab["key"][] = [
   "event",
   "fundraising",
-  "ticket"
+  "ticket",
+  "transaction",
 ];
 
 const allowedByRoleTab: Record<UserAuthRoleKey, Tab["key"][]> = {

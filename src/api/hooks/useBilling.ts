@@ -4,9 +4,9 @@ import {
     type ContributionRequestDTO,
     deposit,
     type DepositRequestDTO, getPersonalTickets,
-    getPersonalTransactions, getTicket,
+    getAllPersonalTransactions, getTicket,
     sendContribution, type Ticket, type TicketsDTO, type Transaction,
-    type TransactionsDTO
+    type TransactionsDTO, getLast10IncomingPersonalTransactions, getLast10PersonalTransactions
 } from "@pages";
 
 export function useDeposit(userId: string | undefined) {
@@ -34,10 +34,28 @@ export function useContribution() {
     })
 }
 
-export function useGetTransactions(userId: string) {
+export function useGetAllPersonalTransactions(userId: string) {
     return useHookQuery<TransactionsDTO, Transaction[]>({
         queryKey: [userId, 'transactions'],
-        queryFn: getPersonalTransactions,
+        queryFn: getAllPersonalTransactions,
+        select: (res) => res.transactions ?? [],
+        errorMessage: "Errore durante la richiesta di transazioni personali"
+    })
+}
+
+export function useGetLast10IncomingPersonalTransactions(userId: string) {
+    return useHookQuery<TransactionsDTO, Transaction[]>({
+        queryKey: [userId, 'last-10-incoming-transactions'],
+        queryFn: getLast10IncomingPersonalTransactions,
+        select: (res) => res.transactions ?? [],
+        errorMessage: "Errore durante la richiesta di transazioni personali"
+    })
+}
+
+export function useGetLast10PersonalTransactions(userId: string) {
+    return useHookQuery<TransactionsDTO, Transaction[]>({
+        queryKey: [userId, 'last-10-incoming-transactions'],
+        queryFn: getLast10PersonalTransactions,
         select: (res) => res.transactions ?? [],
         errorMessage: "Errore durante la richiesta di transazioni personali"
     })

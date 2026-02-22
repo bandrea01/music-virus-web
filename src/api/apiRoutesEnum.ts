@@ -71,7 +71,9 @@ export const ApiRoutes = {
     BILLING: {
         ROOT: '/',
         DEPOSIT: '/account/deposit',
-        TRANSACTIONS: '/account/transactions',
+        ALL_TRANSACTIONS: '/transactions/all',
+        LAST_10_TRANSACTIONS: '/transactions/last-10',
+        LAST_10_INCOMING_TRANSACTIONS: '/transactions/last-10/incoming',
         CONTRIBUTION: '/contribution',
         TOP_CONTRIBUTORS: (fundraisingId: string) => `/contribution/${fundraisingId}/top-contributors`,
         TICKETS: '/tickets',

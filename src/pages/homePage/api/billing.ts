@@ -11,8 +11,18 @@ export async function sendContribution(payload: ContributionRequestDTO) {
     return data;
 }
 
-export async function getPersonalTransactions() {
-    const {data} = await billingApi.get(ApiRoutes.BILLING.TRANSACTIONS);
+export async function getAllPersonalTransactions() {
+    const {data} = await billingApi.get(ApiRoutes.BILLING.ALL_TRANSACTIONS);
+    return data;
+}
+
+export async function getLast10IncomingPersonalTransactions() {
+    const {data} = await billingApi.get(ApiRoutes.BILLING.LAST_10_INCOMING_TRANSACTIONS);
+    return data;
+}
+
+export async function getLast10PersonalTransactions() {
+    const {data} = await billingApi.get(ApiRoutes.BILLING.LAST_10_TRANSACTIONS);
     return data;
 }
 

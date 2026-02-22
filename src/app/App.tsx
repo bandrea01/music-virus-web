@@ -16,9 +16,8 @@ import {
   PersonalProfilePanel,
   PreRegisterPage,
   RegisterPage,
-  TicketPanel
+  TicketPanel, TransactionPanel, VenueFundraisingPanel
 } from "@pages";
-import {VenueFundraisingPanel} from "@pages/homePage/panel/venue";
 
 
 export default function App() {
@@ -64,6 +63,10 @@ export default function App() {
           <Route
             path={AppRoutes.SECTION.TICKET}
             element={<TicketPanel/>}
+          />
+          <Route
+            path={AppRoutes.SECTION.TRANSACTION}
+            element={<TransactionPanel/>}
           />
 
           {/*admin*/}

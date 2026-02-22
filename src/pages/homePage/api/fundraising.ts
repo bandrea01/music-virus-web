@@ -33,7 +33,6 @@ export async function cancelFundraising(fundraisingId: string) {
 }
 
 export async function addPromotion(fundraisingId: string, payload: VenuePromotionRequestDTO) {
-    console.log("Adding promotion with payload:", payload);
     const {data} = await eventFundraisingApi.patch(`${ApiRoutes.FUNDRAISING.ADD_PROMOTION(fundraisingId)}`, payload);
     return data;
 }

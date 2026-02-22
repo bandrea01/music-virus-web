@@ -30,6 +30,8 @@ export default function TicketCardComponent({
 
   const {label: statusLabel, color: statusColor} = getTicketStatusColorAndLabel(ticket.status);
 
+  console.log(ticket);
+
   return (
     <Box
       className="approveRequestCard"

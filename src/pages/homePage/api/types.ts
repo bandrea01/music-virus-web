@@ -139,7 +139,7 @@ export type Event = {
   status: string;
   eventName: string;
   eventDate: string;
-  venuePromotion: string;
+  venuePromotion: PromotionTypeKey;
 }
 export type EventListResponseDTO = {
   events: Event[];
@@ -267,7 +267,9 @@ export type Transaction = {
   transactionId: string;
   transactionType: string;
   senderId: string;
+  receiverId: string;
   amount: number;
+  createdAt: string;
 }
 export type TransactionsDTO = {
   transactions: Transaction[];
@@ -316,7 +318,7 @@ export type Ticket = {
 export type EnrichTicket = Ticket & {
   eventName?: string;
   eventDate?: string;
-  venuePromotion: PromotionTypeKey;
+  venuePromotion?: PromotionTypeKey;
 }
 export type TicketsDTO = {
   tickets: Ticket[];

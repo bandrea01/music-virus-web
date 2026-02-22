@@ -43,8 +43,6 @@ export default function PromotionDialog({
     name: "venuePromotion"
   });
 
-  console.log("Selected promotion:", selectedPromotion);
-
   const onSubmit = (values: PromotionFormValues) => {
     const payload = {
       promotion: values.venuePromotion

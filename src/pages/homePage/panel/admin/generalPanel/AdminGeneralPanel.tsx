@@ -9,7 +9,7 @@ import type {SvgIconComponent} from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
 import './adminGeneralPanel.scss'
 import {AppRoutes, type AppRouteValue, handleRedirectCardClick, UserTypeEnum, type UserTypeKey} from "@utils";
-import {useAdminEventsStats, useAdminUsersStats, useGetTransactions} from "@api";
+import {useAdminEventsStats, useAdminUsersStats, useGetLast10IncomingPersonalTransactions} from "@api";
 import {useAppDispatch} from "@store/hook.ts";
 import {TransactionCardComponent, useAuth} from "@components";
 
@@ -65,7 +65,7 @@ const AdminGeneralPanel = () => {
 
   const {data: userStats} = useAdminUsersStats();
   const {data: eventsStats} = useAdminEventsStats();
-  const {data: adminTransactions} = useGetTransactions(authUser!.userId);
+  const {data: adminTransactions} = useGetLast10IncomingPersonalTransactions(authUser!.userId);
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -163,6 +163,7 @@ const AdminGeneralPanel = () => {
                   <TransactionCardComponent
                     key={transaction.transactionId}
                     transaction={transaction}
+                    isAdminDashboard={true}
                   />
                 ))
               )

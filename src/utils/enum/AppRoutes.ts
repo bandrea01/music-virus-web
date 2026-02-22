@@ -18,7 +18,8 @@ export const AppRoutes = {
         PROFILE: "profile",
         FUNDRAISING: "fundraising",
         EVENT: "event",
-        TICKET: "ticket"
+        TICKET: "ticket",
+        TRANSACTION: "transaction",
     },
 
     // Admin

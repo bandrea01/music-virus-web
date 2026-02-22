@@ -57,7 +57,6 @@ export default function AdminVenuePanel(): ReactElement {
   const dispatch = useAppDispatch();
 
   const venues = data?.venues || [];
-  console.log("venues", venues);
 
   const handleRefetchLogic = () => {
     refetch().then(() => {
