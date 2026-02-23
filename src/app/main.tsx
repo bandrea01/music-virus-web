@@ -10,21 +10,32 @@ import {LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 import {it} from "date-fns/locale";
 import {AuthProvider, UIWrapper} from "@components";
+import { StyledEngineProvider } from "@mui/material/styles";
+import { CacheProvider } from "@emotion/react";
+import createCache from "@emotion/cache";
 
 const qc = new QueryClient();
+const cache = createCache({
+    key: "css",
+    prepend: true,
+});
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-    <React.StrictMode>
-        <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={it}>
-            <AuthProvider>
-                <Provider store={store}>
-                    <QueryClientProvider client={qc}>
-                        <UIWrapper>
-                            <App/>
-                        </UIWrapper>
-                    </QueryClientProvider>
-                </Provider>
-            </AuthProvider>
-        </LocalizationProvider>
-    </React.StrictMode>
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+      <CacheProvider value={cache}>
+          <StyledEngineProvider injectFirst>
+              <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={it}>
+                  <AuthProvider>
+                      <Provider store={store}>
+                          <QueryClientProvider client={qc}>
+                              <UIWrapper>
+                                  <App />
+                              </UIWrapper>
+                          </QueryClientProvider>
+                      </Provider>
+                  </AuthProvider>
+              </LocalizationProvider>
+          </StyledEngineProvider>
+      </CacheProvider>
+  </React.StrictMode>
 );

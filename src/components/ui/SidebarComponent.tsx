@@ -1,5 +1,5 @@
 import React, {type ReactElement} from "react";
-import {Box, Divider, List, ListItemButton, ListItemIcon, ListItemText, Typography} from "@mui/material";
+import {Box, List, ListItemButton, ListItemIcon, ListItemText, Typography} from "@mui/material";
 import type {Tab} from "@utils/lib/tabsHelper.ts";
 import {useNavigate} from "react-router-dom";
 import {selectActiveTab, setActiveTab} from "@store/sidebar/slice.ts";
@@ -26,8 +26,8 @@ export default function SidebarComponent({
 
   return (
     <Box className="home__sidebar" sx={{...sx}}>
-      <Box>
-        <Typography variant="overline">Navigazione</Typography>
+      <Box sx={{display: "flex", flexDirection: "column", minHeight: 0, justifyContent: "flex-start"}}>
+        <Typography variant="overline" sx={{maxHeight: "10%"}}>Navigazione</Typography>
         <List>
           {menu.map((tab, index) => (
             <>
@@ -50,7 +50,6 @@ export default function SidebarComponent({
             </>
           ))}
         </List>
-        <Divider/>
       </Box>
     </Box>
   );
