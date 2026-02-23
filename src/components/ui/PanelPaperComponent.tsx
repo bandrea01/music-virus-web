@@ -53,7 +53,7 @@ export default function PanelPaperComponent({
   }, [openMenuIndex, actions]);
 
   return (
-    <Box sx={{display: "flex", flexDirection: "column", height: "100%", minHeight: 0}}>
+    <Box sx={{display: "flex", flexDirection: "column", height: "100%", minHeight: 0, padding: 2}}>
       {
         subtitle ?
           (
