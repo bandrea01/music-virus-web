@@ -115,7 +115,7 @@ export default function AddEditFundraisingDialog({
               name="eventDate"
               control={control}
               label="Data dell'evento"
-              disablePast
+              minDate={(() => { const d = new Date(); d.setDate(d.getDate() + 1); d.setHours(0,0,0,0); return d; })()}
             />
             <SliderFormField
               name="targetAmount"
