@@ -17,7 +17,7 @@ export const getFundraisingDefaultValues = (fundraising: Fundraising | null | un
     return {
         fundraisingName: fundraising?.fundraisingName ?? '',
         venueId: fundraising?.venueId ?? '',
-        eventDate: fundraising ? new Date(fundraising.eventDate) : new Date(),
+        eventDate: fundraising ? new Date(fundraising.eventDate) : (() => { const d = new Date(); d.setDate(d.getDate() + 1); return d; })(),
         targetAmount: fundraising?.targetAmount ?? 1,
     };
 };
