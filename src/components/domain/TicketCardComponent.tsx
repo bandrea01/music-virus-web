@@ -47,7 +47,7 @@ export default function TicketCardComponent({
             {ticket.eventName}
           </Typography>
           <Typography variant="h6" color='white' fontWeight="bold">
-            {formatDateWithTime(ticket.eventDate!)}
+            {formatDateWithTime(ticket.createdAt!)}
           </Typography>
         </Box>
         <Box display="flex" flexDirection="column">

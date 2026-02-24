@@ -4,8 +4,18 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from 'zod';
 
 export const contributionSchema = z.object({
-    amount: z.coerce.number()
-        .min(1, "L'importo deve essere almeno 1 euro"),
+    amount: z.preprocess((val) => {
+        if (typeof val === 'string' && val.includes(',')) {
+            throw new z.ZodError([
+                {
+                    code: z.ZodIssueCode.custom,
+                    message: 'Formato errato usa "." per i decimali',
+                    path: ['amount'],
+                },
+            ]);
+        }
+        return val;
+    }, z.coerce.number().min(1, "L'importo deve essere almeno 1 euro")),
     contributionVisibility: z.boolean(),
 });
 

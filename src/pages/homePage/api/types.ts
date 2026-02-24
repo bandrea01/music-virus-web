@@ -311,6 +311,7 @@ export type Ticket = {
   ticketId: string;
   ticketCode: string;
   eventId: string;
+  fundraisingId: string;
   contributionAmount: number;
   status: TicketStatusKey;
   createdAt: string;
