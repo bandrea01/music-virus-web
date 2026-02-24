@@ -1,13 +1,13 @@
 import {type ReactElement} from "react";
 import {PanelPaperComponent, TransactionCardComponent, useAuth} from "@components";
 import {Box, Typography} from "@mui/material";
-import {useGetLast10PersonalTransactions} from "@api";
+import {useGetAllPersonalTransactions} from "@api";
 import {TransactionType} from "@pages";
 
 export default function TransactionPanel(): ReactElement {
 
   const {authUser} = useAuth();
-  const {data: transactions} = useGetLast10PersonalTransactions(authUser?.userId ?? "");
+  const {data: transactions} = useGetAllPersonalTransactions(authUser?.userId ?? "");
 
   //if user is the receiver of a contribution payment we should delete the transaction from the list
   const filteredTransactions = transactions
