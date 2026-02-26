@@ -12,9 +12,12 @@ export default function TransactionPanel(): ReactElement {
   //if user is the receiver of a contribution payment we should delete the transaction from the list
   const filteredTransactions = transactions
     ? transactions
-      .filter(transaction =>
-        !(transaction.transactionType === TransactionType.CONTRIBUTION_PAYMENT && transaction.receiverId === authUser?.userId)
-      )
+      .filter(transaction => {
+        const baseCondition = !(transaction.transactionType === TransactionType.CONTRIBUTION_PAYMENT && transaction.receiverId === authUser?.userId);
+        const isArtist = authUser?.role === "ROLE_ARTIST";
+        if (isArtist) return transaction.transactionType !== TransactionType.REFUND && baseCondition;
+        return baseCondition;
+      })
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     : undefined;
 
